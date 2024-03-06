@@ -2,6 +2,13 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\SanctumAuthController;
+use App\Http\Controllers\Api\KategoriPengaduan\KategoriPengaduan;
+use App\Http\Controllers\Api\IndikatorMutu\IndikatorMutuController;
+use App\Http\Controllers\Api\DetailPengaduan\DetailPengaduanController;
+use App\Http\Controllers\Api\Pengaduan\PengaduanController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +21,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
+Route::post('login', [SanctumAuthController::class, 'login']);
+
+Route::middleware(['auth:sanctum'])->group(function () {
+
+    //user
+    Route::get('user',  function (Request $request) {
+        return $request->user();
+    });
+
+    //pengaduan
+    Route::get('get_pengaduan', [PengaduanController::class, 'GetPengaduan']);
+
+    //kategori pengaduan 
+    Route::get('get_kategori_pengaduan', [KategoriPengaduan::class, 'GetKategoriPengaduan']);
+
+    //indikator mutu
+    Route::get('get_indikator_mutu', [IndikatorMutuController::class, 'GetIndikatorMutu']);
+
+    //indikator mutu
+    Route::get('get_detail_pengaduan', [DetailPengaduanController::class, 'GetDetailPengaduan']);
+
+}); 
