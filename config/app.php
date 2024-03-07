@@ -194,4 +194,35 @@ return [
         // ...
     ])->toArray(),
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Theme Configuration
+    |--------------------------------------------------------------------------
+    |
+    |   Color Available :
+    |    - logo_header : dark, purple, light-blue, green, red, white, dark2, blue2, purple2, light-blue2, green2, red2
+    |    - navbar_header : dark, purple, light-blue, green, red, white, dark2, blue2, purple2, light-blue2, green2, red2
+    |    - sidebar : white, dark, dark2
+    |    - background : bg1, bg2, bg3, dark
+    |
+    */
+
+    'themes' => [
+        'color' => [
+            'logo_header'=> 'blue',
+            'navbar_header'=> 'blue2',
+            'sidebar' => 'white',
+            'background' => 'bg1',
+        ],
+        'logo' => [
+            'brand' => '',
+            'favicon' => '',
+        ],
+        'footer' =>[
+            'author' => 'TIM IT RSUD RAT',
+        ]
+    ],
+   
+
 ];
