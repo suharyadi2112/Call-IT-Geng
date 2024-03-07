@@ -73,7 +73,7 @@ class IndikatorMutuController extends Controller
         $validator = $this->validateIndikatorMutu($request, 'update');
 
         try {
-            $validator = $this->validateIndikatorMutu($request, 'update');
+            $validator = $this->validateIndikatorMutu($request, $idIndikator, 'update');
 
 
             
@@ -91,7 +91,7 @@ class IndikatorMutuController extends Controller
                 $indikatorMutu->save();
             });
 
-            return response()->json(['status' => 'success', 'message' => 'siswa updated successfully', 'data' => $request->all()], 200);
+            return response()->json(['status' => 'success', 'message' => 'indikator updated successfully', 'data' => $request->all()], 200);
 
         } catch (ValidationException $e) {
             return response()->json(['status' => 'fail', 'message' => $e->errors(), 'data' => null], 400);
@@ -100,7 +100,27 @@ class IndikatorMutuController extends Controller
         }
     }
 
-    private function validateIndikatorMutu(Request $request, $action = 'insert')
+    public function DelIndikatorMutu($idIndikator){
+
+        $indikatorName = null;
+        try{
+            DB::transaction(function () use (&$indikatorName, $idIndikator) {
+                $indikatorMutuData = IndikatorMutu::find($idIndikator);
+
+                if (!$indikatorMutuData) {
+                    throw new \Exception('indikator mutu not found');
+                }
+
+                $indikatorName = $indikatorMutuData->nama_indikator;
+                $indikatorMutuData->delete();//SoftDelete
+            });
+            return response()->json(['status' => 'success', 'message' => 'indikator deleted successfully', 'data' => $indikatorName], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'data' => null], 500);
+        }
+    }
+
+    private function validateIndikatorMutu(Request $request, $id, $action = 'insert')
     {   
 
         $messages = [
@@ -111,7 +131,22 @@ class IndikatorMutuController extends Controller
             'target.max' => 'target tidak boleh lebih dari 500 karakter.',
         ];
         $validator = Validator::make($request->all(), [
-            'nama_indikator' => 'required|max:500|unique:a_indikator_mutu',
+            'nama_indikator' => ['required','max:500',
+
+                function ($attribute,$value, $fail) use ($request, $action, $id) {
+                    $query = IndikatorMutu::withTrashed()->where('nama_indikator', $value)->where('deleted_at' , null);
+
+                    if ($action === 'update') {
+                        $query->where('id', '!=', $id);
+                    }
+                    
+                    $existingData = $query->count();
+
+                    if ($existingData > 0) {
+                        $fail('Nama indikator sudah ada sebelumnya.');
+                    }
+                },
+            ],
             'target' => 'required|max:500',
         ], $messages);
      
