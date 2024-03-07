@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\ProfileController;
+use App\Http\Controllers\Dashboard\PengaduanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +17,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('login', [LoginController::class, 'login'])->name('login.index');
+
+Route::prefix('dashboard')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('profil', [ProfileController::class, 'index'])->name('profil.index');
+
+    Route::get('pengaduan', [PengaduanController::class, 'index'])->name('pengaduan.index');
+    
+    Route::get('kategori', [PengaduanController::class, 'kategori'])->name('pengaduan.kategori');
+});
+
+
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('login', function () {
-    return response()->json('request failed');
-})->name('login');

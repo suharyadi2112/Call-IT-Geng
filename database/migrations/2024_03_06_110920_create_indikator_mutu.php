@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('nama_indikator');
             $table->integer('target');
             $table->timestamps();
+            
+            $table->softDeletes(); // deleted_at
         });
     }
 

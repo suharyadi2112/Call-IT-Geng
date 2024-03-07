@@ -12,10 +12,17 @@ class SanctumAuthController extends Controller
     public function login(Request $request)
     {
 
+        $messages = [
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Email wajib berformat email dengan @.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min:8' => 'Password minimal 8 karakter.',
+        ];
+
         $validator = Validator::make($request->all(), [
             'email'    => 'required|email',
             'password' => 'required|min:8',
-        ]);
+        ], $messages);
 
         if ($validator->fails()) {
             return response()->json(["status" => "fail", "message" => $validator->errors(), "data" => null], 400);
