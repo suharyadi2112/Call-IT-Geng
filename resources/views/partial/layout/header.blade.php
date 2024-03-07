@@ -96,7 +96,7 @@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ route('profil.index') }}">Profil</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Logout</a>
+                                <button class="dropdown-item" onclick="logout()">Logout</button>
                             </li>
                         </div>
                     </ul>
@@ -106,3 +106,14 @@
     </nav>
     <!-- End Navbar -->
 </div>
+
+@push('script')
+    <script>
+        function logout(){
+            if (confirm("Apakah anda yakin ingin keluar?") == true) {
+                localStorage.clear();
+                window.location.href = "{{ route('login.index') }}";
+            }
+        }
+    </script>
+@endpush
