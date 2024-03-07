@@ -19,6 +19,10 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::create([
             'name' => 'testing callit',
             'email' => 'test@gmail.com',
+            'handphone' => '082283778944',
+            'jabatan' => 'Perawat',
+            'status' => '-',
+            'divisi' => 'Kesehatan',
             'password' =>  Hash::make('12345678'),
         ]);
     }
