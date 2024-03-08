@@ -47,9 +47,34 @@ class IndikatorMutuController extends Controller
         }
     }
 
+    public function GetIndikatorMutuByID($id){
+
+        try {
+            $getIndikatorMutuByID = IndikatorMutu::query()->find($id);
+
+            if (!$getIndikatorMutuByID) {
+                throw new \Exception('Indikator mutu not found');
+            }
+            return response()->json(["status"=> "success","message"=> "Data successfully retrieved", "data" => $getIndikatorMutuByID], 200);
+        } catch (\Exception $e) {
+            return response()->json(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+    }
+
+    public function GetIndikatorMutuList(){
+        try {
+            $queryy = IndikatorMutu::query();
+            $getIndiktorMutuList = $queryy->orderBy('created_at', 'desc')->select("id","nama_indikator","target")->get(); 
+            return response(["status"=> "success","message"=> "Data list indikator mutu successfully retrieved", "data" => $getIndiktorMutuList], 200);
+
+        } catch (\Exception $e) {
+            return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+    }
+
     public function StoreIndikatorMutu(Request $request){
 
-        $validator = $this->validateIndikatorMutu($request, 'insert');  
+        $validator = $this->validateIndikatorMutu($request, null, 'insert');  
         if ($validator->fails()) {
             return response()->json(["status"=> "fail", "message"=>  $validator->errors(),"data" => null], 400);
         }
@@ -70,13 +95,8 @@ class IndikatorMutuController extends Controller
 
     public function UpdateIndikatorMutu(Request $request, $idIndikator){
 
-        $validator = $this->validateIndikatorMutu($request, 'update');
-
         try {
             $validator = $this->validateIndikatorMutu($request, $idIndikator, 'update');
-
-
-            
             if ($validator->fails()) {
                 throw new ValidationException($validator);
             }

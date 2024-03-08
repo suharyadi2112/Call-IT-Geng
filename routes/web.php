@@ -5,7 +5,6 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\PengaduanController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,6 +15,9 @@ use App\Http\Controllers\Dashboard\PengaduanController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/loginx', function () { 
+    return response()->json('Authentication failed:'); 
+})->name('loginX');
 
 Route::get('login', [LoginController::class, 'login'])->name('login.index');
 
