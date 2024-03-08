@@ -213,8 +213,8 @@ return [
 
     'themes' => [
         'color' => [
-            'logo_header'=> 'blue',
-            'navbar_header'=> 'blue2',
+            'logo_header'=> 'white',
+            'navbar_header'=> 'hijau-header',
             'sidebar' => 'white',
             'background' => 'bg1',
         ],
