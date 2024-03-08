@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\Pengaduan\PengaduanController;
 
 
 Route::post('login', [SanctumAuthController::class, 'login']);
+Route::get('check_valid_token', [SanctumAuthController::class, 'CheckValidToken']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
 

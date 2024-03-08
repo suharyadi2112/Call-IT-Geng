@@ -120,4 +120,12 @@ class SanctumAuthController extends Controller
         }
     }
 
+    public function CheckValidToken(){
+        if (Auth::guard('sanctum')->check()) {
+            return response()->json(["status"=> "success","message"=> "valid","data" => null], 200);
+        } else {
+            return response()->json(["status"=> "fail","message"=> "invalid authorization","data" => null], 400);
+        }
+    }
+
 }
