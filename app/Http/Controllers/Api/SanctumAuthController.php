@@ -107,5 +107,17 @@ class SanctumAuthController extends Controller
         }
     }
 
+    public function GetUsersByID($id){
+        try {
+            $getData = User::query()->find($id);
+
+            if (!$getData) {
+                throw new \Exception('User not found');
+            }
+            return response()->json(["status"=> "success","message"=> "Data successfully retrieved", "data" => $getData], 200);
+        } catch (\Exception $e) {
+            return response()->json(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+    }
 
 }

@@ -34,6 +34,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // });
     Route::get('get_user', [SanctumAuthController::class, 'GetUsers']);
     Route::get('get_user_yajra', [SanctumAuthController::class, 'GetUsersYajra']);
+    Route::get('get_user/{id}', [SanctumAuthController::class, 'GetUsersByID']);
 
     //pengaduan
     Route::get('get_pengaduan', [PengaduanController::class, 'GetPengaduan']);
