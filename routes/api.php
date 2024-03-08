@@ -36,6 +36,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('get_user', [SanctumAuthController::class, 'GetUsers']);
     Route::get('get_user_yajra', [SanctumAuthController::class, 'GetUsersYajra']);
     Route::get('get_user/{id}', [SanctumAuthController::class, 'GetUsersByID']);
+    Route::get('get_user_list', [SanctumAuthController::class, 'GetUserList']);
+    Route::post('store_user', [SanctumAuthController::class, 'StoreUser']);
+    
 
     //pengaduan
     Route::get('get_pengaduan', [PengaduanController::class, 'GetPengaduan']);

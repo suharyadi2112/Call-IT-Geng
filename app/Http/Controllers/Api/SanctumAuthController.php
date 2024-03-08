@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use DataTables;
 
 //model
@@ -120,7 +122,7 @@ class SanctumAuthController extends Controller
         }
     }
 
-    public function CheckValidToken(){
+    public function CheckValidToken(){ //cek valid token
         if (Auth::guard('sanctum')->check()) {
             return response()->json(["status"=> "success","message"=> "valid","data" => null], 200);
         } else {
@@ -128,4 +130,95 @@ class SanctumAuthController extends Controller
         }
     }
 
+    public function GetUserList(){
+        try {
+            $queryy = User::query();
+            $getUserList = $queryy->orderBy('created_at', 'desc')->select("id","name")->get(); 
+            return response(["status"=> "success","message"=> "Data list user successfully retrieved", "data" => $getUserList], 200);
+
+        } catch (\Exception $e) {
+            return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+    }
+
+    public function StoreUser(Request $request){
+
+        $validator = $this->validateUser($request, null , 'insert');  
+        if ($validator->fails()) {
+            return response()->json(["status"=> "fail", "message"=>  $validator->errors(),"data" => null], 400);
+        }
+        try {
+            DB::transaction(function () use ($request) {
+                User::create([
+                    'name' => strtolower($request->input('name')),
+                    'email' => strtolower($request->input('email')),
+                    'password' => Hash::make($request->input('password')), 
+                    'handphone' => $request->input('handphone'),
+                    'jabatan' => $request->input('jabatan'),
+                    'status' => $request->input('status'),
+                    'divisi' => $request->input('divisi'),
+                ]);
+            });
+            return response()->json(["status"=> "success","message"=> "User successfully stored", "data" => $request->all()], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+
+    }
+
+    private function validateUser(Request $request, $id, $action = 'insert')
+    {   
+
+        $messages = [
+            'name.required' => 'Nama pengguna wajib diisi.',
+            'name.max' => 'Nama pengguna tidak boleh lebih dari 300 karakter.',
+            
+            'email.required' => 'Email wajib diisi.',
+            'email.max' => 'Email tidak boleh lebih dari 50 karakter.',
+            'email.email' => 'Email wajib berformat email (@).',
+            
+            'password.required' => 'Password wajib diisi.',
+            'password.max' => 'Password tidak boleh lebih dari 10 karakter.',
+            'password.min' => 'Password tidak boleh kurang dari 8 karakter.',
+
+            'handphone.required' => 'Handphone wajib diisi.',
+            'handphone.max' => 'Handphone tidak boleh lebih dari 20 karakter.',
+            
+            'jabatan.required' => 'jabatan wajib diisi.',
+            'jabatan.max' => 'jabatan tidak boleh lebih dari 50 karakter.',
+            
+            'status.required' => 'Status wajib diisi.',
+            'status.max' => 'Status tidak boleh lebih dari 20 karakter.',
+            
+            'divisi.required' => 'Divisi wajib diisi.',
+            'divisi.max' => 'Divisi tidak boleh lebih dari 50 karakter.',
+            
+        ];
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:300',
+            'email' => ['required','max:50','email',
+                function ($attribute,$value, $fail) use ($request, $action, $id) {
+                    $query = User::withTrashed()->where('email', $value)->where('deleted_at' , null);
+
+                    if ($action === 'update') {
+                        $query->where('id', '!=', $id);
+                    }
+                    
+                    $existingData = $query->count();
+
+                    if ($existingData > 0) {
+                        $fail('Email sudah ada sebelumnya gunakan email lain.');
+                    }
+                },
+            ],
+            'password' => 'required|min:8|max:10',
+            'handphone' => 'required|max:20',
+            'jabatan' => 'required|max:50',
+            'status' => 'required|max:20',
+            'divisi' => 'required|max:50',
+        ], $messages);
+     
+        return $validator;
+    }
 }
