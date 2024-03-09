@@ -34,6 +34,10 @@ class Pengaduan extends Model
         'status_pelaporan',
         'tanggal_pelaporan',
         'tanggal_selesai',
+        
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     public function detailpengaduan()
@@ -51,6 +55,11 @@ class Pengaduan extends Model
     public function pelapor()
     {
         return $this->belongsTo(User::class, 'pelapor_id', 'id');
+    }
+
+    public function workers()
+    {
+        return $this->belongsToMany(User::class, 'a_pivot_worker_pengaduan', 'pengaduan_id', 'user_id');
     }
 
     protected static function boot()

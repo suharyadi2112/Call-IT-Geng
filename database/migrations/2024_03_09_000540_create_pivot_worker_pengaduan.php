@@ -18,7 +18,6 @@ return new class extends Migration
             $table->uuid('user_id');
             $table->uuid('pengaduan_id');
             $table->date('tanggal_assesment')->comment('tanggal kapan assesment diberikan');
-            $table->text('keterangan')->comment('keterangan bebas jika ada');
             $table->timestamps();
             
             $table->softDeletes(); // deleted_at
