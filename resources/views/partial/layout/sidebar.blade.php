@@ -6,7 +6,7 @@
                     <a href="{{ route('dashboard') }}" aria-expanded="false">
                         <i class="fas fa-home"></i>
                         <p>Dashboard</p>
-                    </a>	
+                    </a>
                 </li>
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
@@ -27,6 +27,7 @@
                                     <span class="sub-item">Daftar Pengaduan</span>
                                 </a>
                             </li>
+
                             <li class="{{ request()->routeIs('pengaduan.kategori') ? 'active' : '' }}">
                                 <a href="{{ route('pengaduan.kategori') }}">
                                     <span class="sub-item">Kategori</span>
@@ -36,6 +37,14 @@
                         </ul>
                     </div>
                 </li>
+
+                <li class="nav-item {{ request()->routeIs('indikatormutu*') ? 'active' : '' }}">
+                    <a href="{{ route('indikatormutu.index') }}" aria-expanded="false">
+                        <i class="fas fa-bullseye"></i>
+                        <p>Indikator Mutu</p>
+                    </a>
+                </li>
+
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>
@@ -46,7 +55,7 @@
                     <a href="{{ route('profil.index') }}" aria-expanded="false">
                         <i class="fas fa-home"></i>
                         <p>Profil</p>
-                    </a>	
+                    </a>
                 </li>
             </ul>
         </div>

@@ -59,7 +59,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('del_kategori_pengaduan/{id}', [KategoriPengaduan::class, 'DelKategoriPengaduan']);
     Route::put('update_kategori_pengaduan/{id}', [KategoriPengaduan::class, 'UpdateKategoriPengaduan']);
 
-    //indikator mutu
+    //indikator mutu 
     Route::get('get_indikator_mutu', [IndikatorMutuController::class, 'GetIndikatorMutu']);
     Route::get('get_indikator_mutu_list', [IndikatorMutuController::class, 'GetIndikatorMutuList']);
     Route::get('get_indikator_mutu_yajra', [IndikatorMutuController::class, 'GetIndikatorMutuYajra']);

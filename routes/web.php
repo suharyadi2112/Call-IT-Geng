@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\PengaduanController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,6 +29,11 @@ Route::prefix('dashboard')->group(function () {
     Route::get('pengaduan', [PengaduanController::class, 'index'])->name('pengaduan.index');
     
     Route::get('kategori', [PengaduanController::class, 'kategori'])->name('pengaduan.kategori');
+
+    //indikatormutu
+    Route::get('indikatormutu', [IndikatorMutuController::class, 'index'])->name('indikatormutu.index');
+    Route::get('indikatormutu/tambah', [IndikatorMutuController::class, 'create'])->name('indikatormutu.create');
+    Route::post('indikatormutu/store', [IndikatorMutuController::class, 'store'])->name('indikatormutu.store');
 });
 
 
@@ -35,4 +41,3 @@ Route::prefix('dashboard')->group(function () {
 Route::get('/', function () {
     return view('welcome');
 });
-
