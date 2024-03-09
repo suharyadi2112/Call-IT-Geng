@@ -2,9 +2,9 @@
 @section('title', 'Indikator Mutu')
 @section('content')
     <div class="page-inner">
-        <h4 class="page-title">Indikator Mutu <a href="{{ route('indikatormutu.create') }}"
+        {{-- <h4 class="page-title">Indikator Mutu <a href="{{ route('indikatormutu.create') }}"
                 class="btn btn-sm btn-primary float-right">Tambah Indikator</a>
-        </h4>
+        </h4> --}}
         <div class="row">
 
             <div class="card">
@@ -21,7 +21,7 @@
                                 </tr>
                             </thead>
 
-                            <tbody>
+                            {{-- <tbody>
                                 @forelse ($indikators as $i=> $indikator)
                                     <tr>
                                         <td> {{ $i + 1 }}</td>
@@ -40,7 +40,7 @@
                                     </tr>
                                 @endforelse
 
-                            </tbody>
+                            </tbody> --}}
                         </table>
                     </div>
                 </div>

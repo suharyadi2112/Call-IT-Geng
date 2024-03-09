@@ -11,6 +11,7 @@ use DataTables;
 
 //model
 use App\Models\Pengaduan;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class PengaduanController extends Controller
@@ -23,7 +24,7 @@ class PengaduanController extends Controller
 
         try {
         
-            $query = Pengaduan::query()->with('detailpengaduan', 'kategoripengaduan','indikatormutu','pelapor');
+            $query = Pengaduan::query()->with('detailpengaduan', 'kategoripengaduan','indikatormutu','pelapor', 'workers');
             if ($search) {
                 $query->search($search);
             }
@@ -40,7 +41,7 @@ class PengaduanController extends Controller
 
     public function GetPengaduanYajra(){
         try {
-            $model = Pengaduan::query();
+            $model = Pengaduan::query()->with('detailpengaduan', 'kategoripengaduan','indikatormutu','pelapor', 'workers');
             return DataTables::eloquent($model)->toJson();
         } 
         catch (\Exception $e) {
@@ -57,6 +58,85 @@ class PengaduanController extends Controller
         } catch (\Exception $e) {
             return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
         }
+    }
+
+    public function AssignWorkerToPengaduan(Request $request, $idPengaduan){
+
+        try {
+
+            $pengaduan = Pengaduan::find($idPengaduan);
+            if (!$pengaduan) {
+                throw new \Exception('Pengaduan not found');
+            }
+
+            $pesan = [
+                'user_id.required' => 'Workers wajib dipilih.',
+                'user_id.min' => 'Wajib memilih worker minimal 1 orang.',
+                'user_id.max' => 'Wajib memilih worker maksimal 5 orang.',
+            ];
+
+            $validator = Validator::make($request->all(), [
+                'user_id' => 'array',
+                'user_id' => ['required','min:1','max:5',
+                    function ($attribute,$value, $fail) use ($request, $pengaduan) {
+                        $failedUsers = [];
+
+                        $assignedUsers = $pengaduan->workers()->pluck('users.id')->toArray();
+
+                        foreach ($request->user_id as $userId) {
+                            if (!User::find($userId)) {
+                                $failedUsers['user_id_' . $userId] = 'User dengan ID ' . $userId . ' tidak ditemukan.';
+                            } elseif (in_array($userId, $assignedUsers)) {
+                                // Periksa apakah user sudah di-assign ke pengaduan
+                                $failedUsers['user_id_' . $userId] = 'Worker dengan ID ' . $userId . ' sudah diassign ke pengaduan ini sebelumnya.';
+                            }
+                        }
+                        if (!empty($failedUsers)) {
+                            return $fail($failedUsers);
+                        }
+
+                        if (count(array_unique($value)) !== count($value)) {
+                            return $fail('List Workers ' . $attribute . ' duplikat.');
+                        }
+                    },
+                ]
+            ], $pesan);
+
+            if ($validator->fails()) {
+                return response()->json(["status" => "fail", "message" => $validator->errors(), "data" => null], 400);
+            }
+
+            $dataPivot = null;
+            DB::transaction(function () use ($request, $pengaduan, &$dataPivot) {
+                $idUserAsWorkers = $request->input('user_id'); // Dapatkan semua ID pekerja
+                $dataPekerja = [];
+
+                foreach ($idUserAsWorkers as $idUser) {
+                $dataPekerja[] = [
+                    'user_id' => $idUser,
+                    'tanggal_assesment' => date('Y-m-d'),
+                    'created_at' => date('Y-m-d H:i:s'),
+                ];
+                }
+
+                $pengaduan->workers()->attach($dataPekerja); // Lampirkan pekerja dengan data pivot
+
+                $dataPivot = Pengaduan::query()->with(['workers' => function ($query) use ($request) {
+                $query->select('users.id', 'users.name', 'users.handphone');
+                $query->withPivot('tanggal_assesment');
+                }])
+                ->where('a_pengaduan.id', $pengaduan->id)
+                ->get();
+            });
+
+
+            return response(["status"=> "success","message"=> "Assign worker successfully store", "data" => $dataPivot], 200);
+
+        } catch (\Exception $e) {
+            return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+
+
     }
 
     public function StorePengaduan(Request $request){

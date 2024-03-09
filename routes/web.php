@@ -30,10 +30,10 @@ Route::prefix('dashboard')->group(function () {
     
     Route::get('kategori', [PengaduanController::class, 'kategori'])->name('pengaduan.kategori');
 
-    //indikatormutu
-    Route::get('indikatormutu', [IndikatorMutuController::class, 'index'])->name('indikatormutu.index');
-    Route::get('indikatormutu/tambah', [IndikatorMutuController::class, 'create'])->name('indikatormutu.create');
-    Route::post('indikatormutu/store', [IndikatorMutuController::class, 'store'])->name('indikatormutu.store');
+    // //indikatormutu
+    // Route::get('indikatormutu', [IndikatorMutuController::class, 'index'])->name('indikatormutu.index');
+    // Route::get('indikatormutu/tambah', [IndikatorMutuController::class, 'create'])->name('indikatormutu.create');
+    // Route::post('indikatormutu/store', [IndikatorMutuController::class, 'store'])->name('indikatormutu.store');
 });
 
 

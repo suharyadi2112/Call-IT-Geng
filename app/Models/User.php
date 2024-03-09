@@ -49,6 +49,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function pengaduan()
+    {
+        return $this->belongsToMany(Pengaduan::class, 'a_pivot_worker_pengaduan', 'user_id', 'pengaduan_id');
+    }
+
     public function scopeSearch($query, $search)
     {
         if ($search) {

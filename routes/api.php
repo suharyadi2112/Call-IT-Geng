@@ -43,12 +43,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('reset_password/{id}', [SanctumAuthController::class, 'ResetPassword']);
     Route::put('update_user/{id}', [SanctumAuthController::class, 'UpdateUser']);
     
-
     //pengaduan
     Route::get('get_pengaduan', [PengaduanController::class, 'GetPengaduan']);
     Route::get('get_pengaduan_yajra', [PengaduanController::class, 'GetPengaduanYajra']);
     Route::get('get_pengaduan_list', [PengaduanController::class, 'GetPengaduanList']);
     Route::post('store_pengaduan', [PengaduanController::class, 'StorePengaduan']);
+    Route::put('assign_worker_to_pengaduan/{id}', [PengaduanController::class, 'AssignWorkerToPengaduan']);
+
 
     //kategori pengaduan 
     Route::get('get_kategori_pengaduan', [KategoriPengaduan::class, 'GetKategoriPengaduan']);
