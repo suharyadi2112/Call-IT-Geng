@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class KatPengaduan extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'a_kategori_pengaduan'; 
 
@@ -24,7 +25,7 @@ class KatPengaduan extends Model
 
         'created_at',
         'updated_at',
-        
+        'deleted_at',
     ];
 
     // public function pengaduan()

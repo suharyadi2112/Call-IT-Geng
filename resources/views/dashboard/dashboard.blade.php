@@ -10,12 +10,12 @@
 						<div class="row align-items-center">
 							<div class="col-icon">
 								<div class="icon-big text-center icon-primary bubble-shadow-small">
-									<i class="flaticon-users"></i>
+									<i class="flaticon-down-arrow-2"></i>
 								</div>
 							</div>
 							<div class="col col-stats ml-3 ml-sm-0">
 								<div class="numbers">
-									<p class="card-category">Visitors</p>
+									<p class="card-category">Pengaduan Masuk</p>
 									<h4 class="card-title">1,294</h4>
 								</div>
 							</div>
@@ -28,13 +28,13 @@
 					<div class="card-body">
 						<div class="row align-items-center">
 							<div class="col-icon">
-								<div class="icon-big text-center icon-info bubble-shadow-small">
-									<i class="flaticon-interface-6"></i>
+								<div class="icon-big text-center icon-danger bubble-shadow-small">
+									<i class="flaticon-exclamation"></i>
 								</div>
 							</div>
 							<div class="col col-stats ml-3 ml-sm-0">
 								<div class="numbers">
-									<p class="card-category">Subscribers</p>
+									<p class="card-category">Belum Dikerjakan</p>
 									<h4 class="card-title">1303</h4>
 								</div>
 							</div>
@@ -47,14 +47,14 @@
 					<div class="card-body">
 						<div class="row align-items-center">
 							<div class="col-icon">
-								<div class="icon-big text-center icon-success bubble-shadow-small">
-									<i class="flaticon-graph"></i>
+								<div class="icon-big text-center icon-warning bubble-shadow-small">
+									<i class="flaticon-clock"></i>
 								</div>
 							</div>
 							<div class="col col-stats ml-3 ml-sm-0">
 								<div class="numbers">
-									<p class="card-category">Sales</p>
-									<h4 class="card-title">$ 1,345</h4>
+									<p class="card-category">Sedang Dikerjakan</p>
+									<h4 class="card-title">1345</h4>
 								</div>
 							</div>
 						</div>
@@ -66,13 +66,13 @@
 					<div class="card-body">
 						<div class="row align-items-center">
 							<div class="col-icon">
-								<div class="icon-big text-center icon-secondary bubble-shadow-small">
+								<div class="icon-big text-center icon-success bubble-shadow-small">
 									<i class="flaticon-success"></i>
 								</div>
 							</div>
 							<div class="col col-stats ml-3 ml-sm-0">
 								<div class="numbers">
-									<p class="card-category">Order</p>
+									<p class="card-category">Selesai Dikerjakan</p>
 									<h4 class="card-title">576</h4>
 								</div>
 							</div>

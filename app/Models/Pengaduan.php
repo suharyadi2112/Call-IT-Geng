@@ -20,10 +20,10 @@ class Pengaduan extends Model
 
     protected $fillable = [
         'id',
+        'kode_laporan',
         'indikator_mutu_id',
         'pelapor_id',
         'kategori_pengaduan_id',
-        'worker_id',
         'admin_id',
         'lokasi',
         'lantai',

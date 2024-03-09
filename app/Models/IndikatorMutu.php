@@ -25,6 +25,7 @@ class IndikatorMutu extends Model
         'target',
         'created_at',
         'updated_at',
+        'deleted_at',
         
     ];
 

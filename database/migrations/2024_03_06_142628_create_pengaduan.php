@@ -15,23 +15,24 @@ return new class extends Migration
     {
         Schema::create('a_pengaduan', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->text('kode_laporan');
             $table->uuid('indikator_mutu_id');
             $table->uuid('pelapor_id');
             $table->uuid('kategori_pengaduan_id');
-            
-            $table->uuid('worker_id');
-            $table->uuid('admin_id');
+            $table->uuid('admin_id')->nullable();
 
-            $table->text('lokasi');
-            $table->text('lantai');
-            $table->text('judul_pengaduan');
-            $table->text('dekskripsi_pelaporan');
-            $table->text('prioritas');
-            $table->text('nomor_handphone');
-            $table->text('status_pelaporan');
-            $table->date('tanggal_pelaporan')->nullable();
-            $table->date('tanggal_selesai');
+            $table->text('lokasi')->nullable();
+            $table->text('lantai')->nullable();
+            $table->text('judul_pengaduan')->nullable();
+            $table->text('dekskripsi_pelaporan')->nullable();
+            $table->text('prioritas')->nullable();
+            $table->text('nomor_handphone')->nullable();
+            $table->text('status_pelaporan')->nullable();
+            $table->text('tanggal_pelaporan')->nullable();
+            $table->text('tanggal_selesai')->nullable();
             $table->timestamps();
+            
+            $table->softDeletes(); // deleted_at
         });
     }
 
