@@ -38,10 +38,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('get_user/{id}', [SanctumAuthController::class, 'GetUsersByID']);
     Route::get('get_user_list', [SanctumAuthController::class, 'GetUserList']);
     Route::post('store_user', [SanctumAuthController::class, 'StoreUser']);
+    Route::delete('del_user/{id}', [SanctumAuthController::class, 'DelUser']);
+    Route::put('change_password/{id}', [SanctumAuthController::class, 'ChangePasswordUser']);
+    Route::put('reset_password/{id}', [SanctumAuthController::class, 'ResetPassword']);
+    Route::put('update_user/{id}', [SanctumAuthController::class, 'UpdateUser']);
     
 
     //pengaduan
     Route::get('get_pengaduan', [PengaduanController::class, 'GetPengaduan']);
+    Route::get('get_pengaduan_yajra', [PengaduanController::class, 'GetPengaduanYajra']);
+    Route::get('get_pengaduan_list', [PengaduanController::class, 'GetPengaduanList']);
+    Route::post('store_pengaduan', [PengaduanController::class, 'StorePengaduan']);
 
     //kategori pengaduan 
     Route::get('get_kategori_pengaduan', [KategoriPengaduan::class, 'GetKategoriPengaduan']);

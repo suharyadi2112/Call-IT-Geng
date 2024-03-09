@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -167,6 +168,100 @@ class SanctumAuthController extends Controller
 
     }
 
+    public function DelUser($id){
+        $nameUser = null;
+        try{
+            DB::transaction(function () use (&$nameUser, $id) {
+                $userData = User::find($id);
+
+                if (!$userData) {
+                    throw new \Exception('user not found');
+                }
+
+                $nameUser = $userData->nama;
+                $userData->delete();//SoftDelete
+            });
+            return response()->json(['status' => 'success', 'message' => 'user deleted successfully', 'data' => $nameUser], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'data' => null], 500);
+        }
+    }
+
+    public function ChangePasswordUser(Request $request, $id)
+    {
+        try{
+            DB::transaction(function () use ($request, $id) {
+                $user = User::findOrFail($id);
+
+                $messages = [
+                    'password.required' => 'Password wajib diisi.',
+                    'password.max' => 'Password tidak boleh lebih dari 10 karakter.',
+                    'password.min' => 'Password tidak boleh kurang dari 8 karakter.',
+                    'password.confirmed' => 'Password password tidak sesuai.',
+                ];
+
+                $validatedData = $request->validate([
+                    'password' => 'required|min:8|max:10|confirmed',
+                ], $messages);
+
+                $user->update([
+                    'password' => Hash::make($validatedData['password']),
+                ]);
+            });
+        
+            return response()->json(['status' => 'success', 'message' => 'password change successfully', 'data' => null], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'data' => null], 500);
+        }
+    }
+
+    public function ResetPassword(Request $request, $id)
+    {
+        try{
+            DB::transaction(function () use ($request, $id) {
+                $user = User::findOrFail($id);
+
+                $user->update([
+                    'password' => Hash::make('12345678'),
+                ]);
+            });
+
+            return response()->json(['status' => 'success', 'message' => 'password reset successfully', 'data' => null], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'data' => null], 500);
+        }
+    }
+
+    public function UpdateUser(Request $request, $id){
+        try {
+            
+            DB::transaction(function () use ($request, $id) {
+                $userData = User::find($id);
+
+                if (!$userData) {
+                    throw new \Exception('user not found');
+                }
+
+                $validator = $this->validateUser($request, $id, 'update');
+                if ($validator->fails()) {
+                    throw new ValidationException($validator);
+                }
+
+                $userData->fill($request->all());
+                $userData->save();
+            });
+
+            return response()->json(['status' => 'success', 'message' => 'user updated successfully', 'data' => $request->all()], 200);
+
+        } catch (ValidationException $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->errors(), 'data' => null], 400);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'data' => null], 500);
+        }
+    }
+
     private function validateUser(Request $request, $id, $action = 'insert')
     {   
 
@@ -193,11 +288,11 @@ class SanctumAuthController extends Controller
             
             'divisi.required' => 'Divisi wajib diisi.',
             'divisi.max' => 'Divisi tidak boleh lebih dari 50 karakter.',
-            
         ];
-        $validator = Validator::make($request->all(), [
+
+        $rules =  [
             'name' => 'required|max:300',
-            'email' => ['required','max:50','email',
+            'email' => ['required','max:50','email','unique:users,id',
                 function ($attribute,$value, $fail) use ($request, $action, $id) {
                     $query = User::withTrashed()->where('email', $value)->where('deleted_at' , null);
 
@@ -208,16 +303,21 @@ class SanctumAuthController extends Controller
                     $existingData = $query->count();
 
                     if ($existingData > 0) {
-                        $fail('Email sudah ada sebelumnya gunakan email lain.');
+                        $fail('Email sudah ada sebelumnya, gunakan email lain.');
                     }
                 },
             ],
-            'password' => 'required|min:8|max:10',
             'handphone' => 'required|max:20',
             'jabatan' => 'required|max:50',
             'status' => 'required|max:20',
             'divisi' => 'required|max:50',
-        ], $messages);
+        ];
+        
+        if ($action === 'insert') {
+            $rules['password'] = 'required|min:8|max:10';
+        }
+        
+        $validator = Validator::make($request->all(), $rules, $messages);
      
         return $validator;
     }
