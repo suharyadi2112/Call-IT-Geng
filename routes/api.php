@@ -47,7 +47,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('get_pengaduan', [PengaduanController::class, 'GetPengaduan']);
     Route::get('get_pengaduan_yajra', [PengaduanController::class, 'GetPengaduanYajra']);
     Route::get('get_pengaduan_list', [PengaduanController::class, 'GetPengaduanList']);
+    Route::get('get_pengaduan/{id}', [PengaduanController::class, 'GetPengaduanByID']);
     Route::post('store_pengaduan', [PengaduanController::class, 'StorePengaduan']);
+    Route::put('update_pengaduan/{id}', [PengaduanController::class, 'UpdatePengaduan']);
+    Route::put('update_status_pengaduan/{id}', [PengaduanController::class, 'UpdateStatusPengaduan']);
     Route::put('assign_worker_to_pengaduan/{id}', [PengaduanController::class, 'AssignWorkerToPengaduan']);
 
 
