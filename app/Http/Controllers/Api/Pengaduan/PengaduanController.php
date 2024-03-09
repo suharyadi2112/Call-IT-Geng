@@ -28,7 +28,15 @@ class PengaduanController extends Controller
             if ($search) {
                 $query->search($search);
             }
-            $query->orderBy('created_at', 'desc');
+            $query->orderByRaw('CASE status_pelaporan
+                WHEN "Waiting" THEN 1
+                WHEN "Progress" THEN 2
+                ELSE 3
+            END')->orderByRaw('CASE prioritas
+                WHEN "Tinggi" THEN 1
+                WHEN "Sedang" THEN 2
+                ELSE 3
+            END')->orderBy('created_at', 'desc');
             $getPengaduan = $query->paginate($perPage);
 
             return response(["status"=> "success","message"=> "Data successfully retrieved", "data" => $getPengaduan], 200);
@@ -41,7 +49,18 @@ class PengaduanController extends Controller
 
     public function GetPengaduanYajra(){
         try {
-            $model = Pengaduan::query()->with('detailpengaduan', 'kategoripengaduan','indikatormutu','pelapor', 'workers');
+            $model = Pengaduan::query()->with('detailpengaduan', 'kategoripengaduan','indikatormutu','pelapor', 'workers')
+            ->orderByRaw('CASE status_pelaporan
+                WHEN "Waiting" THEN 1
+                WHEN "Progress" THEN 2
+                ELSE 3
+            END')
+            ->orderByRaw('CASE prioritas
+                WHEN "Tinggi" THEN 1
+                WHEN "Sedang" THEN 2
+                ELSE 3
+            END')
+            ->orderBy('created_at', 'desc');
             return DataTables::eloquent($model)->toJson();
         } 
         catch (\Exception $e) {
@@ -57,6 +76,19 @@ class PengaduanController extends Controller
 
         } catch (\Exception $e) {
             return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+    }
+
+    public function GetPengaduanByID($idPengaduan){
+        try {
+            $getPengaduanByID = Pengaduan::query()->with('detailpengaduan', 'kategoripengaduan','indikatormutu','pelapor', 'workers')->find($idPengaduan);
+
+            if (!$getPengaduanByID) {
+                throw new \Exception('pengaduan not found');
+            }
+            return response()->json(["status"=> "success","message"=> "Data successfully retrieved", "data" => $getPengaduanByID], 200);
+        } catch (\Exception $e) {
+            return response()->json(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
         }
     }
 
@@ -109,24 +141,22 @@ class PengaduanController extends Controller
             $dataPivot = null;
             DB::transaction(function () use ($request, $pengaduan, &$dataPivot) {
                 $idUserAsWorkers = $request->input('user_id'); // Dapatkan semua ID pekerja
+                
                 $dataPekerja = [];
-
                 foreach ($idUserAsWorkers as $idUser) {
-                $dataPekerja[] = [
-                    'user_id' => $idUser,
-                    'tanggal_assesment' => date('Y-m-d'),
-                    'created_at' => date('Y-m-d H:i:s'),
-                ];
+                    $dataPekerja[] = [
+                        'user_id' => $idUser,
+                        'tanggal_assesment' => date('Y-m-d'),
+                        'created_at' => date('Y-m-d H:i:s'),
+                    ];
                 }
 
                 $pengaduan->workers()->attach($dataPekerja); // Lampirkan pekerja dengan data pivot
 
-                $dataPivot = Pengaduan::query()->with(['workers' => function ($query) use ($request) {
-                $query->select('users.id', 'users.name', 'users.handphone');
-                $query->withPivot('tanggal_assesment');
-                }])
-                ->where('a_pengaduan.id', $pengaduan->id)
-                ->get();
+                $dataPivot = Pengaduan::query()->with(['workers' => function ($query) {
+                    $query->select('users.id', 'users.name', 'users.handphone');
+                    $query->withPivot('tanggal_assesment');
+                }])->where('a_pengaduan.id', $pengaduan->id)->get();
             });
 
 
@@ -135,8 +165,6 @@ class PengaduanController extends Controller
         } catch (\Exception $e) {
             return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
         }
-
-
     }
 
     public function StorePengaduan(Request $request){
@@ -154,7 +182,7 @@ class PengaduanController extends Controller
 
             DB::transaction(function () use ($request, $adminCheck) {
                 Pengaduan::create([
-                    'kode_laporan' => $this->generateCode($request->input('lantai')),
+                    'kode_laporan' => $this->generateCode(),
                     'indikator_mutu_id' => $request->input('indikator_mutu_id'),
                     'pelapor_id' => $request->input('pelapor_id'),
                     'admin_id' => $adminCheck,
@@ -173,6 +201,82 @@ class PengaduanController extends Controller
 
         } catch (\Exception $e) {
             return response()->json(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+    }
+
+    public function UpdatePengaduan(Request $request, $idPengaduan){
+
+        try {
+            $validator = $this->validatePengaduan($request, $idPengaduan, 'update');
+            if ($validator->fails()) {
+                throw new ValidationException($validator);
+            }
+
+            DB::transaction(function () use ($request, $idPengaduan) {
+                $pengaduanData = Pengaduan::find($idPengaduan);
+            
+                if (!$pengaduanData) {
+                    throw new \Exception('pengaduan not found');
+                }
+            
+                $adminCheck = null;
+                if (Auth::user()->jabatan == 'admin') {
+                    $adminCheck = Auth::user()->id;
+                }
+            
+                $dataToUpdate = $request->all();
+                if ($adminCheck !== null) {
+                    $dataToUpdate['admin_id'] = $adminCheck;
+                }
+            
+                $pengaduanData->update($dataToUpdate);
+            });
+
+            return response()->json(['status' => 'success', 'message' => 'pengaduan updated successfully', 'data' => $request->all()], 200);
+
+        } catch (ValidationException $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->errors(), 'data' => null], 400);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'data' => null], 500);
+        }
+    }
+
+    public function UpdateStatusPengaduan(Request $request, $idPengaduan){
+
+        try {
+
+            $pengaduan = Pengaduan::find($idPengaduan);
+            if (!$pengaduan) {
+                throw new \Exception('Pengaduan not found');
+            }
+    
+            $pesan = [
+                'status_pelaporan.required' => 'Status pelaporan wajib dipilih.',
+                'status_pelaporan.max' => 'Status pelaporan max 50 karakter',
+            ];
+    
+            $validator = Validator::make($request->all(), [
+                'status_pelaporan' => 'required|max:50',
+            ], $pesan);
+    
+            if ($validator->fails()) {
+                return response()->json(["status" => "fail", "message" => $validator->errors(), "data" => null], 400);
+            }
+
+          
+            DB::transaction(function () use ($request, $pengaduan) {
+                
+                $pengaduan->fill($request->all());
+                $pengaduan->save();
+                
+            });
+
+            return response()->json(['status' => 'success', 'message' => 'status pelaporan updated successfully', 'data' => $request->all()], 200);
+
+        } catch (ValidationException $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->errors(), 'data' => null], 400);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'data' => null], 500);
         }
 
     }
@@ -232,10 +336,13 @@ class PengaduanController extends Controller
         return $validator;
     }
 
-    private function generateCode($lantai) {
+    private function generateCode() {
         $kode = date('YmdHis');
-        $lantaiPadded = str_pad($lantai, 2, '0', STR_PAD_LEFT);
-    
-        return $kode . '-' . $lantaiPadded;
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $code = '';
+        for ($i = 0; $i < 4; $i++) {
+            $code .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        return $kode.'-'.$code;
     }
 }
