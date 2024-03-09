@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Ramsey\Uuid\Uuid;
 
 return new class extends Migration
 {
@@ -14,13 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('a_kategori_pengaduan', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('nama');
+        Schema::create('a_pivot_worker_pengaduan', function (Blueprint $table) {
+            $table->id();
+            $table->uuid('user_id');
+            $table->uuid('pengaduan_id');
+            $table->date('tanggal_assesment')->comment('tanggal kapan assesment diberikan');
+            $table->text('keterangan')->comment('keterangan bebas jika ada');
             $table->timestamps();
             
             $table->softDeletes(); // deleted_at
-        }); 
+        });
     }
 
     /**
@@ -30,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('a_kategori_pengaduan');
+        Schema::dropIfExists('a_pivot_worker_pengaduan');
     }
 };

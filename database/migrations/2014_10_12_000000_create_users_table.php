@@ -23,8 +23,10 @@ return new class extends Migration
             $table->string('jabatan');
             $table->string('status');
             $table->string('divisi');
-            $table->rememberToken();
+            $table->rememberToken(); 
             $table->timestamps();
+            
+            $table->softDeletes(); // deleted_at
         });
     }
 

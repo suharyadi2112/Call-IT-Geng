@@ -16,6 +16,9 @@ use App\Http\Controllers\Dashboard\PengaduanController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/loginx', function () { 
+    return response()->json('Authentication failed:'); 
+})->name('loginX');
 
 Route::get('login', [LoginController::class, 'login'])->name('login.index');
 
@@ -26,6 +29,11 @@ Route::prefix('dashboard')->group(function () {
     Route::get('pengaduan', [PengaduanController::class, 'index'])->name('pengaduan.index');
     
     Route::get('kategori', [PengaduanController::class, 'kategori'])->name('pengaduan.kategori');
+
+    //indikatormutu
+    Route::get('indikatormutu', [IndikatorMutuController::class, 'index'])->name('indikatormutu.index');
+    Route::get('indikatormutu/tambah', [IndikatorMutuController::class, 'create'])->name('indikatormutu.create');
+    Route::post('indikatormutu/store', [IndikatorMutuController::class, 'store'])->name('indikatormutu.store');
 });
 
 
@@ -33,4 +41,3 @@ Route::prefix('dashboard')->group(function () {
 Route::get('/', function () {
     return view('welcome');
 });
-
