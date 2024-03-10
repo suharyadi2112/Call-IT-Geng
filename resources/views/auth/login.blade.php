@@ -12,7 +12,10 @@
 <body class="login">
 	<div class="wrapper wrapper-login">
 		<div class="container container-login">
-			<h3 class="text-center">Call IT</h3>
+            
+			<h3 class="text-center">
+                <img src="{{ asset('/assets/img/logologin.png') }}" alt="" style="width: 70%">
+            </h3>
 			<div class="login-form">
                 <form method="post" action="{{ route('login.index') }}" id="login">
                     <div class="form-group form-floating-label">
@@ -27,7 +30,7 @@
                         </div>
                     </div>
                     <div class="form-action mb-3">
-                        <button type="submit" class="btn btn-primary btn-rounded btn-login">Sign In</button>
+                        <button type="submit" class="btn btn-rounded btn-login" style="background-color: #00BF63;color:white">Sign In</button>
                     </div>
                 </form>
 			</div>
