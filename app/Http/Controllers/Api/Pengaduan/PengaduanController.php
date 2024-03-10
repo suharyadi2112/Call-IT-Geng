@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use DataTables;
 
 //model
 use App\Models\Pengaduan;
 use App\Models\User;
+use App\Models\DetailIPengaduan;
 use Illuminate\Support\Facades\Auth;
 
 class PengaduanController extends Controller
@@ -168,7 +171,7 @@ class PengaduanController extends Controller
     }
 
     public function StorePengaduan(Request $request){
-        
+
         $validator = $this->validatePengaduan($request, null, 'insert');  
         if ($validator->fails()) {
             return response()->json(["status"=> "fail", "message"=>  $validator->errors(),"data" => null], 400);
@@ -180,9 +183,13 @@ class PengaduanController extends Controller
                 $adminCheck = Auth::user()->id;
             }
 
-            DB::transaction(function () use ($request, $adminCheck) {
-                Pengaduan::create([
-                    'kode_laporan' => $this->generateCode(),
+            $dataPengaduan = null;
+            $fileUploaded = false; //flag file
+            $paths = [];
+            DB::transaction(function () use ($request, $adminCheck, &$dataPengaduan, &$fileUploaded, &$paths) { //& ubah nilai didalam closure 
+                $kodeGenerate = $this->generateCode();
+                $pengaduan = Pengaduan::create([
+                    'kode_laporan' => $kodeGenerate,
                     'indikator_mutu_id' => $request->input('indikator_mutu_id'),
                     'pelapor_id' => $request->input('pelapor_id'),
                     'admin_id' => $adminCheck,
@@ -196,10 +203,40 @@ class PengaduanController extends Controller
                     'status_pelaporan' => 'waiting',
                     'tanggal_pelaporan' => date('Y-m-d H:i:s'),
                 ]);
+
+                if ($request->file('picture_pre')) { //unggah file
+            
+                    $files = $request->file('picture_pre');
+                    $names = [];
+                    foreach ($files as $file) {
+                        $names[] = Str::random(5) . $kodeGenerate . '.' . $file->getClientOriginalExtension();
+                    }
+
+                    foreach ($files as $key => $file) {
+                        $paths[] = $file->storeAs('detail_pengaduan/picture_pre', $names[$key], 'public');
+                      }
+
+                    foreach ($paths as $path) {
+                        DetailIPengaduan::create([
+                            'pengaduan_id' => $pengaduan->id,
+                            'picture_pre' => $path,
+                        ]);
+                    }
+                    $fileUploaded = true;
+                }
+                
+                $dataPengaduan = $this->getPengaduanAfterCreate($pengaduan->id);
             });
-            return response()->json(["status"=> "success","message"=> "Pengaduan successfully stored", "data" => $request->all()], 200);
+
+            return response()->json(["status"=> "success","message"=> "Pengaduan successfully stored", "data" => $dataPengaduan], 200);
 
         } catch (\Exception $e) {
+            // Hapus file jika gagal proses transaksi
+            if (!empty($paths)) {
+                foreach ($paths as $path) {
+                    Storage::delete($path);
+                }
+            }
             return response()->json(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
         }
     }
@@ -312,6 +349,13 @@ class PengaduanController extends Controller
             'nomor_handphone.max' => 'Nomor handphone max 50 karakter.',
             
             'tanggal_pelaporan.date' => 'Tanggal pelaporan tidak bertipe tanggal(date).',
+            
+            'tanggal_pelaporan.date' => 'Tanggal pelaporan tidak bertipe tanggal(date).',
+
+            'picture_pre.file' => 'Picture Pre harus berupa file',
+            'picture_pre.mimes' => 'Picture Pre harus jpg,jpeg,png',
+            'picture_pre.required' => 'Picture Pre wajib diisi',
+            'picture_pre.max' => 'Picture Pre maksimal 5 mb',
         ];
         $validator = Validator::make($request->all(), [
             'indikator_mutu_id' => 'required|max:100',
@@ -331,6 +375,9 @@ class PengaduanController extends Controller
             'prioritas' => 'required|max:100',
             'nomor_handphone' => 'max:20',
             'tanggal_pelaporan' => 'date',
+
+            'picture_pre' => 'array',
+            'picture_pre.*' => 'required|file|mimes:jpg,jpeg,png|max:5048',
         ], $messages);
      
         return $validator;
@@ -344,5 +391,14 @@ class PengaduanController extends Controller
             $code .= $characters[rand(0, strlen($characters) - 1)];
         }
         return $kode.'-'.$code;
+    }
+
+    private function getPengaduanAfterCreate($idPengaduan){
+        
+        $dataPengaduan = Pengaduan::query()
+        ->with('detailpengaduan', 'kategoripengaduan','indikatormutu','pelapor', 'detailpengaduan')
+        ->where('a_pengaduan.id', $idPengaduan)->get();
+
+        return $dataPengaduan;
     }
 }

@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('a_detail_pengaduan', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('pengaduan_id');
-            $table->text('picture_pre');
-            $table->text('picture_post');
+            $table->uuid('pengaduan_id'); 
+            $table->text('picture_pre')->nullable();
+            $table->text('picture_post')->nullable();
             $table->timestamps();
         });
     }
