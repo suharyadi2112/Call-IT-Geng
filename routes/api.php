@@ -52,6 +52,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('update_pengaduan/{id}', [PengaduanController::class, 'UpdatePengaduan']);
     Route::put('update_status_pengaduan/{id}', [PengaduanController::class, 'UpdateStatusPengaduan']);
     Route::put('assign_worker_to_pengaduan/{id}', [PengaduanController::class, 'AssignWorkerToPengaduan']);
+    Route::post('store_picture_post_pengaduan/{id}', [PengaduanController::class, 'StorePicturePost']);
 
 
     //kategori pengaduan 

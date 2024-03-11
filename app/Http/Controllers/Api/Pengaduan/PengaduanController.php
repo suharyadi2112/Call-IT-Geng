@@ -184,9 +184,8 @@ class PengaduanController extends Controller
             }
 
             $dataPengaduan = null;
-            $fileUploaded = false; //flag file
             $paths = [];
-            DB::transaction(function () use ($request, $adminCheck, &$dataPengaduan, &$fileUploaded, &$paths) { //& ubah nilai didalam closure 
+            DB::transaction(function () use ($request, $adminCheck, &$dataPengaduan, &$paths) { //& ubah nilai didalam closure 
                 $kodeGenerate = $this->generateCode();
                 $pengaduan = Pengaduan::create([
                     'kode_laporan' => $kodeGenerate,
@@ -209,7 +208,7 @@ class PengaduanController extends Controller
                     $files = $request->file('picture_pre');
                     $names = [];
                     foreach ($files as $file) {
-                        $names[] = Str::random(5) . $kodeGenerate . '.' . $file->getClientOriginalExtension();
+                        $names[] = Str::random(5) . date('YmdHis') . '.' . $file->getClientOriginalExtension();
                     }
 
                     foreach ($files as $key => $file) {
@@ -219,10 +218,10 @@ class PengaduanController extends Controller
                     foreach ($paths as $path) {
                         DetailIPengaduan::create([
                             'pengaduan_id' => $pengaduan->id,
-                            'picture_pre' => $path,
+                            'picture' => $path,
+                            'tipe' => 'pre'
                         ]);
                     }
-                    $fileUploaded = true;
                 }
                 
                 $dataPengaduan = $this->getPengaduanAfterCreate($pengaduan->id);
@@ -231,12 +230,6 @@ class PengaduanController extends Controller
             return response()->json(["status"=> "success","message"=> "Pengaduan successfully stored", "data" => $dataPengaduan], 200);
 
         } catch (\Exception $e) {
-            // Hapus file jika gagal proses transaksi
-            if (!empty($paths)) {
-                foreach ($paths as $path) {
-                    Storage::delete($path);
-                }
-            }
             return response()->json(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
         }
     }
@@ -318,6 +311,67 @@ class PengaduanController extends Controller
 
     }
 
+    public function StorePicturePost(Request $request, $idPengaduan){// photo setelah pengaduan diselesaikan
+
+        try {
+            $pengaduan = Pengaduan::find($idPengaduan);
+
+            if (!$pengaduan) {
+                throw new \Exception('Pengaduan not found');
+            }
+
+            $pesan = [
+                'picture_post.*.file' => 'Picture Pre harus berupa file',
+                'picture_post.*.mimes' => 'Picture Pre harus jpg,jpeg,png',
+                'picture_post.*.required' => 'Picture Pre wajib diisi',
+                'picture_post.*.max' => 'Picture Pre maksimal 5 mb',
+            ];
+    
+            $validator = Validator::make($request->all(), [
+                'picture_post.*' => 'required|file|mimes:jpg,jpeg,png|max:5048',
+                'picture_post' => 'array',
+            ], $pesan);
+    
+            if ($validator->fails()) {
+                return response()->json(["status" => "fail", "message" => $validator->errors(), "data" => null], 400);
+            }
+
+            $dataPengaduan = null;
+            $paths = [];
+            DB::transaction(function () use ($request, $pengaduan, &$dataPengaduan, &$paths) {
+
+                    $files = $request->file('picture_post');
+                    $names = [];
+                    foreach ($files as $file) {
+                        $names[] = Str::random(5) . date('YmdHis') . '.' . $file->getClientOriginalExtension();
+                    }
+
+                    foreach ($files as $key => $file) {
+                        $paths[] = $file->storeAs('detail_pengaduan/picture_post', $names[$key], 'public');
+                    }
+
+                    foreach ($paths as $path) {
+                        DetailIPengaduan::create([
+                            'pengaduan_id' => $pengaduan->id,
+                            'picture' => $path,
+                            'tipe' => 'post'
+                        ]);
+                    }
+                
+                
+                $dataPengaduan = $this->getPengaduanAfterCreate($pengaduan->id);
+            });
+
+            return response()->json(['status' => 'success', 'message' => 'picture post pelaporan stored successfully', 'data' => $dataPengaduan], 200);
+
+        } catch (ValidationException $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->errors(), 'data' => null], 400);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'data' => null], 500);
+        }
+
+    }
+
     private function validatePengaduan(Request $request, $id, $action = 'insert')
     {   
 
@@ -352,10 +406,10 @@ class PengaduanController extends Controller
             
             'tanggal_pelaporan.date' => 'Tanggal pelaporan tidak bertipe tanggal(date).',
 
-            'picture_pre.file' => 'Picture Pre harus berupa file',
-            'picture_pre.mimes' => 'Picture Pre harus jpg,jpeg,png',
-            'picture_pre.required' => 'Picture Pre wajib diisi',
-            'picture_pre.max' => 'Picture Pre maksimal 5 mb',
+            'picture_pre.*.file' => 'Picture Pre harus berupa file',
+            'picture_pre.*.mimes' => 'Picture Pre harus jpg,jpeg,png',
+            'picture_pre.*.required' => 'Picture Pre wajib diisi',
+            'picture_pre.*.max' => 'Picture Pre maksimal 5 mb',
         ];
         $validator = Validator::make($request->all(), [
             'indikator_mutu_id' => 'required|max:100',
@@ -383,6 +437,15 @@ class PengaduanController extends Controller
         return $validator;
     }
 
+    private function getPengaduanAfterCreate($idPengaduan){
+        
+        $dataPengaduan = Pengaduan::query()
+        ->with('detailpengaduan', 'kategoripengaduan','indikatormutu','pelapor', 'detailpengaduan')
+        ->where('a_pengaduan.id', $idPengaduan)->get();
+
+        return $dataPengaduan;
+    }
+    
     private function generateCode() {
         $kode = date('YmdHis');
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -391,14 +454,5 @@ class PengaduanController extends Controller
             $code .= $characters[rand(0, strlen($characters) - 1)];
         }
         return $kode.'-'.$code;
-    }
-
-    private function getPengaduanAfterCreate($idPengaduan){
-        
-        $dataPengaduan = Pengaduan::query()
-        ->with('detailpengaduan', 'kategoripengaduan','indikatormutu','pelapor', 'detailpengaduan')
-        ->where('a_pengaduan.id', $idPengaduan)->get();
-
-        return $dataPengaduan;
     }
 }
