@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\PengaduanController;
+use App\Http\Controllers\Controller;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,9 @@ use App\Http\Controllers\Dashboard\PengaduanController;
 Route::get('/loginx', function () { 
     return response()->json('Authentication failed:'); 
 })->name('loginX');
+
+Route::get('pusher-test', [Controller::class, 'TangkapEvent']);
+
 
 Route::get('login', [LoginController::class, 'login'])->name('login.index');
 

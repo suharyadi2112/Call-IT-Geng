@@ -21,8 +21,8 @@ class DetailIPengaduan extends Model
     protected $fillable = [
         'id',
         'pengaduan_id',
-        'picture_pre',
-        'picture_post',
+        'picture',
+        'tipe',
         'created_at',
         'updated_at',
         
