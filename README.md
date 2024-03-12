@@ -1,6 +1,6 @@
 
-![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png)
 
+![WhatsApp Image 2024-03-06 at 10 46 57_f16c5367](https://github.com/suharyadi2112/Call-IT-Geng/assets/105489642/5cb53bf5-af97-4495-ac47-86855932cb58)
 
 ## Technology stack"
 
