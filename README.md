@@ -1,64 +1,115 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![WhatsApp Image 2024-03-06 at 10 46 56_0fee417b](https://github.com/suharyadi2112/Call-IT-Geng/assets/105489642/763cc34d-95cc-4f70-b2c1-9ae8596115ea)
 
-## About Laravel
+## Technology stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as cek:
+# Languages
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+[![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/manual/en/index.php)
+[![Javascript](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/JavaScript_basics?retiredLocale=id)
+[![Html5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
+[![Css3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+# Framework/Library
 
-## Learning Laravel
+[![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/)
+[![Jquery](https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white)](https://jquery.com/)
+[![Bootstrap](https://img.shields.io/badge/bootstrap-%23563D7C.svg?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+# Databases
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+[![MySql](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+# Other
 
-### Premium Partners
+[![Sentry](https://img.shields.io/badge/Sentry-black?style=for-the-badge&logo=Sentry&logoColor=#362D59)](https://sentry.io/about/)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
 
-## Contributing
+- Pusher https://pusher.com
+- Yajra Box https://yajrabox.com/
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Call IT Geng
 
-## Security Vulnerabilities
+Aplikasi Call IT adalah sebuah aplikasi yang didesain untuk memfasilitasi pelaporan dan penanganan permasalahan seputar teknologi informasi (IT) di ruangan atau lokasi lain. Tujuan utama dari aplikasi ini adalah memungkinkan pengguna untuk dengan mudah melaporkan masalah IT yang mereka alami, seperti gangguan jaringan, masalah perangkat keras atau perangkat lunak, kehilangan koneksi internet, dan sebagainya.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Pelaporan Masalah:
 
-## License
+Pengguna dapat melaporkan masalah IT dengan detail.
+Informasi tambahan seperti lokasi dan waktu dapat disertakan.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Kategori Masalah:
+
+Pengguna dapat memilih kategori masalah yang sesuai.
+Kategori termasuk jaringan, perangkat keras, perangkat lunak, dll.
+Prioritas:
+
+Pengguna dapat menetapkan tingkat prioritas untuk setiap masalah.
+
+Notifikasi:
+
+Tim IT menerima notifikasi segera setelah laporan masalah dilakukan.
+Riwayat Laporan:
+
+Pengguna dapat melihat riwayat laporan yang mereka buat beserta statusnya.
+
+Manajemen Tugas:
+
+Tim IT dapat mengelola tugas penanganan masalah dengan menetapkan tugas kepada anggota tim dan melacak kemajuannya.
+
+Analisis:
+
+Aplikasi melakukan analisis tren masalah dari waktu ke waktu untuk membantu identifikasi area yang memerlukan perbaikan dalam infrastruktur IT.
+
+
+## Installation
+
+Install dependensi Call It Geng
+
+```bash
+  composer install
+```
+Generate Key
+```bash
+  php artisan key:generate
+```
+Migrasi Database
+```bash
+  php artisan migrate
+```
+Jalankan Aplikasi
+```bash
+  php artisan serve
+```
+    
+## API Reference
+
+#### All api on postman documenter
+
+```http
+  https://documenter.getpostman.com/view/8929588/2sA2xe4uP3
+```
+
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`PUSHER_APP_ID`
+
+`PUSHER_APP_KEY`
+
+`PUSHER_APP_SECRET`
+
+`PUSHER_APP_CLUSTER`
+
+
+
+## Used By
+
+This project is used by the following companies:
+
+- RSUD Raja Ahmad Tabib Tanjung Pinang Kepulauan Riau
+
