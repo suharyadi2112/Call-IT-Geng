@@ -1,8 +1,9 @@
 
 
 ![WhatsApp Image 2024-03-06 at 10 46 57_f16c5367](https://github.com/suharyadi2112/Call-IT-Geng/assets/105489642/5cb53bf5-af97-4495-ac47-86855932cb58)
+![WhatsApp Image 2024-03-06 at 10 46 56_0fee417b](https://github.com/suharyadi2112/Call-IT-Geng/assets/105489642/763cc34d-95cc-4f70-b2c1-9ae8596115ea)
 
-## Technology stack"
+## Technology stack
 
 # Languages
 
