@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Pengaduan;
 
 use App\Http\Controllers\Controller;
+use App\Events\LaporPengaduan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -10,6 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use DataTables;
+
 
 //model
 use App\Models\Pengaduan;
@@ -223,6 +225,9 @@ class PengaduanController extends Controller
                         ]);
                     }
                 }
+
+                //Notif
+                event(new LaporPengaduan('Laporan Pengaduan Baru Dengan Kode Pengaduan '. $kodeGenerate. ' Lantai '. $request->input('lantai')));
                 
                 $dataPengaduan = $this->getPengaduanAfterCreate($pengaduan->id);
             });
