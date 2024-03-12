@@ -172,6 +172,29 @@ class PengaduanController extends Controller
         }
     }
 
+    public function DelWorkerFromPengaduan($idPengaduan, $idWorker){
+        
+        try {
+            $pengaduan = Pengaduan::find($idPengaduan);
+            if (!$pengaduan) {
+                throw new \Exception('Pengaduan not found');
+            }
+
+            $workerExists = $pengaduan->workers()->where('user_id', $idWorker)->exists();
+            if (!$workerExists) {
+                throw new \Exception('Worker di pengajuan ini tidak ada');
+            }
+
+            $pengaduan->workers()->detach($idWorker); // usir worker dari pengaduan #lu tu ngk diajak
+
+            return response()->json(["status"=> "success","message"=> "Worker has been deleted #lu ngk diajak", "data" => null], 200);
+        } catch (\Exception $e) {
+            return response()->json(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+
+
+    }
+
     public function StorePengaduan(Request $request){
 
         $validator = $this->validatePengaduan($request, null, 'insert');  
