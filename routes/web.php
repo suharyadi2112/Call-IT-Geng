@@ -31,6 +31,9 @@ Route::prefix('dashboard')->group(function () {
     Route::get('profil', [ProfileController::class, 'index'])->name('profil.index');
 
     Route::get('pengaduan', [PengaduanController::class, 'index'])->name('pengaduan.index');
+    Route::get('pengaduan/buat', function () {
+        return view('dashboard.pengaduan.pengaduan_create');
+    })->name('pengaduan.index.create');
     
     Route::get('kategori', [PengaduanController::class, 'kategori'])->name('pengaduan.kategori');
 

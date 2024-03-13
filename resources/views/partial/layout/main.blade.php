@@ -1,31 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	@include('partial.asset.head')
+	@include('partial.asset.script')
 	<script>
-		fetch(window.location.origin + '/api/check_valid_token', {
-            method: 'GET',
-            headers: {
-                'Authorization': localStorage.getItem('access_token')
-            }
-        })
-        .then(response => {
-			if (response.ok) {
-				return response.json();
-			}
-			throw new Error('Network response was not ok.');
-		})
-		.then(data => {
-			if(!data.status =='success'){
-                
-                window.location.href = "{{ route('login.index') }}";
-
-			}
-		})
+        if(!localStorage.getItem('access_token')){
+            window.location.href = "{{ route('login.index') }}";
+		}
     </script>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title> @yield('title') - {{ config('app.name') }}</title>
-	@include('partial.asset.head')
-	@include('partial.asset.script')
+	
     @stack('style')
 </head>
 <body data-background-color="{{ config('app.themes.color.background') }}">
