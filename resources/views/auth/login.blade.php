@@ -2,9 +2,27 @@
 <html lang="en">
 <head>
     <script>
-        if(localStorage.getItem('access_token')){
-            window.location.href = "{{ route('dashboard') }}";
-        }
+        fetch(window.location.origin + '/api/check_valid_token', {
+            method: 'GET',
+            headers: {
+                'Authorization': localStorage.getItem('access_token')
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            console.log(data);
+            if (data.status === 'success') {
+                window.location.href = "{{ route('dashboard') }}";
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
     </script>
     <title>Login - {{ config('app.name') }}</title>
 	@include('partial.asset.head')
