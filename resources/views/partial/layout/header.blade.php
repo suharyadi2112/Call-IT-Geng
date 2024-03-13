@@ -104,7 +104,6 @@
             </ul>
         </div>
     </nav>
-    <!-- End Navbar -->
 </div>
 
 @push('script')
@@ -112,6 +111,10 @@
         function logout(){
             if (confirm("Apakah anda yakin ingin keluar?") == true) {
                 localStorage.clear();
+                $.ajax({
+                    url: window.location.origin +"/api/logout",
+                    type: 'GET',
+                });
                 window.location.href = "{{ route('login.index') }}";
             }
         }

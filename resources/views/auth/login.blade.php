@@ -39,13 +39,12 @@
     @include('partial.asset.script')
     <script src="{{ asset('assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
     <script>
-        
             $(document).ready(function() {
                 $('#login').submit(function(e) {
                     e.preventDefault();
                     var token = $('meta[name="csrf-token"]').attr('content');
                     var url = window.location.origin +"/api/login";   
-                    $.ajax( {
+                    $.ajax({
                         method:'POST',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -63,21 +62,9 @@
                             $('#password').prop('disabled', true);
                         },
                         success: function(data) {
-                            localStorage.setItem('access_token', data.data.access_token);
-                            localStorage.setItem('token_type', data.data.token_type);
-
-                            $.notify({
-                                icon: 'flaticon-success',
-                                title: 'Success',
-                                message: data.message
-                            },{
-                                type: 'success',
-                                placement: {
-                                    from: "top",
-                                    align: "right"
-                                },
-                                time: 500,
-                            });
+                            response = data;
+                            localStorage.setItem('access_token', response.data.access_token);
+                            showNotification('flaticon-success', 'Success', response.message, 'success');
                             setTimeout(function() {
                                 window.location.href = "{{ route('dashboard') }}";
                             }, 450);
@@ -90,33 +77,10 @@
                                     errors += value+'<br>';
                                 });
                                 console.log(errors);
-                                $.notify({
-                                    icon: 'flaticon-error',
-                                    title: 'Error',
-                                    message: errors
-                                },{         
-                                    type: 'danger',
-                                    placement: {
-                                        from: "top",
-                                        align: "right"
-                                    },
-                                    time: 500,
-                                });
+                                showNotification('flaticon-error', 'Error', errors, 'danger');
 
                             }else{
-                                $.notify({
-                                    icon: 'flaticon-error',
-                                    title: 'Error',
-                                    message: error
-                                    },{
-                                    
-                                    type: 'danger',
-                                    placement: {
-                                        from: "top",
-                                        align: "right"
-                                    },
-                                    time: 500,
-                                });
+                                showNotification('flaticon-error', 'Error', error, 'danger');
                             }
                         },
                         complete: function(data) {
@@ -125,10 +89,23 @@
                             $('#password').prop('disabled', false);
                         }
                     })
-
                 });
             });
 
+            function showNotification(icon, title, message, type) {
+                $.notify({
+                    icon: icon,
+                    title: title,
+                    message: message
+                },{
+                    type: type,
+                    placement: {
+                        from: "top",
+                        align: "right"
+                    },
+                    time: 500,
+                });
+            }
     </script>
 </body>
 </html>

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	@include('partial.asset.head')
+	@include('partial.asset.script')
 	<script>
         if(!localStorage.getItem('access_token')){
             window.location.href = "{{ route('login.index') }}";
@@ -8,7 +10,7 @@
     </script>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title> @yield('title') - {{ config('app.name') }}</title>
-	@include('partial.asset.head')
+	
     @stack('style')
 </head>
 <body data-background-color="{{ config('app.themes.color.background') }}">
@@ -22,7 +24,7 @@
 			@include('partial.layout.footer')
 		</div>
 	</div>
-	@include('partial.asset.script')
+	
     @stack('script')
 </body>
 </html>
