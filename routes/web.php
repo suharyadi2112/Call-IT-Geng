@@ -21,12 +21,16 @@ Route::get('/loginx', function () {
     return response()->json('Authentication failed:'); 
 })->name('loginX');
 
-Route::get('pusher-test', [Controller::class, 'TangkapEvent']);
+
+// Routes Authentication
+Route::get('login', [LoginController::class, 'login'])->name('login');
+Route::post('login', [LoginController::class, 'postLogin'])->name('login.post');
+Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 
-Route::get('login', [LoginController::class, 'login'])->name('login.index');
 
-Route::prefix('dashboard')->group(function () {
+// Routes Dashboard
+Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('profil', [ProfileController::class, 'index'])->name('profil.index');
 
@@ -46,5 +50,8 @@ Route::prefix('dashboard')->group(function () {
 
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    return redirect('/login');
 });
+
+Route::get('pusher-test', [Controller::class, 'TangkapEvent']);

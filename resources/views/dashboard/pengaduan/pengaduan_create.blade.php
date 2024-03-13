@@ -4,12 +4,20 @@
 <div class="page-inner">
     <h4 class="page-title">Buat Pengaduan</h4>
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">Form Pengaduan</div>
                 </div>
                 <div class="card-body">
+                    <div class="form-group">
+                        <label for="name">Nama Pelapor</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Nama Pelapor">
+                    </div>
+                    <div class="form-group">
+                        <label for="nomor_handphone">Nomor Telepon</label>
+                        <input type="text" class="form-control" id="nomor nomor_handphone" name="nomor_handphone" placeholder="Nama Pelapor">
+                    </div>
                     <div class="form-group">
                         <label for="lokasi">Lokasi</label>
                         <input type="text" class="form-control" id="lokasi" placeholder="Lokasi">
@@ -26,65 +34,42 @@
                         <label for="dekskripsi_pelaporan">Deskripsi</label>
                         <textarea id="dekskripsi_pelaporan" name="dekskripsi_pelaporan" class="form-control" rows="5" placeholder="Judul Pengaduan"></textarea>
                     </div>
-                </div>
-                <div class="card-action">
-                    <button class="btn btn-success">Submit</button>
-                    <button class="btn btn-danger">Cancel</button>
+                    <div class="form-group">
+                        <label for="dekskripsi_pelaporan">Deskripsi</label>
+                        <textarea id="dekskripsi_pelaporan" name="dekskripsi_pelaporan" class="form-control" rows="5" placeholder="Judul Pengaduan"></textarea>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">Pilihan</div>
                 </div>
                 <div class="card-body">
-                    <label class="mb-3"><b>Form Group Default</b></label>
-                    <div class="form-group form-group-default">
-                        <label>Input</label>
-                        <input id="Name" type="text" class="form-control" placeholder="Fill Name">
-                    </div>
-                    <div class="form-group form-group-default">
-                        <label>Select</label>
-                        <select class="form-control" id="formGroupDefaultSelect">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                    
+                    <div class="form-group">
+                        <label>Kategori</label>
+                        <select class="form-control" id="prioritas" name="prioritas">
+                            <option value="">-- Pilih Kategori --</option>
+                            <option value="Rendah">Jaringan</option>
+                            <option value="Sedang">SIMRS</option>
+                            <option value="Tinggi">Hardware</option>
                         </select>
                     </div>
-                    <label class="mt-3 mb-3"><b>Form Floating Label</b></label>
-                    <div class="form-group form-floating-label">
-                        <input id="inputFloatingLabel" type="text" class="form-control input-border-bottom" required>
-                        <label for="inputFloatingLabel" class="placeholder">Input</label>
-                    </div>
-                    <div class="form-group form-floating-label">
-                        <select class="form-control input-border-bottom" id="selectFloatingLabel" required>
-                            <option value="">&nbsp;</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                    <div class="form-group">
+                        <label>Prioritas</label>
+                        <select class="form-control" id="prioritas" name="prioritas">
+                            <option value="">-- Pilih Prioritas --</option>
+                            <option value="Rendah">Rendah</option>
+                            <option value="Sedang">Sedang</option>
+                            <option value="Tinggi">Tinggi</option>
                         </select>
-                        <label for="selectFloatingLabel" class="placeholder">Select</label>
                     </div>
-                    <div class="form-group form-floating-label">
-                        <input id="inputFloatingLabel2" type="text" class="form-control input-solid" required>
-                        <label for="inputFloatingLabel2" class="placeholder">Input</label>
-                    </div>
-                    <div class="form-group form-floating-label">
-                        <select class="form-control input-solid" id="selectFloatingLabel2" required>
-                            <option value="">&nbsp;</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                        </select>
-                        <label for="selectFloatingLabel2" class="placeholder">Select</label>
-                    </div>
+                </div>
+                <div class="card-action">
+                    <a href="{{ route('pengaduan.index') }}" class="btn btn-sm btn-secondary">Kembali</a>
+                    <button class="btn btn-sm btn-success">Simpan</button>
                 </div>
             </div>
         </div>

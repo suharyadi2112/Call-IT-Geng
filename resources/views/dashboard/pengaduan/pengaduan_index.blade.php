@@ -10,7 +10,7 @@
                     <div class="d-flex align-items-center">
                         <h4 class="card-title">Daftar Pengaduan</h4>
                         <div class="ml-auto">
-                            <a href="" class="btn btn-sm btn-primary">
+                            <a href="{{ route('pengaduan.index.create') }}" class="btn btn-sm btn-primary">
                                 <i class="fa fa-plus"></i> Tambah Pengaduan
                             </a>
                         </div>
