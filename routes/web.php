@@ -6,6 +6,7 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\PengaduanController;
 use App\Http\Controllers\Controller;
+use App\Models\Pengaduan;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,9 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     })->name('pengaduan.index.create');
     
     Route::get('kategori', [PengaduanController::class, 'kategori'])->name('pengaduan.kategori');
+    Route::post('kategori/store', [PengaduanController::class, 'storekategori'])->name('pengaduan.kategori.store');
+    Route::get('kategori/hapus/{id}', [PengaduanController::class, 'destroykategori'])->name('pengaduan.kategori.destroy');
+    
 
     // //indikatormutu
     Route::get('indikatormutu', [IndikatorMutuController::class, 'index'])->name('indikatormutu.index');
