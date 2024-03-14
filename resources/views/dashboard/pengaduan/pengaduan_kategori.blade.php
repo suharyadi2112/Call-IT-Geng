@@ -1,269 +1,201 @@
 @extends('partial.layout.main')
 @section('title', 'Kategori')
 @section('content')
-<div class="page-inner">
-	<h4 class="page-title">Kategori</h4>
-	<div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex align-items-center">
-                        <h4 class="card-title">Daftar Kategori</h4>
-                        <div class="ml-auto">
-                            <a href="" class="btn btn-sm btn-primary">
-                                <i class="fa fa-plus"></i> Tambah Kategori
-                            </a>
+    <div class="page-inner">
+        <h4 class="page-title">Kategori</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <h4 class="card-title">Daftar Kategori</h4>
+                            <div class="ml-auto">
+                                <button type="button" class="btn btn-sm btn-success" id="alert_demo_5">
+                                    <i class="fa fa-plus"></i> Tambah Kategori
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="basic-datatables" class="display table table-striped table-hover" >
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
-                                    <th>Age</th>
-                                    <th>Start date</th>
-                                    <th>Salary</th>
-                                </tr>
-                            </thead>
-                            <tfoot>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
-                                    <th>Age</th>
-                                    <th>Start date</th>
-                                    <th>Salary</th>
-                                </tr>
-                            </tfoot>
-                            <tbody>
-                                <tr>
-                                    <td>Tiger Nixon</td>
-                                    <td>System Architect</td>
-                                    <td>Edinburgh</td>
-                                    <td>61</td>
-                                    <td>2011/04/25</td>
-                                    <td>$320,800</td>
-                                </tr>
-                                <tr>
-                                    <td>Garrett Winters</td>
-                                    <td>Accountant</td>
-                                    <td>Tokyo</td>
-                                    <td>63</td>
-                                    <td>2011/07/25</td>
-                                    <td>$170,750</td>
-                                </tr>
-                                <tr>
-                                    <td>Ashton Cox</td>
-                                    <td>Junior Technical Author</td>
-                                    <td>San Francisco</td>
-                                    <td>66</td>
-                                    <td>2009/01/12</td>
-                                    <td>$86,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Cedric Kelly</td>
-                                    <td>Senior Javascript Developer</td>
-                                    <td>Edinburgh</td>
-                                    <td>22</td>
-                                    <td>2012/03/29</td>
-                                    <td>$433,060</td>
-                                </tr>
-                                <tr>
-                                    <td>Airi Satou</td>
-                                    <td>Accountant</td>
-                                    <td>Tokyo</td>
-                                    <td>33</td>
-                                    <td>2008/11/28</td>
-                                    <td>$162,700</td>
-                                </tr>
-                                <tr>
-                                    <td>Brielle Williamson</td>
-                                    <td>Integration Specialist</td>
-                                    <td>New York</td>
-                                    <td>61</td>
-                                    <td>2012/12/02</td>
-                                    <td>$372,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Herrod Chandler</td>
-                                    <td>Sales Assistant</td>
-                                    <td>San Francisco</td>
-                                    <td>59</td>
-                                    <td>2012/08/06</td>
-                                    <td>$137,500</td>
-                                </tr>
-                                <tr>
-                                    <td>Rhona Davidson</td>
-                                    <td>Integration Specialist</td>
-                                    <td>Tokyo</td>
-                                    <td>55</td>
-                                    <td>2010/10/14</td>
-                                    <td>$327,900</td>
-                                </tr>
-                                <tr>
-                                    <td>Colleen Hurst</td>
-                                    <td>Javascript Developer</td>
-                                    <td>San Francisco</td>
-                                    <td>39</td>
-                                    <td>2009/09/15</td>
-                                    <td>$205,500</td>
-                                </tr>
-                                <tr>
-                                    <td>Sonya Frost</td>
-                                    <td>Software Engineer</td>
-                                    <td>Edinburgh</td>
-                                    <td>23</td>
-                                    <td>2008/12/13</td>
-                                    <td>$103,600</td>
-                                </tr>
-                                <tr>
-                                    <td>Jena Gaines</td>
-                                    <td>Office Manager</td>
-                                    <td>London</td>
-                                    <td>30</td>
-                                    <td>2008/12/19</td>
-                                    <td>$90,560</td>
-                                </tr>
-                                <tr>
-                                    <td>Quinn Flynn</td>
-                                    <td>Support Lead</td>
-                                    <td>Edinburgh</td>
-                                    <td>22</td>
-                                    <td>2013/03/03</td>
-                                    <td>$342,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Charde Marshall</td>
-                                    <td>Regional Director</td>
-                                    <td>San Francisco</td>
-                                    <td>36</td>
-                                    <td>2008/10/16</td>
-                                    <td>$470,600</td>
-                                </tr>
-                                <tr>
-                                    <td>Haley Kennedy</td>
-                                    <td>Senior Marketing Designer</td>
-                                    <td>London</td>
-                                    <td>43</td>
-                                    <td>2012/12/18</td>
-                                    <td>$313,500</td>
-                                </tr>
-                                <tr>
-                                    <td>Tatyana Fitzpatrick</td>
-                                    <td>Regional Director</td>
-                                    <td>London</td>
-                                    <td>19</td>
-                                    <td>2010/03/17</td>
-                                    <td>$385,750</td>
-                                </tr>
-                                <tr>
-                                    <td>Michael Silva</td>
-                                    <td>Marketing Designer</td>
-                                    <td>London</td>
-                                    <td>66</td>
-                                    <td>2012/11/27</td>
-                                    <td>$198,500</td>
-                                </tr>
-                                <tr>
-                                    <td>Paul Byrd</td>
-                                    <td>Chief Financial Officer (CFO)</td>
-                                    <td>New York</td>
-                                    <td>64</td>
-                                    <td>2010/06/09</td>
-                                    <td>$725,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Gloria Little</td>
-                                    <td>Systems Administrator</td>
-                                    <td>New York</td>
-                                    <td>59</td>
-                                    <td>2009/04/10</td>
-                                    <td>$237,500</td>
-                                </tr>
-                                <tr>
-                                    <td>Bradley Greer</td>
-                                    <td>Software Engineer</td>
-                                    <td>London</td>
-                                    <td>41</td>
-                                    <td>2012/10/13</td>
-                                    <td>$132,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Dai Rios</td>
-                                    <td>Personnel Lead</td>
-                                    <td>Edinburgh</td>
-                                    <td>35</td>
-                                    <td>2012/09/26</td>
-                                    <td>$217,500</td>
-                                </tr>
-                                <tr>
-                                    <td>Jenette Caldwell</td>
-                                    <td>Development Lead</td>
-                                    <td>New York</td>
-                                    <td>30</td>
-                                    <td>2011/09/03</td>
-                                    <td>$345,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Yuri Berry</td>
-                                    <td>Chief Marketing Officer (CMO)</td>
-                                    <td>New York</td>
-                                    <td>40</td>
-                                    <td>2009/06/25</td>
-                                    <td>$675,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Caesar Vance</td>
-                                    <td>Pre-Sales Support</td>
-                                    <td>New York</td>
-                                    <td>21</td>
-                                    <td>2011/12/12</td>
-                                    <td>$106,450</td>
-                                </tr>
-                                <tr>
-                                    <td>Doris Wilder</td>
-                                    <td>Sales Assistant</td>
-                                    <td>Sidney</td>
-                                    <td>23</td>
-                                    <td>2010/09/20</td>
-                                    <td>$85,600</td>
-                                </tr>
-                                <tr>
-                                    <td>Angelica Ramos</td>
-                                    <td>Chief Executive Officer (CEO)</td>
-                                    <td>London</td>
-                                    <td>47</td>
-                                    <td>2009/10/09</td>
-                                    <td>$1,200,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Gavin Joyce</td>
-                                    <td>Developer</td>
-                                    <td>Edinburgh</td>
-                                    <td>42</td>
-                                    <td>2010/12/22</td>
-                                    <td>$92,575</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="basic-datatables" class="display table table-striped table-hover"
+                                style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Kategori</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+
 @endsection
 
 @push('script')
-<script src="{{ ('/assets/js/plugin/datatables/datatables.min.js') }}"></script>
-<script >
-    $(document).ready(function() {
-        $('#basic-datatables').DataTable({
+    <script src="{{ '/assets/js/plugin/datatables/datatables.min.js' }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#basic-datatables').DataTable({
+                processing: true,
+                serverSide: true,
+                sortable: false,
+                ajax: {
+                    url: window.location.origin + '/api/get_kategori_pengaduan_yajra',
+                    type: 'GET',
+                    headers: {
+                        "Authorization": '   Bearer ' + localStorage.getItem('access_token')
+                    }
+                },
+                columns: [{
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row, meta) {
+                            return '<a href="/pengaduan_kategori/' + row.id +
+                                '/edit" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Edit</a> <button data-id="' +
+                                row.id +
+                                '" type="button" class="btn btn-danger btn-sm" id="hapus">Hapus</button>';
+                        }
+                    }
+                ],
+            });
+
+
+            $(document).on('click', '#hapus', function(e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                swal({
+                    title: 'Hapus Data',
+                    text: "Apakah kamu yakin ingin menghapus ini",
+                    type: 'warning',
+                    buttons: {
+                        cancel: {
+                            visible: true,
+                            text: 'Batal',
+                            className: 'btn btn-danger'
+                        },
+                        confirm: {
+                            text: 'Hapus',
+                            className: 'btn btn-success'
+                        }
+                    }
+                }).then((Delete) => {
+                    if (Delete) {
+                        $.ajax({
+                            url: window.location.origin + '/api/del_kategori_pengaduan/' +
+                                id,
+                            type: 'DELETE',
+                            headers: {
+                                "Authorization": localStorage.getItem('access_token')
+                            },
+                            success: function(response) {
+                                console.log(response);
+                                swal({
+                                    title: 'Berhasil',
+                                    text: 'Data berhasil dihapus',
+                                    type: 'success',
+                                    timer: '1500'
+                                });
+                                $('#basic-datatables').DataTable().ajax.reload();
+                            },
+                            error: function(error) {
+                                console.log(error);
+                                swal({
+                                    title: 'Gagal',
+                                    text: 'Data gagal dihapus',
+                                    type: 'error',
+                                    timer: '1500'
+                                });
+                            }
+                        });
+                    } else {
+                        swal.close();
+                    }
+                });
+            });
+
+
+
+            // $.ajax({
+            //     url: window.location.origin + '/api/get_kategori_pengaduan_yajra',
+            //     type: 'GET',
+            //     headers: {
+            //         "Authorization": '   Bearer '+localStorage.getItem('access_token')
+            //     }
+            // }).done(function(response) {
+            //     console.log(response);
+            // }).fail(function(error) {
+            //     console.log(error);
+            // });
+
         });
-    });
-</script>
+    </script>
+    <script>
+        //== Class definition
+        var SweetAlert2Demo = function() {
+
+            //== Demos
+            var initDemos = function() {
+                //== Sweetalert Demo 1
+
+
+                $('#alert_demo_5').click(function(e) {
+                    swal({
+                        title: 'Nama Kategori',
+                        html: '<br><input class="form-control" placeholder="Nama Kategori" name="nama" id="input-field">',
+                        content: {
+                            element: "input",
+                            attributes: {
+                                placeholder: "Nama Kategori",
+                                type: "text",
+                                name: "nama",
+                                id: "input-field",
+                                className: "form-control"
+                            },
+                        },
+                        buttons: {
+                            cancel: {
+                                visible: true,
+                                className: 'btn btn-danger'
+                            },
+                            confirm: {
+                                className: 'btn btn-success'
+                            }
+                        },
+                    }).then(
+                        function() {
+                            swal("", "You entered : " + $('#input-field').val(), "success");
+                        }
+                    );
+                });
+
+
+
+            };
+
+            return {
+                //== Init
+                init: function() {
+                    initDemos();
+                },
+            };
+        }();
+
+        //== Class Initialization
+        jQuery(document).ready(function() {
+            SweetAlert2Demo.init();
+        });
+    </script>
 @endpush

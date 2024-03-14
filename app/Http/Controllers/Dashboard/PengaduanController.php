@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\KatPengaduan;
 
 class PengaduanController extends Controller
 {
@@ -13,6 +14,7 @@ class PengaduanController extends Controller
 
 
     public function kategori(){
-        return view('dashboard.pengaduan.pengaduan_kategori');
+        $kategori=KatPengaduan::all();
+        return view('dashboard.pengaduan.pengaduan_kategori',['kategori' => $kategori]);
     }
 }

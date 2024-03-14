@@ -4,3 +4,4 @@
 <script src="{{ asset('/assets/js/core/bootstrap.min.js') }}"></script>
 <script src="{{ asset('/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
 <script src="{{ asset('/assets/js/atlantis.js') }}"></script>
+<script src="{{asset('/assets/js/plugin/sweetalert/sweetalert.min.js')}}"></script>

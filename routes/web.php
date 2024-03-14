@@ -21,16 +21,23 @@ Route::get('/loginx', function () {
     return response()->json('Authentication failed:'); 
 })->name('loginX');
 
-Route::get('pusher-test', [Controller::class, 'TangkapEvent']);
+
+// Routes Authentication
+Route::get('login', [LoginController::class, 'login'])->name('login');
+Route::post('login', [LoginController::class, 'postLogin'])->name('login.post');
+Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 
-Route::get('login', [LoginController::class, 'login'])->name('login.index');
 
-Route::prefix('dashboard')->group(function () {
+// Routes Dashboard
+Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('profil', [ProfileController::class, 'index'])->name('profil.index');
 
     Route::get('pengaduan', [PengaduanController::class, 'index'])->name('pengaduan.index');
+    Route::get('pengaduan/buat', function () {
+        return view('dashboard.pengaduan.pengaduan_create');
+    })->name('pengaduan.index.create');
     
     Route::get('kategori', [PengaduanController::class, 'kategori'])->name('pengaduan.kategori');
 
@@ -43,5 +50,8 @@ Route::prefix('dashboard')->group(function () {
 
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    return redirect('/login');
 });
+
+Route::get('pusher-test', [Controller::class, 'TangkapEvent']);
