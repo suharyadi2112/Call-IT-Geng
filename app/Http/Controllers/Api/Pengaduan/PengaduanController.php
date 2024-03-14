@@ -407,7 +407,6 @@ class PengaduanController extends Controller
             'indikator_mutu_id.required' => 'Indikator mutu wajib diisi.',
             'indikator_mutu_id.max' => 'Indikator mutu max 100 karakter.',
             
-            'pelapor_id.required' => 'Pelapor wajib diisi.',
             'pelapor_id.max' => 'Pelapor max 100 karakter.',
             
             'kategori_pengaduan_id.required' => 'Kategori pengaduan wajib diisi.',
@@ -441,7 +440,7 @@ class PengaduanController extends Controller
         ];
         $validator = Validator::make($request->all(), [
             'indikator_mutu_id' => 'required|max:100',
-            'pelapor_id' => 'required|max:100',
+            'pelapor_id' => 'max:100',
             'kategori_pengaduan_id' => 'required|max:100',
             'lokasi' => 'required|max:500',
             'lantai' => ['required', 'max:50',
