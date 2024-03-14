@@ -16,7 +16,7 @@
 				</div>
 				<div class="card-body">
 					<div class="user-profile text-center">
-						<div class="name">Administrator</div>
+						<div class="name">{{ auth()->user()->name }}</div>
 					</div>
 				</div>
 			</div>
@@ -27,21 +27,52 @@
 					<h4 class="card-title">Detail Profil</h4>
 				</div>
 				<div class="card-body">
-					<div class="form-group">
-						<label for="name">Nama</label>
-						<input type="text" class="form-control" id="name" placeholder="Nama">
-					</div>
-					<div class="form-group">
-						<label for="email">Email</label>
-						<input type="email" class="form-control" id="email" placeholder="Email">
-					</div>
-					<div class="form-group">
-						<label for="password">Password</label>
-						<input type="password" class="form-control" id="password" placeholder="Password">
-					</div>
-					<div class="text-right mt-3 mb-3">
-						<button class="btn btn-sm btn-primary">Simpan Perubahan</button>
-					</div>
+					@if ($errors->any())
+						<div class="alert alert-danger  alert-dismissible fade show" role="alert">
+							<ul>
+								@foreach ($errors->all() as $error)
+									<li class="text-danger">{{ $error }}</li>
+								@endforeach
+							</ul>
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+                	@endif
+
+					@if (session('success'))
+						<div class="alert alert-success  alert-dismissible fade show" role="alert">
+							<div class="d-flex justify-content-between">
+								<div>
+									{{ session('success') }}
+								</div>
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+                            </div>
+						</div>
+					@endif
+
+
+					<form action="{{ route('profil.update') }}" method="post">
+						@csrf
+						@method('POST')
+						<div class="form-group">
+							<label for="name">Nama <span class="required-label">*</span></label>
+							<input type="text" class="form-control" id="name" name="name" placeholder="Nama" value="{{ $user->name }}" required>
+						</div>
+						<div class="form-group">
+							<label for="email">Email <span class="required-label">*</span></label>
+							<input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{ $user->email }}">
+						</div>
+						<div class="form-group">
+							<label for="password">Password</label>
+							<input type="password" class="form-control" id="password" name="password" placeholder="Password">
+						</div>
+						<div class="text-right mt-3 mb-3">
+							<button type="submit" class="btn btn-sm btn-primary">Simpan Perubahan</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>

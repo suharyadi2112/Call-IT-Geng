@@ -3,6 +3,31 @@
 @section('content')
 <div class="page-inner">
 	<h4 class="page-title">Pengaduan</h4>
+    @if ($errors->any())
+        <div class="alert alert-danger  alert-dismissible fade show" role="alert">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li class="text-danger">{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+
+    @if (session('success'))
+        <div class="alert alert-success  alert-dismissible fade show" role="alert">
+            <div class="d-flex justify-content-between">
+                <div>
+                    {{ session('success') }}
+                </div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    @endif
 	<div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -21,6 +46,7 @@
                         <table id="basic-datatables" class="display table table-striped table-hover" style="width: 100%">
                             <thead>
                                 <tr>
+                                    <th></th>
                                     <th>Judul Pengaduan</th>
                                     <th>Lantai</th>
                                     <th>Lokasi</th>
@@ -44,6 +70,22 @@
 
 @endsection
 
+@push('style')
+
+<style>
+    td.details-control {
+        background: url('https://raw.githubusercontent.com/DataTables/DataTables/1.10.7/examples/resources/details_open.png') no-repeat center center;
+        cursor: pointer;
+    }
+    tr.shown td.details-control {
+        background: url('https://raw.githubusercontent.com/DataTables/DataTables/1.10.7/examples/resources/details_close.png') no-repeat center center;
+    }
+    div.slider {
+        display: none;
+    }
+    </style> 
+@endpush
+
 @push('script')
 <script src="{{ ('/assets/js/plugin/datatables/datatables.min.js') }}"></script>
 <script >
@@ -52,12 +94,13 @@
                 processing: true,
                 serverSide: true,
                 sortable: false,
-                ajax: {
-                    url : window.location.origin + '/api/get_pengaduan_yajra',
-                    type: 'GET',
-                    headers: {"Authorization": localStorage.getItem('access_token')}
-                },
+                ajax: '{{ route('pengaduan.index') }}',
                 columns: [
+                    {
+                        class:          "details-control",
+                        orderable:      false,
+                        defaultContent: "",
+                    }, 
                     { data: 'judul_pengaduan', name: 'judul_pengaduan' },
                     { data: 'lantai', name: 'lantai' },
                     { data: 'lokasi', name: 'lokasi' },
@@ -72,74 +115,13 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row, meta) {
-                            return '<a href="/kategori_pengaduan/'+row.id+'/edit" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Edit</a> <button data-id="'+row.id+'" type="button" class="btn btn-danger btn-sm" id="hapus">Hapus</button>';
+                            return '<a href="/dashboard/pengaduan/'+row.id+'" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Edit</a>';
                         }
                     }
                 ],
             });
 
-
-            $(document).on('click', '#hapus', function(e) {
-                e.preventDefault();
-                var id = $(this).data('id');
-                swal({
-                    title: 'Hapus Data',
-                    text: "Apakah kamu yakin ingin menghapus ini",
-                    type: 'warning',
-                    buttons: {
-                        cancel: {
-                            visible: true,
-                            text : 'Batal',
-                            className: 'btn btn-danger'
-                        },        			
-                        confirm: {
-                            text : 'Hapus',
-                            className : 'btn btn-success'
-                        }
-                    }
-                }).then((Delete) => {
-                    if (Delete) {
-                        $.ajax({
-                            url : window.location.origin + '/api/del_worker_from_pengaduan/'+id,
-                            type: 'DELETE',
-                            headers: {"Authorization": localStorage.getItem('access_token')},
-                            success: function(response) {
-                                console.log(response);
-                                swal({
-                                    title: 'Berhasil',
-                                    text: 'Data berhasil dihapus',
-                                    type: 'success',
-                                    timer: '1500'
-                                });
-                                $('#basic-datatables').DataTable().ajax.reload();
-                            },
-                            error: function(error) {
-                                console.log(error);
-                                swal({
-                                    title: 'Gagal',
-                                    text: 'Data gagal dihapus',
-                                    type: 'error',
-                                    timer: '1500'
-                                });
-                            }
-                        });
-                    } else {
-                        swal.close();
-                    }
-                });
-            });
-
-
-
-            // $.ajax({
-            //     url : window.location.origin + '/api/get_pengaduan_yajra',
-            //     type: 'GET',
-            //     headers: {"Authorization": localStorage.getItem('access_token')}
-            // }).done(function(response){
-            //     console.log(response);
-            // }).fail(function(error){
-            //     console.log(error);
-            // });
+            
  
         });
     

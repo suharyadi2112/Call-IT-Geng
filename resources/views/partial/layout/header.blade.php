@@ -30,7 +30,7 @@
                             <li>
                                 <div class="user-box">
                                     <div class="u-text">
-                                        <h4>Halo, Hizrian</h4>
+                                        <h4>Halo, {{ auth()->user()->name }}</h4>
                                     </div>
                                 </div>
                             </li>

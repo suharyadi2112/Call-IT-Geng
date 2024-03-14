@@ -7,7 +7,7 @@
 <script>
     WebFont.load({
         google: {"families":["Lato:300,400,700,900"]},
-        custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['../assets/css/fonts.min.css']},
+        custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['{{ asset('/assets/css/fonts.min.css') }}']},
         active: function() {
             sessionStorage.fonts = true;
         }
@@ -16,3 +16,10 @@
 
 <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap.min.css') }}">
 <link rel="stylesheet" href="{{ asset('/assets/css/atlantis.css') }}">
+<style>
+    .alert .close {
+        top: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+</style>
