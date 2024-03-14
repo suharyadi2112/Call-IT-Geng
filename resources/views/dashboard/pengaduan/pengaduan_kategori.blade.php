@@ -83,10 +83,14 @@
                     },
                 ]
             });
+            
+
             $('#exampleModal').click(function() {
                 $('#saveBtn').val("create-data");
                 $('#id').val('');
                 $('#postForm').trigger("reset");
+                $('#modal-title').html("Tambah Data");
+                $('#modalOpen').modal('show');
             });
 
             function clearForm() {
@@ -95,6 +99,17 @@
                 $('#id').val('');
                 $('#saveBtn').prop("disabled", false);
             }
+            $('body').on('click', '#modalEdit', function() {
+                var id = $(this).data('id');
+                // alert(id);
+                $.get("{{ route('pengaduan.kategori') }}" + '/show/' + id, function(data) {
+                    $('#modal-title').html("Edit Data");
+                    $('#saveBtn').val("edit-data");
+                    $('#exampleModal').modal('show');
+                    $('#id').val(data.id);
+                    $('#nama').val(data.nama);
+                })
+            });
             $('#saveBtn').click(function(e) {
                 e.preventDefault();
                 $(this).html('Mengirim');
@@ -136,30 +151,7 @@
                     }
                 });
             });
-            $('#modalDelete').click(function(e) {
-                e.preventDefault();
-                $(this).html('Mengirim');
-                $('#saveBtn').prop("disabled", true);
-                $('.alert').remove();
-                $.ajax({
-                    enctype: 'multipart/form-data',
-                    data: new FormData($('#postForm')[0]),
-                    url: "{{ route('pengaduan.kategori.destroy', ':id') }}",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    type: "DELETE",
-                    dataType: 'json',
-                    contentType: false,
-                    processData: false,
-                    success: function(data) {
-                        console.log(data);
-                        $('#modalDelete').html('Hapus');
-                        clearForm();
-
-                    }
-                });
-            })
+            
             
         });
     </script>

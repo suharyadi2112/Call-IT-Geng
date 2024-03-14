@@ -44,6 +44,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     
     Route::get('kategori', [PengaduanController::class, 'kategori'])->name('pengaduan.kategori');
     Route::post('kategori/store', [PengaduanController::class, 'storekategori'])->name('pengaduan.kategori.store');
+    Route::get('kategori/show/{id}', [PengaduanController::class, 'showkategori'])->name('pengaduan.kategori.show');
     Route::get('kategori/hapus/{id}', [PengaduanController::class, 'destroykategori'])->name('pengaduan.kategori.destroy');
     
 
