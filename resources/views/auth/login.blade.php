@@ -12,6 +12,18 @@
                 <img src="{{ asset('/assets/img/logologin.png') }}" alt="" style="width: 70%">
             </h3>
 			<div class="login-form">
+                @if ($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert"    >
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li class="text-danger">{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
                 <form method="post" action="{{ route('login.post') }}" id="login">
                     @csrf
                     <div class="form-group form-floating-label">

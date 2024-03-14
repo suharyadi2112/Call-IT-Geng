@@ -27,7 +27,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="name">Nama Pelapor</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Nama Pelapor" required value="{{ auth()->user()->name }}" disabled>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Nama Pelapor" required value="{{ old('name') }}">
                         </div>
                         <div class="form-group">
                             <label for="nomor_handphone">Nomor Telepon</label>
