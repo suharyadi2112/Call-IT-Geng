@@ -215,7 +215,7 @@ class PengaduanController extends Controller
                 $pengaduan = Pengaduan::create([
                     'kode_laporan' => $kodeGenerate,
                     'indikator_mutu_id' => $request->input('indikator_mutu_id'),
-                    'pelapor_id' => $request->input('pelapor_id'),
+                    'pelapor_id' => Auth::user()->id,
                     'admin_id' => $adminCheck,
                     'kategori_pengaduan_id' => $request->input('kategori_pengaduan_id'),
                     'lokasi' => $request->input('lokasi'),
