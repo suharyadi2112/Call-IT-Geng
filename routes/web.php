@@ -41,6 +41,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('pengaduan/buat',[PengaduanController::class, 'buatPengaduan'])->name('pengaduan.index.create');
     Route::post('pengaduan/buat',[PengaduanController::class, 'simpanPengaduan'])->name('pengaduan.index.store');
     Route::get('pengaduan/{id}',[PengaduanController::class, 'detailPengaduan'])->name('pengaduan.index.detail');
+    Route::put('pengaduan/{id}',[PengaduanController::class, 'updatePengaduan'])->name('pengaduan.index.update');
     
     Route::get('kategori', [PengaduanController::class, 'kategori'])->name('pengaduan.kategori');
     Route::post('kategori/store', [PengaduanController::class, 'storekategori'])->name('pengaduan.kategori.store');
