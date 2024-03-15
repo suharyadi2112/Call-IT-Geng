@@ -26,8 +26,8 @@ class IndikatorMutu extends Model
         'created_at',
         'updated_at',
         'deleted_at',
-        
     ];
+
 
     protected static function boot()
     {
@@ -42,7 +42,7 @@ class IndikatorMutu extends Model
     {
         if ($search) {
             return $query->where('nama_indikator', 'LIKE', "%$search%")
-                        ->orWhere('target', 'LIKE', "%$search");
+            ->orWhere('target', 'LIKE', "%$search%");
         }
         return $query;
     }

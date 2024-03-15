@@ -51,8 +51,10 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     // //indikatormutu
     Route::get('indikatormutu', [IndikatorMutuController::class, 'index'])->name('indikatormutu.index');
-    Route::get('indikatormutu/tambah', [IndikatorMutuController::class, 'create'])->name('indikatormutu.create');
     Route::post('indikatormutu/store', [IndikatorMutuController::class, 'store'])->name('indikatormutu.store');
+    Route::get('indikatormutu/show/{id}', [IndikatorMutuController::class, 'showindikator'])->name('indikatormutu.index.show');
+    Route::post('indikatormutu/update', [IndikatorMutuController::class, 'updateindikator'])->name('indikatormutu.update');
+    Route::get('indikatormutu/hapus/{id}', [IndikatorMutuController::class, 'destroyindikator'])->name('indikatormutu.destroy');
 });
 
 
