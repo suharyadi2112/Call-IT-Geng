@@ -1,7 +1,7 @@
 <div class="main-header">
     <div class="logo-header" data-background-color="{{ config('app.themes.color.logo_header') }}"> 
         <a href="{{ route('dashboard') }}" class="logo">
-            <img src="{{ asset('/assets/img/callit.png') }}" alt="navbar brand" class="navbar-brand" style="width: 80%;">
+            <img src="{{ asset('/assets/img/callit.png') }}" alt="navbar brand" class="navbar-brand" style="width: 142px;height:35px;">
         </a>
         <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon">
