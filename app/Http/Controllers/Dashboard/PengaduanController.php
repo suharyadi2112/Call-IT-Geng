@@ -233,6 +233,22 @@ class PengaduanController extends Controller
         return response()->json(['success' => 'Kategori berhasil ditambahkan']);
     }
 
+    public function updatekategori(Request $request)
+    {
+        $request->validate([
+            'namaupdate' => 'required|max:50',
+
+        ], [
+            'namaupdate.required' => 'Nama kategori tidak boleh kosong',
+            // 'nama.min' => 'Nama kategori minimal 5 karakter',
+            'namaupdate.max' => 'Nama kategori maksimal 50 karakter',
+        ]);
+
+
+        $namaupdate = $request->namaupdate;
+        KatPengaduan::whereId($request->idupdate)->update(['nama'=>$namaupdate]);
+        return response()->json(['success' => 'Kategori berhasil diupdate']);
+    }
     public function destroykategori($id)
     {
         // return response()->json($id);
