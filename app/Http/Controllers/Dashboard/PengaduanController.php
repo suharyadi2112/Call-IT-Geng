@@ -26,18 +26,30 @@ class PengaduanController extends Controller
 
         if ($request->ajax()) {
             $model = Pengaduan::query()->with('detailpengaduan', 'kategoripengaduan', 'indikatormutu', 'pelapor', 'workers')
-                ->orderByRaw('CASE status_pelaporan
-                WHEN "Waiting" THEN 1
-                WHEN "Progress" THEN 2
-                ELSE 3
-            END')
-                ->orderByRaw('CASE prioritas
-                WHEN "Tinggi" THEN 1
-                WHEN "Sedang" THEN 2
-                ELSE 3
-            END')
-                ->orderBy('created_at', 'desc');
-            return DataTables::eloquent($model)->toJson();
+            ->orderBy('created_at', 'desc');
+            return DataTables::of($model)
+            ->addColumn('action', function ($row) {
+                $actionBtn = '<a href="'.route('pengaduan.index.detail',$row->id).'" class="mr-2 btn btn-sm round btn-outline-primary shadow" title="Detail" data-id="' . $row->id . '">
+                <i class="fa fa-lg fa-fw fa-eye"></i></a>';
+                return $actionBtn;
+            })
+            ->editColumn('status_pelaporan', function ($row) {
+                return '<span class="badge badge-'.($row->status_pelaporan == 'waiting' ? 'warning' : ($row->status_pelaporan == 'progress' ? 'info' : 'success')).'">'.ucfirst($row->status_pelaporan).'</span>';
+            })
+            ->editColumn('prioritas', function ($row) {
+                return '<span class="badge badge-'.($row->prioritas == 'Tinggi'? 'danger' : ($row->prioritas == 'Sedang'? 'warning' :'success')).'">'.ucfirst($row->prioritas).'</span>';
+            })
+            ->editColumn('tanggal_pelaporan', function ($row) {
+                return date('d-m-Y H:i', strtotime($row->tanggal_pelaporan));
+            })
+            ->editColumn('tanggal_selesai', function ($row) {
+                if ($row->tanggal_selesai == null) {
+                    return '-';
+                }
+                return date('d-m-Y H:i', strtotime($row->tanggal_selesai));
+            })
+            ->rawColumns(['action', 'status_pelaporan', 'prioritas'])
+            ->make(true);
         }
 
         return view('dashboard.pengaduan.pengaduan_index');
@@ -46,12 +58,12 @@ class PengaduanController extends Controller
     public function buatPengaduan()
     {
         $indikatorMutu = IndikatorMutu::select('id', 'nama_indikator')->get();
-        return view('dashboard.pengaduan.pengaduan_create', ['indikatorMutu' => $indikatorMutu]);
+        $kategoriPengaduan = KatPengaduan::select('id', 'nama')->get();
+        return view('dashboard.pengaduan.pengaduan_create', ['indikatorMutu' => $indikatorMutu, 'kategoriPengaduan' => $kategoriPengaduan]);
     }
 
     public function simpanPengaduan(Request $request)
     {
-
         $validator = $this->validatePengaduan($request, null, 'insert');
         if ($validator->fails()) {
             return redirect()->route('pengaduan.index.create')->withInput()->with('errors', $validator->errors());
@@ -70,7 +82,7 @@ class PengaduanController extends Controller
                 $pengaduan = Pengaduan::create([
                     'kode_laporan' => $kodeGenerate,
                     'indikator_mutu_id' => $request->input('indikator_mutu_id'),
-                    'pelapor_id' => $request->input('pelapor_id'),
+                    'pelapor_id' => Auth::user()->id,
                     'admin_id' => $adminCheck,
                     'kategori_pengaduan_id' => $request->input('kategori_pengaduan_id'),
                     'lokasi' => $request->input('lokasi'),
@@ -83,7 +95,7 @@ class PengaduanController extends Controller
                     'tanggal_pelaporan' => date('Y-m-d H:i:s'),
                 ]);
 
-                if ($request->file('picture_pre')) { //unggah file
+                if ($request->file('picture_pre')) {
 
                     $files = $request->file('picture_pre');
                     $names = [];
@@ -112,16 +124,72 @@ class PengaduanController extends Controller
 
             return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil disimpan!');
         } catch (\Exception $e) {
-            return redirect()->route('pengaduan.index')->withInput()->with('error', $e->getMessage());
+            return redirect()->route('pengaduan.index.create')->withInput()->with('error', $e->getMessage());
         }
     }
 
     public function detailPengaduan($id)
     {
-        $pengaduan = Pengaduan::find($id);
+        $pengaduan = Pengaduan::findOrFail($id);
+        $gambarPengaduan = DetailIPengaduan::where('pengaduan_id', $pengaduan->id)->get();
+        $kategoriPengaduan = KatPengaduan::select('id', 'nama')->get();
         $indikatorMutu = IndikatorMutu::select('id', 'nama_indikator')->get();
 
-        return view('dashboard.pengaduan.pengaduan_detail', ['pengaduan' => $pengaduan, 'indikatorMutu' => $indikatorMutu]);
+        return view('dashboard.pengaduan.pengaduan_detail', ['pengaduan' => $pengaduan, 'indikatorMutu' => $indikatorMutu, 'kategoriPengaduan' => $kategoriPengaduan, 'gambarPengaduan' => $gambarPengaduan]);
+    }
+
+    public function updatePengaduan(Request $request, $id){
+
+        $pengaduan = Pengaduan::findOrfail($id);
+        $pesan = [
+            'status_pelaporan.required' => 'Status pelaporan wajib dipilih.',
+            'status_pelaporan.max' => 'Status pelaporan max 50 karakter',
+            'picture_post.*.file' => 'Picture Pre harus berupa file',
+            'picture_post.*.mimes' => 'Picture Pre harus jpg,jpeg,png',
+            'picture_post.*.required' => 'Picture Pre wajib diisi',
+            'picture_post.*.max' => 'Picture Pre maksimal 5 mb',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'status_pelaporan' => 'required|max:50',
+            'picture_post.*' => 'required|file|mimes:jpg,jpeg,png|max:5048',
+            'picture_post' => 'array',
+        ], $pesan);
+
+        if ($validator->fails()) {
+            return redirect()->route('pengaduan.index.detail')->withInput()->with('errors', $validator->errors());
+        }
+
+        try {
+            DB::transaction(function () use ($request, $pengaduan) {   
+                $pengaduan->fill($request->all());
+                $pengaduan->save();
+                
+            });
+            return redirect()->route('pengaduan.index')->with('success', 'Status pelaporan berhasil diupdate!');
+
+        } catch (\Exception $e) {
+            return redirect()->route('pengaduan.index.detail')->withInput()->with('error', $e->getMessage());
+        }
+    }
+
+    private function getPengaduanAfterCreate($idPengaduan){
+        
+        $dataPengaduan = Pengaduan::query()
+        ->with('detailpengaduan', 'kategoripengaduan','indikatormutu','pelapor', 'detailpengaduan')
+        ->where('a_pengaduan.id', $idPengaduan)->get();
+
+        return $dataPengaduan;
+    }
+
+    private function generateCode() {
+        $kode = date('YmdHis');
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $code = '';
+        for ($i = 0; $i < 4; $i++) {
+            $code .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        return $kode.'-'.$code;
     }
 
     private function validatePengaduan(Request $request, $id, $action = 'insert')
@@ -131,7 +199,6 @@ class PengaduanController extends Controller
             'indikator_mutu_id.required' => 'Indikator mutu wajib diisi.',
             'indikator_mutu_id.max' => 'Indikator mutu max 100 karakter.',
 
-            'pelapor_id.required' => 'Pelapor wajib diisi.',
             'pelapor_id.max' => 'Pelapor max 100 karakter.',
 
             'kategori_pengaduan_id.required' => 'Kategori pengaduan wajib diisi.',
@@ -165,7 +232,7 @@ class PengaduanController extends Controller
         ];
         $validator = Validator::make($request->all(), [
             'indikator_mutu_id' => 'required|max:100',
-            'pelapor_id' => 'required|max:100',
+            'pelapor_id' => 'max:100',
             'kategori_pengaduan_id' => 'required|max:100',
             'lokasi' => 'required|max:500',
             'lantai' => [
@@ -233,6 +300,22 @@ class PengaduanController extends Controller
         return response()->json(['success' => 'Kategori berhasil ditambahkan']);
     }
 
+    public function updatekategori(Request $request)
+    {
+        $request->validate([
+            'namaupdate' => 'required|max:50',
+
+        ], [
+            'namaupdate.required' => 'Nama kategori tidak boleh kosong',
+            // 'nama.min' => 'Nama kategori minimal 5 karakter',
+            'namaupdate.max' => 'Nama kategori maksimal 50 karakter',
+        ]);
+
+
+        $namaupdate = $request->namaupdate;
+        KatPengaduan::whereId($request->idupdate)->update(['nama'=>$namaupdate]);
+        return response()->json(['success' => 'Kategori berhasil diupdate']);
+    }
     public function destroykategori($id)
     {
         // return response()->json($id);

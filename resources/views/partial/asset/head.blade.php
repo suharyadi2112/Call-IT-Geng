@@ -22,4 +22,7 @@
         width: 0 !important;
         height: 0 !important;
     }
+    .form-control:disabled{
+        opacity: 1 !important;
+    }
 </style>

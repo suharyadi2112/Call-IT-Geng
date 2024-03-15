@@ -133,88 +133,28 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title fw-mediumbold">Worker</div>
                         <div class="card-list">
+                            @foreach($worker as $m)
                             <div class="item-list">
                                 <div class="avatar">
                                     <img src="../assets/img/user.png" alt="..." class="avatar-img rounded-circle">
                                 </div>
                                 <div class="info-user ml-3">
-                                    <div class="username">Nama Worker</div>
-                                    <div class="status">Spesialisasi</div>
+                                    <div class="username">{{$m->name}}</div>
+                                    <div class="status">{{$m->jabatan}}</div>
                                 </div>
-                                <button class="btn btn-icon btn-success btn-round btn-xs">
-                                    <i class="fa fa-eye"></i>
-                                </button>
+                                
                             </div>
-                            <div class="item-list">
-                                <div class="avatar">
-                                    <img src="../assets/img/user.png" alt="..." class="avatar-img rounded-circle">
-                                </div>
-                                <div class="info-user ml-3">
-                                    <div class="username">Nama Worker</div>
-                                    <div class="status">Spesialisasi</div>
-                                </div>
-                                <button class="btn btn-icon btn-success btn-round btn-xs">
-                                    <i class="fa fa-eye"></i>
-                                </button>
-                            </div>
-                            <div class="item-list">
-                                <div class="avatar">
-                                    <img src="../assets/img/user.png" alt="..." class="avatar-img rounded-circle">
-                                </div>
-                                <div class="info-user ml-3">
-                                    <div class="username">Nama Worker</div>
-                                    <div class="status">Spesialisasi</div>
-                                </div>
-                                <button class="btn btn-icon btn-success btn-round btn-xs">
-                                    <i class="fa fa-eye"></i>
-                                </button>
-                            </div>
-                            <div class="item-list">
-                                <div class="avatar">
-                                    <img src="../assets/img/user.png" alt="..." class="avatar-img rounded-circle">
-                                </div>
-                                <div class="info-user ml-3">
-                                    <div class="username">Nama Worker</div>
-                                    <div class="status">Spesialisasi</div>
-                                </div>
-                                <button class="btn btn-icon btn-success btn-round btn-xs">
-                                    <i class="fa fa-eye"></i>
-                                </button>
-                            </div>
-                            <div class="item-list">
-                                <div class="avatar">
-                                    <img src="../assets/img/user.png" alt="..." class="avatar-img rounded-circle">
-                                </div>
-                                <div class="info-user ml-3">
-                                    <div class="username">Nama Worker</div>
-                                    <div class="status">Spesialisasi</div>
-                                </div>
-                                <button class="btn btn-icon btn-success btn-round btn-xs">
-                                    <i class="fa fa-eye"></i>
-                                </button>
-                            </div>
-                            <div class="item-list">
-                                <div class="avatar">
-                                    <img src="../assets/img/user.png" alt="..." class="avatar-img rounded-circle">
-                                </div>
-                                <div class="info-user ml-3">
-                                    <div class="username">Nama Worker</div>
-                                    <div class="status">Spesialisasi</div>
-                                </div>
-                                <button class="btn btn-icon btn-success btn-round btn-xs">
-                                    <i class="fa fa-eye"></i>
-                                </button>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <div class="card card-success bg-success-gradient">
                     <div class="card-body">
                         <h4 class="mt-3 b-b1 pb-2 mb-4 fw-bold">Pengaduan Masuk Bulan Ini</h4>

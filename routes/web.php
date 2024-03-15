@@ -41,17 +41,21 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('pengaduan/buat',[PengaduanController::class, 'buatPengaduan'])->name('pengaduan.index.create');
     Route::post('pengaduan/buat',[PengaduanController::class, 'simpanPengaduan'])->name('pengaduan.index.store');
     Route::get('pengaduan/{id}',[PengaduanController::class, 'detailPengaduan'])->name('pengaduan.index.detail');
+    Route::put('pengaduan/{id}',[PengaduanController::class, 'updatePengaduan'])->name('pengaduan.index.update');
     
     Route::get('kategori', [PengaduanController::class, 'kategori'])->name('pengaduan.kategori');
     Route::post('kategori/store', [PengaduanController::class, 'storekategori'])->name('pengaduan.kategori.store');
     Route::get('kategori/show/{id}', [PengaduanController::class, 'showkategori'])->name('pengaduan.kategori.show');
+    Route::post('kategori/update', [PengaduanController::class, 'updatekategori'])->name('pengaduan.kategori.update');
     Route::get('kategori/hapus/{id}', [PengaduanController::class, 'destroykategori'])->name('pengaduan.kategori.destroy');
     
 
     // //indikatormutu
     Route::get('indikatormutu', [IndikatorMutuController::class, 'index'])->name('indikatormutu.index');
-    Route::get('indikatormutu/tambah', [IndikatorMutuController::class, 'create'])->name('indikatormutu.create');
     Route::post('indikatormutu/store', [IndikatorMutuController::class, 'store'])->name('indikatormutu.store');
+    Route::get('indikatormutu/show/{id}', [IndikatorMutuController::class, 'showindikator'])->name('indikatormutu.index.show');
+    Route::post('indikatormutu/update', [IndikatorMutuController::class, 'updateindikator'])->name('indikatormutu.update');
+    Route::get('indikatormutu/hapus/{id}', [IndikatorMutuController::class, 'destroyindikator'])->name('indikatormutu.destroy');
 });
 
 
