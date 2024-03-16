@@ -34,21 +34,25 @@ services:
         aliases:
           - service_web
     command: [nginx-debug, '-g', 'daemon off;']
-  # Mysql Service
-  mysql_call_it:
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ''
-      MYSQL_DATABASE: callit
-      MYSQL_USER: root
-      MYSQL_PASSWORD: ''
+  # Mysql Service 
+  db:
+    image: mysql:8.0 
+    tty: true 
+    cap_add:
+      - SYS_NICE
+    restart: always environment:
+      - MYSQL_DATABASE=callit
+      - MYSQL_ROOT_PASSWORD=12345678
     ports:
-    - "3306:3306"
+    - '3306:3306'
+    volumes:
+      - db:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql 
     networks:
       - suu_network
-  # POSTGRES CONTAINER
+    volumes:
+      db:
+        driver: local
 #Docker Networks
 networks:
   suu_network:
