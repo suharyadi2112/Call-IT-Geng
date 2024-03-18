@@ -29,7 +29,6 @@ class DashboardController extends Controller
             ->groupBy('kategori_pengaduan_id')
             ->orderBy('total', 'desc')
             ->get('total', 'kategori_pengaduan_id');
-        // dd($bulan);
         return view(
             'dashboard.dashboard',
             [

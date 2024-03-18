@@ -89,6 +89,7 @@
                     </div>
                     <div class="card-body pb-0">
                         @foreach ($pengaduan as $p)
+                            {{-- @php dd($p->kategoripengaduan->nama); @endphp --}}
                             <div class="d-flex">
                                 <div class="avatar">
                                     <img src="../assets/img/logoproduct.svg" alt="..."
