@@ -47,7 +47,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Pengaduan</th>
+                                    <th>Judul Aduan</th>
                                     <th>Lantai</th>
                                     <th>Lokasi</th>
                                     <th>Prioritas</th>
