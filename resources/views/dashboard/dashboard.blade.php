@@ -3,7 +3,7 @@
 @section('content')
     <div class="page-inner">
         <h4 class="page-title">Dashboard</h4>
-        <div class="row">
+        <div class="row row-card-no-pd">
             <div class="col-sm-6 col-md-3">
                 <div class="card card-stats card-round">
                     <div class="card-body ">
