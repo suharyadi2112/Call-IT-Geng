@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Ramsey\Uuid\Uuid;
 
 class Pengaduan extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     
     protected $table = 'a_pengaduan'; 
 
@@ -37,8 +39,10 @@ class Pengaduan extends Model
         
         'created_at',
         'updated_at',
-        'deleted_at',
+        
     ];
+
+    protected $dates = ['deleted_at'];
 
     public function detailpengaduan()
     {

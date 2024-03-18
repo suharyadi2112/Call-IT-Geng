@@ -15,15 +15,55 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
         \App\Models\User::create([
-            'name' => 'testing callit',
-            'email' => 'test@gmail.com',
+            'name' => 'admin',
+            'email' => 'admin@gmail.com',
             'handphone' => '082283778944',
-            'jabatan' => 'Perawat',
+            'jabatan' => 'Administrator',
             'status' => '-',
-            'divisi' => 'Kesehatan',
+            'divisi' => 'IT',
             'password' =>  Hash::make('12345678'),
         ]);
+
+        \App\Models\User::create([
+            'name' => 'User Guest',
+            'email' => 'user@gmail.com',
+            'handphone' => '082283778944',
+            'jabatan' => 'Guest',
+            'status' => '-',
+            'divisi' => '-',
+            'password' =>  Hash::make('12345678'),
+        ]);
+
+        \App\Models\User::create([
+            'name' => 'Sandi',
+            'email' => 'sandi@gmail.com',
+            'handphone' => '082283778944',
+            'jabatan' => 'IT Support',
+            'status' => '-',
+            'divisi' => 'IT',
+            'password' =>  Hash::make('12345678'),
+        ]);
+
+        \App\Models\User::create([
+            'name' => 'Tommy',
+            'email' => 'tommy@gmail.com',
+            'handphone' => '082283778944',
+            'jabatan' => 'IT Support',
+            'status' => '-',
+            'divisi' => 'IT',
+            'password' =>  Hash::make('12345678'),
+        ]);
+
+        \App\Models\User::create([
+            'name' => 'Nindy',
+            'email' => 'nindy@gmail.com',
+            'handphone' => '082283778944',
+            'jabatan' => 'IT Support',
+            'status' => '-',
+            'divisi' => 'IT',
+            'password' =>  Hash::make('12345678'),
+        ]);
+
     }
 }
