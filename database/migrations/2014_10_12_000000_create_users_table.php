@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('jabatan');
             $table->string('status');
             $table->string('divisi');
-            $table->string('role');
+            $table->string('role')->nullable();
             $table->rememberToken(); 
             $table->timestamps();
             
