@@ -46,7 +46,6 @@
                                     '07' => '07',
                                     '08' => '08',
                                     '09' => '09',
-                                    '10' => '10',
                                 ];
                             @endphp
                             <label for="lantai">Lantai <span class="required-label">*</span></label>
@@ -62,7 +61,7 @@
                             <input type="text" class="form-control" id="lokasi" name="lokasi" placeholder="Lokasi" required value="{{ old('lokasi') }}">
                         </div>
                         <div class="form-group">
-                            <label for="lokasi">Judul Pengaduan <span class="required-label">*</span></label>
+                            <label for="lokasi">Judul Aduan <span class="required-label">*</span></label>
                             <input type="text" class="form-control" id="judul_pengaduan" name="judul_pengaduan" placeholder="Judul Pengaduan" required value="{{ old('judul_pengaduan') }}">
                         </div>
                         <div class="form-group">
@@ -70,8 +69,8 @@
                             <textarea id="dekskripsi_pelaporan" name="dekskripsi_pelaporan" class="form-control" rows="5" placeholder="Deskripsi Pengaduan" required>{{ old('dekskripsi_pelaporan') }}</textarea>
                         </div>
                         <div class="form-group">
-                            <label for="dekskripsi_pelaporan">Gambar Kondisi Pengaduan <span class="required-label">*</span></label>
-                            <input type="file" class="form-control" id="imageInput" name="picture_pre[]" multiple required>
+                            <label for="dekskripsi_pelaporan">Kondisi Pengaduan <span class="required-label">*</span></label>
+                            <input type="file" class="form-control" id="imageInput" name="picture_pre[]" multiple required accept=".jpg, .jpeg, .png"/>
                             <div id="preview" class="mt-3 row"></div>
                             <button type="button" class="btn btn-sm btn-danger mt-3" id="btnDelete" style="display:none;">Hapus Gambar</button>
                         </div>

@@ -17,6 +17,7 @@ use App\Models\Pengaduan;
 use App\Models\KatPengaduan;
 use App\Models\DetailIPengaduan;
 use App\Models\IndikatorMutu;
+use App\Models\User;
 use Illuminate\Validation\Rules\Exists;
 
 class PengaduanController extends Controller
@@ -31,6 +32,8 @@ class PengaduanController extends Controller
             ->addColumn('action', function ($row) {
                 $actionBtn = '<a href="'.route('pengaduan.index.detail',$row->id).'" class="mr-2 btn btn-sm round btn-outline-primary shadow" title="Detail" data-id="' . $row->id . '">
                 <i class="fa fa-lg fa-fw fa-eye"></i></a>';
+                $actionBtn .= '<button type="button" id="modalDelete" class="mr-2 btn btn-sm round btn-outline-danger shadow" title="Hapus" data-id="' . $row->id . '">
+                <i class="fa fa-lg fa-fw fa-trash"></i></button>';
                 return $actionBtn;
             })
             ->editColumn('status_pelaporan', function ($row) {
@@ -130,17 +133,23 @@ class PengaduanController extends Controller
 
     public function detailPengaduan($id)
     {
-        $pengaduan = Pengaduan::findOrFail($id);
+        $pengaduan = Pengaduan::with('workers', 'pelapor')->findOrFail($id);
         $gambarPengaduan = DetailIPengaduan::where('pengaduan_id', $pengaduan->id)->get();
+        $gambarPerbaikanPengaduan = DetailIPengaduan::where('pengaduan_id', $pengaduan->id)->where('tipe', 'post')->get();
         $kategoriPengaduan = KatPengaduan::select('id', 'nama')->get();
         $indikatorMutu = IndikatorMutu::select('id', 'nama_indikator')->get();
-
-        return view('dashboard.pengaduan.pengaduan_detail', ['pengaduan' => $pengaduan, 'indikatorMutu' => $indikatorMutu, 'kategoriPengaduan' => $kategoriPengaduan, 'gambarPengaduan' => $gambarPengaduan]);
+        $workers = User::whereIn('jabatan', ['worker', 'admin'])->get();
+        return view('dashboard.pengaduan.pengaduan_detail', [
+            'pengaduan' => $pengaduan, 
+            'indikatorMutu' => $indikatorMutu, 
+            'kategoriPengaduan' => $kategoriPengaduan, 
+            'gambarPengaduan' => $gambarPengaduan,
+            'gambarPerbaikanPengaduan' => $gambarPerbaikanPengaduan,
+            'workers' => $workers
+        ]);
     }
 
     public function updatePengaduan(Request $request, $id){
-
-        $pengaduan = Pengaduan::findOrfail($id);
         $pesan = [
             'status_pelaporan.required' => 'Status pelaporan wajib dipilih.',
             'status_pelaporan.max' => 'Status pelaporan max 50 karakter',
@@ -148,28 +157,84 @@ class PengaduanController extends Controller
             'picture_post.*.mimes' => 'Picture Pre harus jpg,jpeg,png',
             'picture_post.*.required' => 'Picture Pre wajib diisi',
             'picture_post.*.max' => 'Picture Pre maksimal 5 mb',
+            'workers.required' => 'Pekerja wajib dipilih.',
         ];
 
         $validator = Validator::make($request->all(), [
             'status_pelaporan' => 'required|max:50',
+            'workers' => 'required|array',
             'picture_post.*' => 'required|file|mimes:jpg,jpeg,png|max:5048',
             'picture_post' => 'array',
         ], $pesan);
 
         if ($validator->fails()) {
-            return redirect()->route('pengaduan.index.detail')->withInput()->with('errors', $validator->errors());
+            return redirect()->back()->withInput()->with('errors', $validator->errors());
         }
 
         try {
-            DB::transaction(function () use ($request, $pengaduan) {   
+            $pengaduan = Pengaduan::findOrfail($id);
+            DB::transaction(function () use ($request, $pengaduan) {  
+                $idUserAsWorkers = $request->input('workers');
+                $dataPekerja = [];
+                foreach ($idUserAsWorkers as $idUser) {
+                    $dataPekerja[] = [
+                        'user_id' => $idUser,
+                        'tanggal_assesment' => date('Y-m-d'),
+                        'created_at' => date('Y-m-d H:i:s'),
+                    ];
+                }
+
+                $pengaduan->workers()->sync($dataPekerja);
+
+                if ($request->input('status_pelaporan') == 'done') {
+                    if ($pengaduan->tanggal_selesai == null) {
+                        $pengaduan->tanggal_selesai = date('Y-m-d H:i:s');
+                    }
+                }
+
                 $pengaduan->fill($request->all());
                 $pengaduan->save();
-                
+
+                if ($request->file('picture_post')) {
+
+                    $files = $request->file('picture_post');
+                    $names = [];
+                    foreach ($files as $file) {
+                        $names[] = Str::random(5) . date('YmdHis') . '.' . $file->getClientOriginalExtension();
+                    }
+
+                    foreach ($files as $key => $file) {
+                        $paths[] = $file->storeAs('detail_pengaduan/picture_post', $names[$key], 'public');
+                    }
+
+                    foreach ($paths as $path) {
+                        DetailIPengaduan::create([
+                            'pengaduan_id' => $pengaduan->id,
+                            'picture' => $path,
+                            'tipe' => 'post'
+                        ]);
+                    }
+                }
             });
+            if($request->input('stayPaged') == 'on'){
+                return redirect()->back()->with('success', 'Status pelaporan berhasil diupdate!');
+            }
             return redirect()->route('pengaduan.index')->with('success', 'Status pelaporan berhasil diupdate!');
 
         } catch (\Exception $e) {
-            return redirect()->route('pengaduan.index.detail')->withInput()->with('error', $e->getMessage());
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
+    }
+
+
+    public function hapusPengaduan($id){
+
+        try {
+            $pengaduan = Pengaduan::findOrfail($id);
+            $pengaduan->delete();
+            return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
 
