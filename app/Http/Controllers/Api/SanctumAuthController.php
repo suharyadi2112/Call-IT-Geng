@@ -156,6 +156,7 @@ class SanctumAuthController extends Controller
                     'password' => Hash::make($request->input('password')), 
                     'handphone' => $request->input('handphone'),
                     'jabatan' => $request->input('jabatan'),
+                    'role' => $request->input('role'),
                     'status' => $request->input('status'),
                     'divisi' => $request->input('divisi'),
                 ]);

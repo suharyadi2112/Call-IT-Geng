@@ -28,6 +28,7 @@ class User extends Authenticatable
         'handphone',
         'jabatan',
         'status',
+        'role',
         'divisi',
     ];
 
