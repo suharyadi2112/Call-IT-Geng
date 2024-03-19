@@ -138,7 +138,7 @@ class PengaduanController extends Controller
         $gambarPerbaikanPengaduan = DetailIPengaduan::where('pengaduan_id', $pengaduan->id)->where('tipe', 'post')->get();
         $kategoriPengaduan = KatPengaduan::select('id', 'nama')->get();
         $indikatorMutu = IndikatorMutu::select('id', 'nama_indikator')->get();
-        $workers = User::whereIn('jabatan', ['worker', 'admin'])->get();
+        $workers = User::whereIn('divisi', ['IT'])->get();
         return view('dashboard.pengaduan.pengaduan_detail', [
             'pengaduan' => $pengaduan, 
             'indikatorMutu' => $indikatorMutu, 

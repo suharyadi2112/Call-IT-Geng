@@ -14,7 +14,7 @@ class DashboardController extends Controller
     public function index()
     {
         $worker = User::where('divisi', 'IT')->get();
-        // $pengaduan = Pengaduan::get();
+        $info = Pengaduan::latest()->take(5)->get();
         $pengaduan = Pengaduan::select('kategori_pengaduan_id', DB::raw('count(*) as total'))
             ->groupBy('kategori_pengaduan_id')
             ->orderBy('total', 'desc')
@@ -33,6 +33,7 @@ class DashboardController extends Controller
             'dashboard.dashboard',
             [
                 'worker' => $worker,
+                'info' => $info,
                 'pengaduan' => $pengaduan,
                 'belum' => $belum,
                 'sedang' => $sedang,
