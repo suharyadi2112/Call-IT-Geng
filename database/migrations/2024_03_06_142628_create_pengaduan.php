@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('a_pengaduan', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->text('kode_laporan');
-            $table->uuid('indikator_mutu_id');
+            $table->uuid('indikator_mutu_id')->nullable();
             $table->uuid('pelapor_id');
             $table->uuid('kategori_pengaduan_id');
             $table->uuid('admin_id')->nullable();

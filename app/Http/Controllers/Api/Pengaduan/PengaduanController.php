@@ -225,7 +225,6 @@ class PengaduanController extends Controller
                 $kodeGenerate = $this->generateCode();
                 $pengaduan = Pengaduan::create([
                     'kode_laporan' => $kodeGenerate,
-                    'indikator_mutu_id' => $request->input('indikator_mutu_id'),
                     'pelapor_id' => Auth::user()->id,
                     'admin_id' => $adminCheck,
                     'kategori_pengaduan_id' => $request->input('kategori_pengaduan_id'),
@@ -233,7 +232,6 @@ class PengaduanController extends Controller
                     'lantai' => $request->input('lantai'),
                     'judul_pengaduan' => $request->input('judul_pengaduan'),
                     'dekskripsi_pelaporan' => $request->input('dekskripsi_pelaporan'),
-                    'prioritas' => $request->input('prioritas'),
                     'nomor_handphone' => $request->input('nomor_handphone'),
                     'status_pelaporan' => 'waiting',
                     'tanggal_pelaporan' => date('Y-m-d H:i:s'),
@@ -415,9 +413,6 @@ class PengaduanController extends Controller
     {   
 
         $messages = [
-            'indikator_mutu_id.required' => 'Indikator mutu wajib diisi.',
-            'indikator_mutu_id.max' => 'Indikator mutu max 100 karakter.',
-            
             'pelapor_id.max' => 'Pelapor max 100 karakter.',
             
             'kategori_pengaduan_id.required' => 'Kategori pengaduan wajib diisi.',
@@ -435,9 +430,6 @@ class PengaduanController extends Controller
             'dekskripsi_pelaporan.required' => 'Deskripsi pelapporan wajib diisi.',
             'dekskripsi_pelaporan.max' => 'Deskripsi pelapporan max 1000 karakter.',
             
-            'prioritas.required' => 'Prioritas pelaporan wajib diisi.',
-            'prioritas.max' => 'Prioritas pelaporan max 100 karakter.',
-            
             'nomor_handphone.max' => 'Nomor handphone max 50 karakter.',
             
             'tanggal_pelaporan.date' => 'Tanggal pelaporan tidak bertipe tanggal(date).',
@@ -450,7 +442,6 @@ class PengaduanController extends Controller
             'picture_pre.*.max' => 'Picture Pre maksimal 5 mb',
         ];
         $validator = Validator::make($request->all(), [
-            'indikator_mutu_id' => 'required|max:100',
             'pelapor_id' => 'max:100',
             'kategori_pengaduan_id' => 'required|max:100',
             'lokasi' => 'required|max:500',
@@ -464,7 +455,6 @@ class PengaduanController extends Controller
             ],
             'judul_pengaduan' => 'required|max:500',
             'dekskripsi_pelaporan' => 'required|max:1000',
-            'prioritas' => 'required|max:100',
             'nomor_handphone' => 'max:20',
             'tanggal_pelaporan' => 'date',
 
