@@ -49,6 +49,7 @@
                                     <th>#</th>
                                     <th>Nama</th>
                                     <th>Jabatan</th>
+                                    <th>Divisi</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -90,6 +91,7 @@
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '5%'},
                 { data: 'name', name: 'name'},
                 { data: 'jabatan', name: 'jabatan' },
+                { data: 'divisi', name: 'divisi' },
                 { data: 'action', name: 'action'}
 
             ],
@@ -116,11 +118,11 @@
             }).then((Delete) => {
                 if (Delete) {
                     $.ajax({
-                        url : window.location.pathname + '/' + id,
-                        type : 'DELETE',
+                        url : window.location.pathname + '/' + id + '/hapus',
                         data: {
                             "id": id,
                             "_token": "{{ csrf_token() }}",
+                            "_method": 'DELETE'
                         },
                         success: function (data) {
                             table.ajax.reload();

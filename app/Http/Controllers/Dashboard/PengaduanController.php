@@ -24,16 +24,24 @@ class PengaduanController extends Controller
 {
     public function index(Request $request)
     {
-
         if ($request->ajax()) {
-            $model = Pengaduan::query()->with('detailpengaduan', 'kategoripengaduan', 'indikatormutu', 'pelapor', 'workers')
-            ->orderBy('created_at', 'desc');
+            if(auth()->user()->divisi == 'IT'){
+                $model = Pengaduan::query()->with('kategoripengaduan', 'pelapor', 'workers')
+                ->orderBy('created_at', 'desc');
+            }else{
+                $model = Pengaduan::query()->with('kategoripengaduan', 'pelapor', 'workers')
+                ->where('pelapor_id', auth()->user()->id)
+                ->orderBy('created_at', 'desc');
+            }
+
             return DataTables::of($model)
             ->addColumn('action', function ($row) {
-                $actionBtn = '<a href="'.route('pengaduan.index.detail',$row->id).'" class="mr-2 btn btn-sm round btn-outline-primary shadow" title="Detail" data-id="' . $row->id . '">
+                $actionBtn = '<a href="'.route('pengaduan.detail',$row->id).'" class="mr-2 btn btn-sm round btn-outline-primary shadow" title="Detail" data-id="' . $row->id . '">
                 <i class="fa fa-lg fa-fw fa-eye"></i></a>';
-                $actionBtn .= '<button type="button" id="modalDelete" class="mr-2 btn btn-sm round btn-outline-danger shadow" title="Hapus" data-id="' . $row->id . '">
-                <i class="fa fa-lg fa-fw fa-trash"></i></button>';
+                if (Auth::user()->divis == 'IT') {
+                    $actionBtn.= '<button type="button" id="modalDelete" class="mr-2 btn btn-sm round btn-outline-danger shadow" title="Hapus" data-id="'. $row->id. '">
+                    <i class="fa fa-lg fa-fw fa-trash"></i></button>';
+                }
                 return $actionBtn;
             })
             ->editColumn('status_pelaporan', function ($row) {
@@ -69,12 +77,12 @@ class PengaduanController extends Controller
     {
         $validator = $this->validatePengaduan($request, null, 'insert');
         if ($validator->fails()) {
-            return redirect()->route('pengaduan.index.create')->withInput()->with('errors', $validator->errors());
+            return redirect()->back()->withInput()->with('errors', $validator->errors());
         }
         try {
 
             $adminCheck = null;
-            if (Auth::user()->jabatan == 'admin') {
+            if (Auth::user()->jabatan == 'Administrator') {
                 $adminCheck = Auth::user()->id;
             }
 
@@ -127,7 +135,7 @@ class PengaduanController extends Controller
 
             return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil disimpan!');
         } catch (\Exception $e) {
-            return redirect()->route('pengaduan.index.create')->withInput()->with('error', $e->getMessage());
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
 

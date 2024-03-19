@@ -106,9 +106,11 @@
             </div>
         </div>
         <div class="col-md-6">
-            <form action="{{ route('pengaduan.index.update', $pengaduan->id) }}" method="POST" enctype="multipart/form-data" id="form-pengaduan">
+            @cekDivisi
+            <form action="{{ route('pengaduan.update', $pengaduan->id) }}" method="POST" enctype="multipart/form-data" id="form-pengaduan">
                 @csrf
                 @method('PUT')
+            @endcekDivisi
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">Kondisi Perbaikan</div>
@@ -123,7 +125,7 @@
                                 'done' => 'Selesai',
                             ];
                             @endphp
-                            <select class="form-control" id="status_pelaporan" name="status_pelaporan" @if($pengaduan->status_pelaporan == 'done') @disabled(true) @endif>
+                            <select class="form-control" id="status_pelaporan" name="status_pelaporan" @if($pengaduan->status_pelaporan == 'done' || auth()->user()->divisi == 'Umum') @disabled(true) @endif>
                                 <option value="">-- Pilih Status Pelaporan --</option>
                                 @foreach ($status as $key => $value)
                                     <option value="{{ $key }}" {{ $key == $pengaduan->status_pelaporan ? 'selected' : '' }}>{{ $value }}</option>
@@ -132,11 +134,13 @@
                         </div>
                         <div class="form-group select2-input">
                             <label>Ditugaskan Kepada</label>
-                            <select class="form-control" id="workers" name="workers[]" multiple required style="width: 100%" @if($pengaduan->status_pelaporan == 'done') @disabled(true) @endif>
+                            <select class="form-control" id="workers" name="workers[]" multiple required style="width: 100%" @if($pengaduan->status_pelaporan == 'done' || auth()->user()->divisi == 'Umum') @disabled(true) @endif>
+                                @cekDivisi
                                 <option value="">-- Pilih Orang --</option>
                                 @foreach ($workers as $key => $value)
                                     <option value="{{ $value->id }}" {{ in_array($value->id, $pengaduan->workers->pluck('id')->toArray()) ? 'selected' : '' }}>{{ $value->name }}</option>
                                 @endforeach
+                                @endcekDivisi
                             </select>
                         </div>
                         <div class="form-group" id="imageFixing">
@@ -170,12 +174,16 @@
                     </div>
                     <div class="card-action">
                         <a href="{{ route('pengaduan.index') }}" class="btn btn-sm btn-black">Kembali</a>
-                        @if($pengaduan->status_pelaporan != 'done') 
-                        <button type="submit" class="btn btn-sm btn-primary">Simpan</button>
-                        @endif
+                        @cekDivisi
+                            @if($pengaduan->status_pelaporan != 'done' ) 
+                                <button type="submit" class="btn btn-sm btn-primary">Simpan</button>
+                            @endif
+                        @endcekDivisi
                     </div>
                 </div>
+            @cekDivisi
             </form>
+            @endcekDivisi
         </div>
     </div>
 </div>
@@ -195,7 +203,7 @@
             $(this).ekkoLightbox();
         });
         $("#workers").select2({
-            placeholder: "Pilih Orang",
+            placeholder: "",
             theme: 'bootstrap',
         });
 

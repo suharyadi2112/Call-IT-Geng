@@ -3,7 +3,7 @@
 @section('content')
 <div class="page-inner">
     <h4 class="page-title">Buat Pengaduan</h4>
-    <form action="{{ route('pengaduan.index.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('pengaduan.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('POST')
         @if ($errors->any())

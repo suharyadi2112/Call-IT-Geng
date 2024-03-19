@@ -38,31 +38,41 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('profil', [ProfileController::class, 'index'])->name('profil.index');
     Route::post('profil', [ProfileController::class, 'update'])->name('profil.update');
 
-    Route::get('pengaduan', [PengaduanController::class, 'index'])->name('pengaduan.index');
-    Route::get('pengaduan/buat',[PengaduanController::class, 'buatPengaduan'])->name('pengaduan.index.create');
-    Route::post('pengaduan/buat',[PengaduanController::class, 'simpanPengaduan'])->name('pengaduan.index.store');
-    Route::get('pengaduan/{id}',[PengaduanController::class, 'detailPengaduan'])->name('pengaduan.index.detail');
-    Route::put('pengaduan/{id}',[PengaduanController::class, 'updatePengaduan'])->name('pengaduan.index.update');
-    Route::get('pengaduan/{id}/hapus',[PengaduanController::class, 'hapusPengaduan'])->name('pengaduan.index.delete');
+    Route::prefix('pengaduan')->group(function () {
+        Route::get('/', [PengaduanController::class, 'index'])->name('pengaduan.index');
+        Route::get('/buat', [PengaduanController::class, 'buatPengaduan'])->name('pengaduan.create');
+        Route::post('/buat', [PengaduanController::class, 'simpanPengaduan'])->name('pengaduan.store');
+        Route::get('/{id}', [PengaduanController::class, 'detailPengaduan'])->name('pengaduan.detail');
+        Route::put('/{id}', [PengaduanController::class, 'updatePengaduan'])->name('pengaduan.update');
+        Route::get('/{id}/hapus', [PengaduanController::class, 'hapusPengaduan'])->middleware('cekDivisi')->name('pengaduan.delete');
+    });
     
-    Route::get('kategori', [PengaduanController::class, 'kategori'])->name('pengaduan.kategori');
-    Route::post('kategori/store', [PengaduanController::class, 'storekategori'])->name('pengaduan.kategori.store');
-    Route::get('kategori/show/{id}', [PengaduanController::class, 'showkategori'])->name('pengaduan.kategori.show');
-    Route::post('kategori/update', [PengaduanController::class, 'updatekategori'])->name('pengaduan.kategori.update');
-    Route::get('kategori/hapus/{id}', [PengaduanController::class, 'destroykategori'])->name('pengaduan.kategori.destroy');
-    
-    Route::get('indikatormutu', [IndikatorMutuController::class, 'index'])->name('indikatormutu.index');
-    Route::post('indikatormutu/store', [IndikatorMutuController::class, 'store'])->name('indikatormutu.store');
-    Route::get('indikatormutu/show/{id}', [IndikatorMutuController::class, 'showindikator'])->name('indikatormutu.index.show');
-    Route::post('indikatormutu/update', [IndikatorMutuController::class, 'updateindikator'])->name('indikatormutu.update');
-    Route::get('indikatormutu/hapus/{id}', [IndikatorMutuController::class, 'destroyindikator'])->name('indikatormutu.destroy');
 
-    Route::get('pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
-    Route::get('pengguna/buat', [PenggunaController::class, 'create'])->name('pengguna.create');
-    Route::post('pengguna/buat', [PenggunaController::class,'store'])->name('pengguna.store');
-    Route::get('pengguna/{id}', [PenggunaController::class, 'show'])->name('pengguna.show');
-    Route::put('pengguna/{id}', [PenggunaController::class, 'update'])->name('pengguna.update');
-    Route::delete('pengguna/{id}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
+    Route::prefix('kategori')->middleware('cekDivisi')->group(function () {
+        Route::get('/', [PengaduanController::class, 'kategori'])->name('pengaduan.kategori');
+        Route::post('/store', [PengaduanController::class, 'storekategori'])->name('pengaduan.kategori.store');
+        Route::get('/show/{id}', [PengaduanController::class, 'showkategori'])->name('pengaduan.kategori.show');
+        Route::post('/update', [PengaduanController::class, 'updatekategori'])->name('pengaduan.kategori.update');
+        Route::get('/hapus/{id}', [PengaduanController::class, 'destroykategori'])->name('pengaduan.kategori.destroy');
+    });
+
+    Route::prefix('indikatormutu')->middleware('cekDivisi')->group(function () {
+        Route::get('/', [IndikatorMutuController::class, 'index'])->name('indikatormutu.index');
+        Route::post('/store', [IndikatorMutuController::class, 'store'])->name('indikatormutu.store');
+        Route::get('/show/{id}', [IndikatorMutuController::class, 'showindikator'])->name('indikatormutu.show');
+        Route::post('/update', [IndikatorMutuController::class, 'updateindikator'])->name('indikatormutu.update');
+        Route::get('/hapus/{id}', [IndikatorMutuController::class, 'destroyindikator'])->name('indikatormutu.destroy');
+    });
+    
+    Route::prefix('pengguna')->middleware('cekDivisi')->group(function () {
+        Route::get('/', [PenggunaController::class, 'index'])->name('pengguna.index');
+        Route::get('/buat', [PenggunaController::class, 'create'])->name('pengguna.create');
+        Route::post('/buat', [PenggunaController::class,'store'])->name('pengguna.store');
+        Route::get('/{id}', [PenggunaController::class, 'show'])->name('pengguna.show');
+        Route::put('/{id}', [PenggunaController::class, 'update'])->name('pengguna.update');
+        Route::get('/{id}/hapus', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
+    });
+    
 
 });
 
