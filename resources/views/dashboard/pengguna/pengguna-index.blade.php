@@ -1,8 +1,8 @@
 @extends('partial.layout.main')
-@section('title', 'Pengaduan')
+@section('title', 'Master Pengguna')
 @section('content')
 <div class="page-inner">
-	<h4 class="page-title">Pengaduan</h4>
+	<h4 class="page-title">Pengguna</h4>
     @if ($errors->any())
         <div class="alert alert-danger  alert-dismissible fade show" role="alert">
             <ul>
@@ -33,10 +33,10 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title">Daftar Pengaduan</h4>
+                        <h4 class="card-title">Daftar Pengguna</h4>
                         <div class="ml-auto">
-                            <a href="{{ route('pengaduan.create') }}" class="btn btn-sm btn-success">
-                                <i class="fa fa-plus"></i> Tambah Pengaduan
+                            <a href="{{ route('pengguna.create') }}" class="btn btn-sm btn-success">
+                                <i class="fa fa-plus"></i> Tambah Pengguna
                             </a>
                         </div>
                     </div>
@@ -47,13 +47,10 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Judul Aduan</th>
-                                    <th>Lantai</th>
-                                    <th>Lokasi</th>
-                                    <th>Prioritas</th>
-                                    <th>Status</th>
-                                    <th>Pelapor</th>
-                                    <th>Kategori</th>
+                                    <th>Nama</th>
+                                    <th>Jabatan</th>
+                                    <th>Divisi</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                         </table>
@@ -89,69 +86,17 @@
             processing: true,
             serverSide: true,
             ordering: false,
-            ajax: '{{ route('pengaduan.index') }}',
+            ajax: '{{ route('pengguna.index') }}',
             columns: [
-                {
-                    class : "details-control",
-                    orderable : false,
-                    defaultContent : "",
-                }, 
-                { data: 'judul_pengaduan', name: 'judul_pengaduan' },
-                { data: 'lantai', name: 'lantai' },
-                { data: 'lokasi', name: 'lokasi' },
-                { data: 'prioritas', name: 'prioritas' },
-                { data: 'status_pelaporan', name: 'status_pelaporan' },
-                { data: 'pelapor.name', name: 'pelapor.name' },
-                { data: 'kategoripengaduan.nama', name: 'kategoripengaduan.nama', defaultContent: '-' },
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '5%'},
+                { data: 'name', name: 'name'},
+                { data: 'jabatan', name: 'jabatan' },
+                { data: 'divisi', name: 'divisi' },
+                { data: 'action', name: 'action'}
+
             ],
         });
-
-        $('#basic-datatables tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row( tr );
-            table.rows().every(function () {
-                if (this.child.isShown() && !$(this.node()).is(tr)) {
-                    this.child.hide();
-                    $(this.node()).removeClass('shown');
-                }
-            });
-
-            if (row.child.isShown()) {
-                row.child.hide();
-                tr.removeClass('shown');
-            } else {
-                row.child(format(row.data())).show();
-                tr.addClass('shown');
-            }
-        });
-        function format ( d ) {
-            let workerData = '';
-            if (Object.keys(d.workers).length !== 0) {
-                workerData += '<tr><td>Pengerjaan:</td><td>';
-                for (let key in d.workers) {
-                    if (d.workers.hasOwnProperty(key)) {
-                        workerData += d.workers[key].name + '<br>';
-                    }
-                }
-                workerData += '</td></tr>';
-            }
-            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-                '<tr>'+
-                    '<td>Tanggal Lapor : </td>'+
-                    '<td>'+d.tanggal_pelaporan+'</td>'+
-                '</tr>'+
-                '<tr>'+
-                    '<td>Tanggal Selesai:</td>'+
-                    '<td>'+d.tanggal_selesai+'</td>'+
-                '</tr>'+
-                workerData + 
-                '<tr>'+
-                    '<td>Aksi</td>'+
-                    '<td>'+d.action+'</td>'+
-                '</tr>'+
-            '</table>';
-        }
-
+        
         $('body').on('click', '#modalDelete', function() {
             var id = $(this).data('id');
             swal({
@@ -168,7 +113,6 @@
                         text : 'Hapus',
                         className : 'btn btn-danger'
                     },
-                 
                     
                 }
             }).then((Delete) => {
@@ -204,8 +148,6 @@
                 }
             });
         })
-                
-    
 
     });
 </script>

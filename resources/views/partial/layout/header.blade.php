@@ -1,9 +1,11 @@
 <div class="main-header">
-    <div class="logo-header" data-background-color="{{ config('app.themes.color.logo_header') }}"> 
+    <div class="logo-header" data-background-color="{{ config('app.themes.color.logo_header') }}">
         <a href="{{ route('dashboard') }}" class="logo">
-            <img src="{{ asset('/assets/img/callit.png') }}" alt="navbar brand" class="navbar-brand" style="width: 142px;height:35px;">
+            <img src="{{ asset('/assets/img/callit.png') }}" alt="navbar brand" class="navbar-brand"
+                style="width: 142px;height:35px;">
         </a>
-        <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse"
+            data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon">
                 <i class="icon-menu"></i>
             </span>
@@ -16,13 +18,18 @@
         </div>
     </div>
 
-    <nav class="navbar navbar-header navbar-expand-lg" data-background-color="{{ config('app.themes.color.navbar_header') }}">
+    <nav class="navbar navbar-header navbar-expand-lg"
+        data-background-color="{{ config('app.themes.color.navbar_header') }}">
         <div class="container-fluid">
             <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
                 <li class="nav-item dropdown hidden-caret">
                     <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
                         <div class="avatar-sm">
-                            <img src="{{ ('/assets/img/user.png') }}" alt="..." class="avatar-img rounded-circle">
+                            <span class="avatar-title rounded-circle border border-white bg-secondary">
+                                @php
+                                    echo substr(Auth::user()->name, 0, 1);
+                                @endphp
+                            </span>
                         </div>
                     </a>
                     <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -49,11 +56,11 @@
 </div>
 
 @push('script')
-<script>
-    function logout(){
-        if (confirm("Apakah anda yakin ingin keluar?") == true) {
-            window.location.href = "{{ route('logout') }}";
-         }
-    }
-</script>
+    <script>
+        function logout() {
+            if (confirm("Apakah anda yakin ingin keluar?") == true) {
+                window.location.href = "{{ route('logout') }}";
+            }
+        }
+    </script>
 @endpush

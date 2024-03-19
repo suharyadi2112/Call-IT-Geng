@@ -22,11 +22,13 @@ class ProfileController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$user->id,
+            'handphone' => 'required|numeric',
             'password' => 'nullable|min:8'
         ]);
 
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->handphone = $request->handphone;
         if($request->password){
             $user->password = bcrypt($request->password);
         }

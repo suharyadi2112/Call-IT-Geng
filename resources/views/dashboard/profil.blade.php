@@ -66,6 +66,10 @@
 							<input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{ $user->email }}">
 						</div>
 						<div class="form-group">
+							<label for="handphone">No Handphone <span class="required-label">*</span></label>
+							<input type="text" class="form-control" id="handphone" name="handphone" placeholder="No Handphone" required value="{{ $user->handphone }}"/>
+						</div>
+						<div class="form-group">
 							<label for="password">Password</label>
 							<input type="password" class="form-control" id="password" name="password" placeholder="Password">
 						</div>

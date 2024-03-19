@@ -92,8 +92,11 @@
                             {{-- @php dd($p->kategoripengaduan->nama); @endphp --}}
                             <div class="d-flex">
                                 <div class="avatar">
-                                    <img src="../assets/img/logoproduct.svg" alt="..."
-                                        class="avatar-img rounded-circle">
+                                    <span class="avatar-title rounded-circle border border-white bg-success">
+                                        @php
+                                            echo substr($p->kategoripengaduan->nama, 0, 1);
+                                        @endphp
+                                    </span>
                                 </div>
                                 <div class="flex-1 pt-1 ml-2">
                                     <h6 class="fw-bold mb-1">{{ $p->kategoripengaduan->nama }}</h6>
@@ -115,27 +118,6 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title fw-mediumbold">Worker</div>
-                        <div class="card-list">
-                            @foreach ($worker as $m)
-                                <div class="item-list">
-                                    <div class="avatar">
-                                        <img src="../assets/img/user.png" alt="..." class="avatar-img rounded-circle">
-                                    </div>
-                                    <div class="info-user ml-3">
-                                        <div class="username">{{ $m->name }}</div>
-                                        <div class="status">{{ $m->jabatan }}</div>
-                                    </div>
-
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-5">
                 <div class="card card-success bg-success-gradient">
                     <div class="card-body">
                         <h4 class="mt-3 b-b1 pb-2 mb-4 fw-bold">Pengaduan Masuk Bulan Ini :</h4>
@@ -147,8 +129,9 @@
                         <h4 class="mt-3 b-b1 pb-2 mb-4 fw-bold">Kategori Pengaduan Terbanyak Bulan Ini :</h4>
                         <ul class="list-unstyled">
                             @foreach ($bulankategori as $bk)
-                                <li class="d-flex justify-content-between pb-1 pt-1"><small>{{$bk->kategoripengaduan->nama}}</small>
-                                    <span>{{$bk->total}}</span>
+                                <li class="d-flex justify-content-between pb-1 pt-1">
+                                    <small>{{ $bk->kategoripengaduan->nama }}</small>
+                                    <span>{{ $bk->total }}</span>
                                 </li>
                             @endforeach
 
@@ -156,6 +139,48 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-5">
+                <div class="card  full-height card-round">
+                    <div class="card-header">
+                        <div class="card-head-row">
+                            <div class="card-title">Pengaduan</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @foreach ($info as $i)
+                            <div class="d-flex">
+                                <div class="avatar">
+                                    <span class="avatar-title rounded-circle border border-white bg-info">
+                                        @php
+                                            echo substr($i->pelapor->name, 0, 1);
+                                        @endphp
+                                    </span>
+                                </div>
+                                <div class="flex-1 ml-3 pt-1">
+                                    <h6 class="text-uppercase fw-bold mb-1">{{ $i->pelapor->name }}
+                                        @if ($i->status_pelaporan == 'waiting')
+                                            <span class="btn btn-danger btn-round  btn-xs">Belum Dikerjakan</span>
+                                        @elseif($i->status_pelaporan == 'progress')
+                                            <span class="btn btn-warning btn-round  btn-xs">Sedang Dikerjakan</span>
+                                        @else
+                                            <span class="btn btn-success btn-round  btn-xs">Selesai Dikerjakan</span>
+                                        @endif
+
+                                    </h6>
+                                    <span class="text-muted">{!! $i->dekskripsi_pelaporan !!}</span>
+                                </div>
+                                <div class="float-right pt-1">
+                                    <small
+                                        class="text-muted">{{ \Carbon\Carbon::parse($i->tanggal_pelaporan)->diffForHumans() }}</small>
+                                </div>
+                            </div>
+                            <div class="separator-dashed"></div>
+                        @endforeach
+
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 @endsection

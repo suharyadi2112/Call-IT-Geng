@@ -14,42 +14,36 @@
                     </span>
                     <h4 class="text-section">Menu</h4>
                 </li>
-                <li class="nav-item {{ request()->routeIs('pengaduan*') ? 'active submenu' : '' }}">
-                    <a data-toggle="collapse" href="#pengaduan">
+                <li class="nav-item {{ request()->routeIs('pengaduan*') ? 'active' : '' }}">
+                    <a href="{{ route('pengaduan.index') }}" aria-expanded="false">
                         <i class="fas fa-layer-group"></i>
                         <p>Pengaduan</p>
-                        <span class="caret"></span>
                     </a>
-                    <div class="collapse {{ request()->routeIs('pengaduan*') ? 'show' : '' }}" id="pengaduan">
-                        <ul class="nav nav-collapse">
-                            <li class="{{ request()->routeIs('pengaduan.index*') ? 'active' : '' }}">
-                                <a href="{{ route('pengaduan.index') }}">
-                                    <span class="sub-item">Daftar Pengaduan</span>
-                                </a>
-                            </li>
-
-                            <li class="{{ request()->routeIs('pengaduan.kategori') ? 'active' : '' }}">
-                                <a href="{{ route('pengaduan.kategori') }}">
-                                    <span class="sub-item">Kategori</span>
-                                </a>
-                            </li>
-
-                        </ul>
-                    </div>
                 </li>
 
+                @cekDivisi
+                <li class="nav-item {{ request()->routeIs('pengaduan.kategori') ? 'active' : '' }}">
+                    <a href="{{ route('pengaduan.kategori') }}" aria-expanded="false">
+                        <i class="fas fa-list"></i>
+                        <p>Kategori</p>
+                    </a>
+                </li>
+                @endcekDivisi
+
+                @cekDivisi
                 <li class="nav-item {{ request()->routeIs('indikatormutu*') ? 'active' : '' }}">
                     <a href="{{ route('indikatormutu.index') }}" aria-expanded="false">
                         <i class="fas fa-bullseye"></i>
                         <p>Indikator Mutu</p>
                     </a>
                 </li>
+                @endcekDivisi
 
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>
                     </span>
-                    <h4 class="text-section">Setting</h4>
+                    <h4 class="text-section">Pengaturan</h4>
                 </li>
                 <li class="nav-item {{ request()->routeIs('profil*') ? 'active' : '' }}">
                     <a href="{{ route('profil.index') }}" aria-expanded="false">
@@ -57,6 +51,15 @@
                         <p>Profil</p>
                     </a>
                 </li>
+
+                @cekDivisi
+                <li class="nav-item {{ request()->routeIs('pengguna*') ? 'active' : '' }}">
+                    <a href="{{ route('pengguna.index') }}" aria-expanded="false">
+                        <i class="fas fa-user"></i>
+                        <p>Master Pengguna</p>
+                    </a>
+                </li>
+                @endcekDivisi
             </ul>
         </div>
     </div>

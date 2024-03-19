@@ -18,6 +18,9 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    use SoftDeletes;
+
     protected $fillable = [
         'name',
         'email',
@@ -26,9 +29,9 @@ class User extends Authenticatable
         'jabatan',
         'status',
         'divisi',
-        
-        'deleted_at',//soft delete
     ];
+
+    protected $dates = ['deleted_at'];
 
     /**
      * The attributes that should be hidden for serialization.
