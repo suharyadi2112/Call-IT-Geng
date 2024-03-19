@@ -147,23 +147,32 @@
                             <div id="preview" class="mt-3 row"></div>
                             <button type="button" class="btn btn-sm btn-danger mt-3" id="btnDelete" style="display:none;">Hapus Gambar</button>
                             <div class="row image-gallery">
+                                @if($gambarPerbaikanPengaduan->count() > 0)
                                 @foreach ($gambarPerbaikanPengaduan as $key => $value)
                                     <a href="{{ asset('storage/'.$value->picture) }}" class="col-6 col-md-3 mb-4" data-toggle="lightbox">
                                         <img src="{{ asset('storage/'.$value->picture) }}" class="img-fluid" style="width: 100%; object-fit: cover; height: 100px;">
                                     </a>   
                                 @endforeach
+                                @else
+                                <div class="col-12">
+                                    <p class="text-center">Tidak ada gambar</p>
+                                @endif
                             </div>
                         </div>
+                        @if($pengaduan->status_pelaporan != 'done') 
                         <div class="form-check">
                             <label class="form-check-label">
                                 <input class="form-check-input" type="checkbox" id="stayPaged" name="stayPaged">
                                 <span class="form-check-sign">Tetap dihalaman ini</span>
                             </label>
                         </div>
+                        @endif
                     </div>
                     <div class="card-action">
                         <a href="{{ route('pengaduan.index') }}" class="btn btn-sm btn-black">Kembali</a>
+                        @if($pengaduan->status_pelaporan != 'done') 
                         <button type="submit" class="btn btn-sm btn-primary">Simpan</button>
+                        @endif
                     </div>
                 </div>
             </form>

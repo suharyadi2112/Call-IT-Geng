@@ -7,6 +7,7 @@ use App\Http\Controllers\Dashboard\IndikatorMutuController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\PengaduanController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Dashboard\PenggunaController;
 use App\Models\Pengaduan;
 
 /*
@@ -50,19 +51,24 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::post('kategori/update', [PengaduanController::class, 'updatekategori'])->name('pengaduan.kategori.update');
     Route::get('kategori/hapus/{id}', [PengaduanController::class, 'destroykategori'])->name('pengaduan.kategori.destroy');
     
-
-    // //indikatormutu
     Route::get('indikatormutu', [IndikatorMutuController::class, 'index'])->name('indikatormutu.index');
     Route::post('indikatormutu/store', [IndikatorMutuController::class, 'store'])->name('indikatormutu.store');
     Route::get('indikatormutu/show/{id}', [IndikatorMutuController::class, 'showindikator'])->name('indikatormutu.index.show');
     Route::post('indikatormutu/update', [IndikatorMutuController::class, 'updateindikator'])->name('indikatormutu.update');
     Route::get('indikatormutu/hapus/{id}', [IndikatorMutuController::class, 'destroyindikator'])->name('indikatormutu.destroy');
+
+    Route::get('pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
+    Route::get('pengguna/buat', [PenggunaController::class, 'create'])->name('pengguna.create');
+    Route::post('pengguna/buat', [PenggunaController::class,'store'])->name('pengguna.store');
+    Route::get('pengguna/{id}', [PenggunaController::class, 'show'])->name('pengguna.show');
+    Route::put('pengguna/{id}', [PenggunaController::class, 'update'])->name('pengguna.update');
+    Route::delete('pengguna/{id}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
+
 });
 
 
 
 Route::get('/', function () {
-    // return view('welcome');
     return redirect('/login');
 });
 

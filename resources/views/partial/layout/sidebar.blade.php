@@ -14,28 +14,17 @@
                     </span>
                     <h4 class="text-section">Menu</h4>
                 </li>
-                <li class="nav-item {{ request()->routeIs('pengaduan*') ? 'active submenu' : '' }}">
-                    <a data-toggle="collapse" href="#pengaduan">
+                <li class="nav-item {{ request()->routeIs('pengaduan.index*') ? 'active' : '' }}">
+                    <a href="{{ route('pengaduan.index') }}" aria-expanded="false">
                         <i class="fas fa-layer-group"></i>
                         <p>Pengaduan</p>
-                        <span class="caret"></span>
                     </a>
-                    <div class="collapse {{ request()->routeIs('pengaduan*') ? 'show' : '' }}" id="pengaduan">
-                        <ul class="nav nav-collapse">
-                            <li class="{{ request()->routeIs('pengaduan.index*') ? 'active' : '' }}">
-                                <a href="{{ route('pengaduan.index') }}">
-                                    <span class="sub-item">Daftar Pengaduan</span>
-                                </a>
-                            </li>
-
-                            <li class="{{ request()->routeIs('pengaduan.kategori') ? 'active' : '' }}">
-                                <a href="{{ route('pengaduan.kategori') }}">
-                                    <span class="sub-item">Kategori</span>
-                                </a>
-                            </li>
-
-                        </ul>
-                    </div>
+                </li>
+                <li class="nav-item {{ request()->routeIs('pengaduan.kategori') ? 'active' : '' }}">
+                    <a href="{{ route('pengaduan.kategori') }}" aria-expanded="false">
+                        <i class="fas fa-list"></i>
+                        <p>Kategori</p>
+                    </a>
                 </li>
 
                 <li class="nav-item {{ request()->routeIs('indikatormutu*') ? 'active' : '' }}">
@@ -49,12 +38,18 @@
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>
                     </span>
-                    <h4 class="text-section">Setting</h4>
+                    <h4 class="text-section">Pengaturan</h4>
                 </li>
                 <li class="nav-item {{ request()->routeIs('profil*') ? 'active' : '' }}">
                     <a href="{{ route('profil.index') }}" aria-expanded="false">
                         <i class="fas fa-home"></i>
                         <p>Profil</p>
+                    </a>
+                </li>
+                <li class="nav-item {{ request()->routeIs('pengguna*') ? 'active' : '' }}">
+                    <a href="{{ route('pengguna.index') }}" aria-expanded="false">
+                        <i class="fas fa-user"></i>
+                        <p>Master Pengguna</p>
                     </a>
                 </li>
             </ul>
