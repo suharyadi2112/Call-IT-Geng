@@ -30,6 +30,8 @@ services:
     volumes:
      - ./:/var/www
      - ./nginx/conf.d/:/etc/nginx/conf.d/
+     - "./public:/var/www/html/public:ro"
+    - "./storage/app:/var/www/html/storage/app:ro"
     networks:
       suu_network:
         aliases:

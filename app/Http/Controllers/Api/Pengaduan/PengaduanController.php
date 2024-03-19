@@ -73,6 +73,17 @@ class PengaduanController extends Controller
         }
     }
 
+    public function GetPengaduanByWorker($id_worker){
+        try {
+
+            $dataPivot = User::find($id_worker)->load('pengaduan')->only('name', 'pengaduan');
+            return response(["status"=> "success","message"=> "Data list pengaduan by worker successfully retrieved", "data" => $dataPivot], 200);
+
+        } catch (\Exception $e) {
+            return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+    }
+
     public function GetPengaduanList(){
         try {
             $queryy = Pengaduan::query();
