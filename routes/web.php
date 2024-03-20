@@ -59,6 +59,10 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     Route::prefix('laporan')->middleware('cekDivisi')->group(function () {
         Route::get('/', [LaporanController::class, 'index'])->name('laporan.index');
+        Route::get('/get', [LaporanController::class, 'getlaporan'])->name('laporan.get');
+        Route::get('/export_excel', [LaporanController::class, 'export_excel'])->name('laporan.export');
+        // Route::get('/siswa/export_excel', 'SiswaController@export_excel');
+
         // Route::post('/store', [PengaduanController::class, 'storekategori'])->name('kategori.store');
         // Route::get('/show/{id}', [PengaduanController::class, 'showkategori'])->name('kategori.show');
         // Route::post('/update', [PengaduanController::class, 'updatekategori'])->name('kategori.update');

@@ -28,6 +28,12 @@
                         <p>Kategori</p>
                     </a>
                 </li>
+                <li class="nav-item {{ request()->routeIs('laporan.*') ? 'active' : '' }}">
+                    <a href="{{ route('laporan.index') }}" aria-expanded="false">
+                        <i class="fas fa-file"></i>
+                        <p>Laporan</p>
+                    </a>
+                </li>
                 @endcekDivisi
 
                 <li class="nav-section">
