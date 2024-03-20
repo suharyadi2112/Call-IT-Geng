@@ -100,7 +100,7 @@
             var table = $('#basic-datatables').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('pengaduan.kategori') }}",
+                ajax: "{{ route('kategori.index') }}",
                 columns: [{
                         data: 'nama',
                         name: 'nama'
@@ -126,7 +126,7 @@
             $('body').on('click', '#modalEdit', function() {
                 var id = $(this).data('id');
                 // alert(id);
-                $.get("{{ route('pengaduan.kategori') }}" + '/show/' + id, function(data) {
+                $.get("{{ route('kategori.index') }}" + '/show/' + id, function(data) {
                     $('#modal-title').html("Edit Data");
                     $('#updateBtn').val("create-data");
                     $('#updateModal').modal('show');
@@ -153,7 +153,7 @@
                 $.ajax({
                     enctype: 'multipart/form-data',
                     data: new FormData($('#updateForm')[0]),
-                    url: "{{ route('pengaduan.kategori.update') }}",
+                    url: "{{ route('kategori.update') }}",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -195,7 +195,7 @@
                 $.ajax({
                     enctype: 'multipart/form-data',
                     data: new FormData($('#postForm')[0]),
-                    url: "{{ route('pengaduan.kategori.store') }}",
+                    url: "{{ route('kategori.store') }}",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },

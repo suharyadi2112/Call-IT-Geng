@@ -16,9 +16,7 @@ use Yajra\Datatables\Datatables;
 use App\Models\Pengaduan;
 use App\Models\KatPengaduan;
 use App\Models\DetailIPengaduan;
-use App\Models\IndikatorMutu;
 use App\Models\User;
-use Illuminate\Validation\Rules\Exists;
 
 class PengaduanController extends Controller
 {
@@ -68,9 +66,8 @@ class PengaduanController extends Controller
 
     public function buatPengaduan()
     {
-        $indikatorMutu = IndikatorMutu::select('id', 'nama_indikator')->get();
         $kategoriPengaduan = KatPengaduan::select('id', 'nama')->get();
-        return view('dashboard.pengaduan.pengaduan_create', ['indikatorMutu' => $indikatorMutu, 'kategoriPengaduan' => $kategoriPengaduan]);
+        return view('dashboard.pengaduan.pengaduan_create', ['kategoriPengaduan' => $kategoriPengaduan]);
     }
 
     public function simpanPengaduan(Request $request)
@@ -92,10 +89,10 @@ class PengaduanController extends Controller
                 $kodeGenerate = $this->generateCode();
                 $pengaduan = Pengaduan::create([
                     'kode_laporan' => $kodeGenerate,
-                    'indikator_mutu_id' => $request->input('indikator_mutu_id'),
                     'pelapor_id' => Auth::user()->id,
                     'admin_id' => $adminCheck,
                     'kategori_pengaduan_id' => $request->input('kategori_pengaduan_id'),
+                    'indikator_mutu_id' => '-',
                     'lokasi' => $request->input('lokasi'),
                     'lantai' => $request->input('lantai'),
                     'judul_pengaduan' => $request->input('judul_pengaduan'),
@@ -135,7 +132,7 @@ class PengaduanController extends Controller
 
             return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil disimpan!');
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error', $e->getMessage());
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -145,11 +142,9 @@ class PengaduanController extends Controller
         $gambarPengaduan = DetailIPengaduan::where('pengaduan_id', $pengaduan->id)->get();
         $gambarPerbaikanPengaduan = DetailIPengaduan::where('pengaduan_id', $pengaduan->id)->where('tipe', 'post')->get();
         $kategoriPengaduan = KatPengaduan::select('id', 'nama')->get();
-        $indikatorMutu = IndikatorMutu::select('id', 'nama_indikator')->get();
         $workers = User::whereIn('divisi', ['IT'])->get();
         return view('dashboard.pengaduan.pengaduan_detail', [
             'pengaduan' => $pengaduan, 
-            'indikatorMutu' => $indikatorMutu, 
             'kategoriPengaduan' => $kategoriPengaduan, 
             'gambarPengaduan' => $gambarPengaduan,
             'gambarPerbaikanPengaduan' => $gambarPerbaikanPengaduan,
@@ -249,7 +244,7 @@ class PengaduanController extends Controller
     private function getPengaduanAfterCreate($idPengaduan){
         
         $dataPengaduan = Pengaduan::query()
-        ->with('detailpengaduan', 'kategoripengaduan','indikatormutu','pelapor', 'detailpengaduan')
+        ->with('detailpengaduan', 'kategoripengaduan','pelapor', 'detailpengaduan')
         ->where('a_pengaduan.id', $idPengaduan)->get();
 
         return $dataPengaduan;
@@ -269,9 +264,6 @@ class PengaduanController extends Controller
     {
 
         $messages = [
-            'indikator_mutu_id.required' => 'Indikator mutu wajib diisi.',
-            'indikator_mutu_id.max' => 'Indikator mutu max 100 karakter.',
-
             'pelapor_id.max' => 'Pelapor max 100 karakter.',
 
             'kategori_pengaduan_id.required' => 'Kategori pengaduan wajib diisi.',
@@ -304,7 +296,6 @@ class PengaduanController extends Controller
             'picture_pre.*.max' => 'Picture Pre maksimal 5 mb',
         ];
         $validator = Validator::make($request->all(), [
-            'indikator_mutu_id' => 'required|max:100',
             'pelapor_id' => 'max:100',
             'kategori_pengaduan_id' => 'required|max:100',
             'lokasi' => 'required|max:500',
@@ -341,7 +332,7 @@ class PengaduanController extends Controller
                     $actionBtn = '<button type="button" class="mr-2 btn btn-sm round btn-outline-primary shadow" title="Edit" id="modalEdit" data-id="' . $row->id . '">
                     <i class="fa fa-lg fa-fw fa-edit"></i>
                     </button>';
-                    $actionBtn .= '<a href="' . route('pengaduan.kategori.destroy', $row->id) . '" class="btn btn-sm round btn-outline-danger shadow" title="Delete" id="modalDelete"
+                    $actionBtn .= '<a href="' . route('kategori.destroy', $row->id) . '" class="btn btn-sm round btn-outline-danger shadow" title="Delete" id="modalDelete"
                     data-id="' . $row->id . '">
                     <i class="fa fa-lg fa-fw fa-trash"></i>
                     </a>';
@@ -402,7 +393,7 @@ class PengaduanController extends Controller
         if ($request->ajax()) {
             return response()->json($kategori);
         } else {
-            return redirect()->route('pengaduan.kategori');
+            return redirect()->route('kategori.index');
         }
     }
 }
