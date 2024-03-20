@@ -22,19 +22,10 @@
                 </li>
 
                 @cekDivisi
-                <li class="nav-item {{ request()->routeIs('pengaduan.kategori') ? 'active' : '' }}">
-                    <a href="{{ route('pengaduan.kategori') }}" aria-expanded="false">
+                <li class="nav-item {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
+                    <a href="{{ route('kategori.index') }}" aria-expanded="false">
                         <i class="fas fa-list"></i>
                         <p>Kategori</p>
-                    </a>
-                </li>
-                @endcekDivisi
-
-                @cekDivisi
-                <li class="nav-item {{ request()->routeIs('indikatormutu*') ? 'active' : '' }}">
-                    <a href="{{ route('indikatormutu.index') }}" aria-expanded="false">
-                        <i class="fas fa-bullseye"></i>
-                        <p>Indikator Mutu</p>
                     </a>
                 </li>
                 @endcekDivisi
