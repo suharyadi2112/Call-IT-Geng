@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Dashboard\IndikatorMutuController;
+// use App\Http\Controllers\Dashboard\IndikatorMutuController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\PengaduanController;
 use App\Http\Controllers\Controller;
@@ -49,20 +49,20 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     
 
     Route::prefix('kategori')->middleware('cekDivisi')->group(function () {
-        Route::get('/', [PengaduanController::class, 'kategori'])->name('pengaduan.kategori');
-        Route::post('/store', [PengaduanController::class, 'storekategori'])->name('pengaduan.kategori.store');
-        Route::get('/show/{id}', [PengaduanController::class, 'showkategori'])->name('pengaduan.kategori.show');
-        Route::post('/update', [PengaduanController::class, 'updatekategori'])->name('pengaduan.kategori.update');
-        Route::get('/hapus/{id}', [PengaduanController::class, 'destroykategori'])->name('pengaduan.kategori.destroy');
+        Route::get('/', [PengaduanController::class, 'kategori'])->name('kategori.index');
+        Route::post('/store', [PengaduanController::class, 'storekategori'])->name('kategori.store');
+        Route::get('/show/{id}', [PengaduanController::class, 'showkategori'])->name('kategori.show');
+        Route::post('/update', [PengaduanController::class, 'updatekategori'])->name('kategori.update');
+        Route::get('/hapus/{id}', [PengaduanController::class, 'destroykategori'])->name('kategori.destroy');
     });
 
-    Route::prefix('indikatormutu')->middleware('cekDivisi')->group(function () {
-        Route::get('/', [IndikatorMutuController::class, 'index'])->name('indikatormutu.index');
-        Route::post('/store', [IndikatorMutuController::class, 'store'])->name('indikatormutu.store');
-        Route::get('/show/{id}', [IndikatorMutuController::class, 'showindikator'])->name('indikatormutu.show');
-        Route::post('/update', [IndikatorMutuController::class, 'updateindikator'])->name('indikatormutu.update');
-        Route::get('/hapus/{id}', [IndikatorMutuController::class, 'destroyindikator'])->name('indikatormutu.destroy');
-    });
+    // Route::prefix('indikatormutu')->middleware('cekDivisi')->group(function () {
+    //     Route::get('/', [IndikatorMutuController::class, 'index'])->name('indikatormutu.index');
+    //     Route::post('/store', [IndikatorMutuController::class, 'store'])->name('indikatormutu.store');
+    //     Route::get('/show/{id}', [IndikatorMutuController::class, 'showindikator'])->name('indikatormutu.show');
+    //     Route::post('/update', [IndikatorMutuController::class, 'updateindikator'])->name('indikatormutu.update');
+    //     Route::get('/hapus/{id}', [IndikatorMutuController::class, 'destroyindikator'])->name('indikatormutu.destroy');
+    // });
     
     Route::prefix('pengguna')->middleware('cekDivisi')->group(function () {
         Route::get('/', [PenggunaController::class, 'index'])->name('pengguna.index');

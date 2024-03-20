@@ -94,14 +94,6 @@
                             <option value="Tinggi" {{ $pengaduan->prioritas == 'Tinggi' ? 'selected' : '' }}>Tinggi</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>Indikator Mutu</label>
-                        <select class="form-control" id="indikator_mutu_id" name="indikator_mutu_id" disabled>
-                            @foreach ($indikatorMutu as $key => $value)
-                                <option value="{{ $value->id }}" {{ $value->id == $pengaduan->indikator_mutu_id ? 'selected' : '' }}>{{ $value->nama_indikator }}</option>
-                            @endforeach
-                        </select>
-                    </div>
                 </div>
             </div>
         </div>

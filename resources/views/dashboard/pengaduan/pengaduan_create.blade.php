@@ -18,6 +18,7 @@
                 </button>
             </div>
         @endif
+
         <div class="row">
             <div class="col-md-6">
                 <div class="card">
@@ -99,15 +100,6 @@
                                 <option value="Rendah" {{ old('prioritas') == 'Rendah' ? 'selected' : '' }}>Rendah</option>
                                 <option value="Sedang" {{ old('prioritas') == 'Sedang' ? 'selected' : '' }}>Sedang</option>
                                 <option value="Tinggi" {{ old('prioritas') == 'Tinggi' ? 'selected' : '' }}>Tinggi</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Indikator Mutu</label>
-                            <select class="form-control" id="indikator_mutu_id" name="indikator_mutu_id">
-                                <option value="">-- Pilih Indikator Mutu -- <span class="required-label">*</span></option>
-                                @foreach ($indikatorMutu as $key => $value)
-                                    <option value="{{ $value->id }}" {{ old('indikator_mutu_id') == $value->id ? 'selected' : '' }}>{{ $value->nama_indikator }}</option>
-                                @endforeach
                             </select>
                         </div>
                     </div>
