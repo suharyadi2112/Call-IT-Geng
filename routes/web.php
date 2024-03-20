@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\PengaduanController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Dashboard\PenggunaController;
+use App\Http\Controllers\LaporanController;
 use App\Models\Pengaduan;
 
 /*
@@ -54,6 +55,14 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::get('/show/{id}', [PengaduanController::class, 'showkategori'])->name('kategori.show');
         Route::post('/update', [PengaduanController::class, 'updatekategori'])->name('kategori.update');
         Route::get('/hapus/{id}', [PengaduanController::class, 'destroykategori'])->name('kategori.destroy');
+    });
+
+    Route::prefix('laporan')->middleware('cekDivisi')->group(function () {
+        Route::get('/', [LaporanController::class, 'index'])->name('laporan.index');
+        // Route::post('/store', [PengaduanController::class, 'storekategori'])->name('kategori.store');
+        // Route::get('/show/{id}', [PengaduanController::class, 'showkategori'])->name('kategori.show');
+        // Route::post('/update', [PengaduanController::class, 'updatekategori'])->name('kategori.update');
+        // Route::get('/hapus/{id}', [PengaduanController::class, 'destroykategori'])->name('kategori.destroy');
     });
 
     // Route::prefix('indikatormutu')->middleware('cekDivisi')->group(function () {
