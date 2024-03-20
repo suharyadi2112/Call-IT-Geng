@@ -142,7 +142,7 @@ class PengaduanController extends Controller
         $gambarPengaduan = DetailIPengaduan::where('pengaduan_id', $pengaduan->id)->get();
         $gambarPerbaikanPengaduan = DetailIPengaduan::where('pengaduan_id', $pengaduan->id)->where('tipe', 'post')->get();
         $kategoriPengaduan = KatPengaduan::select('id', 'nama')->get();
-        $workers = User::whereIn('divisi', ['IT'])->get();
+        $workers = User::whereIn('role', ['Worker'])->get();
         return view('dashboard.pengaduan.pengaduan_detail', [
             'pengaduan' => $pengaduan, 
             'kategoriPengaduan' => $kategoriPengaduan, 

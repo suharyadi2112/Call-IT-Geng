@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CekDivisi
+class checkRole
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class CekDivisi
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->divisi == 'IT') {
+        if (Auth::check() && in_array(Auth::user()->role, ['Admin', 'Worker'])) {
             return $next($request);
         }
 

@@ -32,7 +32,7 @@
                         </div>
                         <div class="form-group">
                             <label for="nomor_handphone">Nomor Telepon <span class="required-label">*</span></label>
-                            <input type="number" class="form-control" id="nomor_handphone" name="nomor_handphone" placeholder="Nomor Handphone" required value="{{ old('nomor_handphone') }}">
+                            <input type="number" class="form-control" id="nomor_handphone" name="nomor_handphone" placeholder="Nomor Handphone" required value="{{ auth()->user()->handphone }}">
                         </div>
                         <div class="form-group">
                             @php
@@ -46,7 +46,6 @@
                                     '06' => '06',
                                     '07' => '07',
                                     '08' => '08',
-                                    '09' => '09',
                                 ];
                             @endphp
                             <label for="lantai">Lantai <span class="required-label">*</span></label>

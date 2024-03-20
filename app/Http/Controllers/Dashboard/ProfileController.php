@@ -23,12 +23,17 @@ class ProfileController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$user->id,
             'handphone' => 'required|numeric',
-            'password' => 'nullable|min:8'
+            'password' => 'nullable|min:8',
+            'jabatan' => 'required',
+            'divisi' => 'required',
+
         ]);
 
         $user->name = $request->name;
         $user->email = $request->email;
         $user->handphone = $request->handphone;
+        $user->jabatan = $request->jabatan;
+        $user->divisi = $request->divisi;
         if($request->password){
             $user->password = bcrypt($request->password);
         }

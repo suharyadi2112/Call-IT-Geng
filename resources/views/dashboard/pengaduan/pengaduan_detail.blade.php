@@ -98,11 +98,11 @@
             </div>
         </div>
         <div class="col-md-6">
-            @cekDivisi
+            @checkRole
             <form action="{{ route('pengaduan.update', $pengaduan->id) }}" method="POST" enctype="multipart/form-data" id="form-pengaduan">
                 @csrf
                 @method('PUT')
-            @endcekDivisi
+            @endcheckRole
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">Kondisi Perbaikan</div>
@@ -127,12 +127,12 @@
                         <div class="form-group select2-input">
                             <label>Ditugaskan Kepada</label>
                             <select class="form-control" id="workers" name="workers[]" multiple required style="width: 100%" @if($pengaduan->status_pelaporan == 'done' || auth()->user()->divisi == 'Umum') @disabled(true) @endif>
-                                @cekDivisi
+                                @checkRole
                                 <option value="">-- Pilih Orang --</option>
                                 @foreach ($workers as $key => $value)
                                     <option value="{{ $value->id }}" {{ in_array($value->id, $pengaduan->workers->pluck('id')->toArray()) ? 'selected' : '' }}>{{ $value->name }}</option>
                                 @endforeach
-                                @endcekDivisi
+                                @endcheckRole
                             </select>
                         </div>
                         <div class="form-group" id="imageFixing">
@@ -166,16 +166,16 @@
                     </div>
                     <div class="card-action">
                         <a href="{{ route('pengaduan.index') }}" class="btn btn-sm btn-black">Kembali</a>
-                        @cekDivisi
+                        @checkRole
                             @if($pengaduan->status_pelaporan != 'done' ) 
                                 <button type="submit" class="btn btn-sm btn-primary">Simpan</button>
                             @endif
-                        @endcekDivisi
+                        @endcheckRole
                     </div>
                 </div>
-            @cekDivisi
+            @checkRole
             </form>
-            @endcekDivisi
+            @endcheckRole
         </div>
     </div>
 </div>
