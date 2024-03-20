@@ -22,7 +22,7 @@
 			</div>
 		</div>
 		<div class="col-md-8">
-			<div class="card card-with-nav">
+			<div class="card">
 				<div class="card-header">
 					<h4 class="card-title">Detail Profil</h4>
 				</div>
@@ -68,6 +68,14 @@
 						<div class="form-group">
 							<label for="handphone">No Handphone <span class="required-label">*</span></label>
 							<input type="text" class="form-control" id="handphone" name="handphone" placeholder="No Handphone" required value="{{ $user->handphone }}"/>
+						</div>
+						<div class="form-group">
+							<label for="jabatan">Jabatan <span class="required-label">*</span></label>
+							<input type="text" class="form-control" id="jabatan" name="jabatan" placeholder="Jabatan" required value="{{ $user->jabatan }}"/>
+						</div>
+						<div class="form-group">
+							<label for="divisi">Divisi <span class="required-label">*</span></label>
+							<input type="text" class="form-control" id="divisi" name="divisi" placeholder="Divisi" required value="{{ $user->divisi }}"/>
 						</div>
 						<div class="form-group">
 							<label for="password">Password</label>

@@ -21,13 +21,14 @@
                     </a>
                 </li>
 
-                @cekDivisi
-                <li class="nav-item {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
+                @checkRole
+                <li class="nav-item {{ request()->routeIs('kategori*') ? 'active' : '' }}">
                     <a href="{{ route('kategori.index') }}" aria-expanded="false">
                         <i class="fas fa-list"></i>
                         <p>Kategori</p>
                     </a>
                 </li>
+<<<<<<< HEAD
                 <li class="nav-item {{ request()->routeIs('laporan.*') ? 'active' : '' }}">
                     <a href="{{ route('laporan.index') }}" aria-expanded="false">
                         <i class="fas fa-file"></i>
@@ -35,6 +36,9 @@
                     </a>
                 </li>
                 @endcekDivisi
+=======
+                @endcheckRole
+>>>>>>> 1fc5facd84b12edc244e817a0ad0360c4ae3ce5f
 
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
@@ -49,14 +53,14 @@
                     </a>
                 </li>
 
-                @cekDivisi
+                @checkRole
                 <li class="nav-item {{ request()->routeIs('pengguna*') ? 'active' : '' }}">
                     <a href="{{ route('pengguna.index') }}" aria-expanded="false">
                         <i class="fas fa-user"></i>
                         <p>Master Pengguna</p>
                     </a>
                 </li>
-                @endcekDivisi
+                @endcheckRole
             </ul>
         </div>
     </div>

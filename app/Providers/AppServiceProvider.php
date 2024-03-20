@@ -25,8 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Blade::if('cekDivisi', function () {
-            return Auth::check() && Auth::user()->divisi == 'IT';
+        Blade::if('checkRole', function () {
+            return Auth::check() && in_array(Auth::user()->role, ['Admin', 'Worker']);
         });
 
     }
