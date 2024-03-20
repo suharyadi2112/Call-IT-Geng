@@ -2,16 +2,20 @@
 
 namespace App\Exports;
 
-use App\Models\Pengaduan;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use App\Models\Pengaduan;
 
 class PengaduanExport implements FromCollection
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
+    protected $pengaduan;
+
+    public function __construct($pengaduan)
+    {
+        $this->pengaduan = $pengaduan;
+    }
+
     public function collection()
     {
-        return Pengaduan::all();
+        return $this->pengaduan;
     }
 }

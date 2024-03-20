@@ -59,8 +59,8 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     Route::prefix('laporan')->middleware('checkRole')->group(function () {
         Route::get('/', [LaporanController::class, 'index'])->name('laporan.index');
-        Route::get('/get', [LaporanController::class, 'getlaporan'])->name('laporan.get');
-        Route::get('/export_excel', [LaporanController::class, 'export_excel'])->name('laporan.export');
+        Route::post('/get', [LaporanController::class, 'getlaporan'])->name('laporan.get');
+        // Route::get('/export_excel', [LaporanController::class, 'export_excel'])->name('laporan.export');
         // Route::get('/siswa/export_excel', 'SiswaController@export_excel');
 
         // Route::post('/store', [PengaduanController::class, 'storekategori'])->name('kategori.store');

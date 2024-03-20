@@ -5,7 +5,8 @@
         <h4 class="page-title">Laporan</h4>
         <div class="row">
             <div class="col-md-3">
-                <form action="{{ route('laporan.get') }}" method="GET">
+                <form action="{{ route('laporan.get') }}" method="post">
+                    @csrf
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex align-items-center">
