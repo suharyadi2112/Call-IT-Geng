@@ -92,7 +92,6 @@ class PengaduanController extends Controller
                     'pelapor_id' => Auth::user()->id,
                     'admin_id' => $adminCheck,
                     'kategori_pengaduan_id' => $request->input('kategori_pengaduan_id'),
-                    'indikator_mutu_id' => '-',
                     'lokasi' => $request->input('lokasi'),
                     'lantai' => $request->input('lantai'),
                     'judul_pengaduan' => $request->input('judul_pengaduan'),

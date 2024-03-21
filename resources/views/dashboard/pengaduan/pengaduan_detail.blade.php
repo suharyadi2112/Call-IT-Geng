@@ -94,7 +94,7 @@
                                 'done' => 'Selesai',
                             ];
                             @endphp
-                            <select class="form-control" id="status_pelaporan" name="status_pelaporan" @if($pengaduan->status_pelaporan == 'done' || auth()->user()->divisi == 'Umum') @disabled(true) @endif>
+                            <select class="form-control" id="status_pelaporan" name="status_pelaporan" @if($pengaduan->status_pelaporan == 'done' || auth()->user()->role == 'User') @disabled(true) @endif>
                                 <option value="">-- Pilih Status Pelaporan --</option>
                                 @foreach ($status as $key => $value)
                                     <option value="{{ $key }}" {{ $key == $pengaduan->status_pelaporan ? 'selected' : '' }}>{{ $value }}</option>
@@ -103,7 +103,7 @@
                         </div>
                         <div class="form-group select2-input">
                             <label>Ditugaskan Kepada</label>
-                            <select class="form-control" id="workers" name="workers[]" multiple required style="width: 100%" @if($pengaduan->status_pelaporan == 'done' || auth()->user()->divisi == 'Umum') @disabled(true) @endif>
+                            <select class="form-control" id="workers" name="workers[]" multiple required style="width: 100%" @if($pengaduan->status_pelaporan == 'done' || auth()->user()->role == 'User') @disabled(true) @endif>
                                 @checkRole
                                 <option value="">-- Pilih Orang --</option>
                                 @foreach ($workers as $key => $value)
