@@ -10,33 +10,7 @@
 					<h4 class="card-title">Buat Profil Baru</h4>
 				</div>
 				<div class="card-body">
-					@if ($errors->any())
-						<div class="alert alert-danger  alert-dismissible fade show" role="alert">
-							<ul>
-								@foreach ($errors->all() as $error)
-									<li class="text-danger">{{ $error }}</li>
-								@endforeach
-							</ul>
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-                	@endif
-
-					@if (session('success'))
-						<div class="alert alert-success  alert-dismissible fade show" role="alert">
-							<div class="d-flex justify-content-between">
-								<div>
-									{{ session('success') }}
-								</div>
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-                            </div>
-						</div>
-					@endif
-
-
+					@include('partial.layout.error_message')
 					<form action="{{ route('pengguna.store') }}" method="post">
 						@csrf
 						@method('POST')

@@ -21,6 +21,11 @@ class LoginController extends Controller
         $this->validate($request, [
             'email' =>'required',
             'password' => 'required',
+        ],[
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Email wajib berformat email dengan @.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min:8' => 'Password minimal 8 karakter.',
         ]);
 
         $credentials = $request->only('email', 'password');
@@ -29,13 +34,13 @@ class LoginController extends Controller
             return redirect()->intended('dashboard');
         }
 
-        return redirect()->back()->withInput($request->only('email'));
+        return redirect()->back()->withInput($request->only('email'))->withErrors(['The provided credentials do not match our records.']);
     }
 
     public function logout(Request $request){
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('login');
+        return redirect()->route('login')->with('success', 'Anda berhasil logout.');
     }
 }

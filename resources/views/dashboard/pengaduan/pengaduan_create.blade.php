@@ -3,22 +3,10 @@
 @section('content')
 <div class="page-inner">
     <h4 class="page-title">Buat Pengaduan</h4>
+    @include('partial.layout.error_message')
     <form action="{{ route('pengaduan.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('POST')
-        @if ($errors->any())
-            <div class="alert alert-danger  alert-dismissible fade show" role="alert">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li class="text-danger">{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
-
         <div class="row">
             <div class="col-md-6">
                 <div class="card">
