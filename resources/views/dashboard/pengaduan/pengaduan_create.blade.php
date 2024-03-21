@@ -18,6 +18,7 @@
                 </button>
             </div>
         @endif
+
         <div class="row">
             <div class="col-md-6">
                 <div class="card">
@@ -31,7 +32,7 @@
                         </div>
                         <div class="form-group">
                             <label for="nomor_handphone">Nomor Telepon <span class="required-label">*</span></label>
-                            <input type="number" class="form-control" id="nomor_handphone" name="nomor_handphone" placeholder="Nomor Handphone" required value="{{ old('nomor_handphone') }}">
+                            <input type="number" class="form-control" id="nomor_handphone" name="nomor_handphone" placeholder="Nomor Handphone" required value="{{ auth()->user()->handphone }}">
                         </div>
                         <div class="form-group">
                             @php
@@ -45,7 +46,6 @@
                                     '06' => '06',
                                     '07' => '07',
                                     '08' => '08',
-                                    '09' => '09',
                                 ];
                             @endphp
                             <label for="lantai">Lantai <span class="required-label">*</span></label>
@@ -99,15 +99,6 @@
                                 <option value="Rendah" {{ old('prioritas') == 'Rendah' ? 'selected' : '' }}>Rendah</option>
                                 <option value="Sedang" {{ old('prioritas') == 'Sedang' ? 'selected' : '' }}>Sedang</option>
                                 <option value="Tinggi" {{ old('prioritas') == 'Tinggi' ? 'selected' : '' }}>Tinggi</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Indikator Mutu</label>
-                            <select class="form-control" id="indikator_mutu_id" name="indikator_mutu_id">
-                                <option value="">-- Pilih Indikator Mutu -- <span class="required-label">*</span></option>
-                                @foreach ($indikatorMutu as $key => $value)
-                                    <option value="{{ $value->id }}" {{ old('indikator_mutu_id') == $value->id ? 'selected' : '' }}>{{ $value->nama_indikator }}</option>
-                                @endforeach
                             </select>
                         </div>
                     </div>

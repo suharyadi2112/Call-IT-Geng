@@ -50,6 +50,8 @@
                                     <th>Nama</th>
                                     <th>Jabatan</th>
                                     <th>Divisi</th>
+                                    <th>Peran</th>
+                                    <th>Dibuat</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -88,12 +90,13 @@
             ordering: false,
             ajax: '{{ route('pengguna.index') }}',
             columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '5%'},
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '5%', orderable: false, searchable: false},
                 { data: 'name', name: 'name'},
                 { data: 'jabatan', name: 'jabatan' },
                 { data: 'divisi', name: 'divisi' },
+                { data: 'role', name: 'role'},
+                { data: 'created_at', name: 'created_at'},
                 { data: 'action', name: 'action'}
-
             ],
         });
         

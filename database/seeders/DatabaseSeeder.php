@@ -15,55 +15,85 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::create([
-            'name' => 'admin',
-            'email' => 'admin@gmail.com',
-            'handphone' => '082283778944',
-            'jabatan' => 'Administrator',
-            'status' => '-',
-            'divisi' => 'IT',
-            'password' =>  Hash::make('12345678'),
-        ]);
+        $users = [
+            [
+                'name' => 'Administrator',
+                'email' => 'admin@gmail.com',
+                'handphone' => '082283778944',
+                'jabatan' => 'Administrator',
+                'status' => 'Aktif',
+                'divisi' => 'IT',
+                'role' => 'Admin',
+                'password' => Hash::make('12345678'),
+            ],
+            [
+                'name' => 'User Guest',
+                'email' => 'user@gmail.com',
+                'handphone' => '082283778944',
+                'jabatan' => 'Guest',
+                'status' => '-',
+                'divisi' => '-',
+                'role' => 'User',
+                'password' => Hash::make('12345678'),
+            ],
+            [
+                'name' => 'Sandi',
+                'email' => 'sandi@gmail.com',
+                'handphone' => '082283778944',
+                'jabatan' => 'IT Support',
+                'status' => '-',
+                'divisi' => 'IT',
+                'role' => 'Worker',
+                'password' => Hash::make('12345678'),
+            ],
+            [
+                'name' => 'Tommy',
+                'email' => 'tommy@gmail.com',
+                'handphone' => '082283778944',
+                'jabatan' => 'IT Support',
+                'status' => '-',
+                'divisi' => 'IT',
+                'role' => 'Worker',
+                'password' => Hash::make('12345678'),
+            ],
+            [
+                'name' => 'Nindy',
+                'email' => 'nindy@gmail.com',
+                'handphone' => '082283778944',
+                'jabatan' => 'IT Support',
+                'status' => '-',
+                'divisi' => 'IT',
+                'role' => 'Worker',
+                'password' => Hash::make('12345678'),
+            ],
+        ];
+        
+        foreach ($users as $userData) {
+            \App\Models\User::create($userData);
+        }
 
-        \App\Models\User::create([
-            'name' => 'User Guest',
-            'email' => 'user@gmail.com',
-            'handphone' => '082283778944',
-            'jabatan' => 'Guest',
-            'status' => '-',
-            'divisi' => '-',
-            'password' =>  Hash::make('12345678'),
-        ]);
 
-        \App\Models\User::create([
-            'name' => 'Sandi',
-            'email' => 'sandi@gmail.com',
-            'handphone' => '082283778944',
-            'jabatan' => 'IT Support',
-            'status' => '-',
-            'divisi' => 'IT',
-            'password' =>  Hash::make('12345678'),
-        ]);
+        $kategori =[
+            [
+                'nama' => 'Jaringan (Network)',
+            ],
+            [
+                'nama' => 'Perangkat Lunak (Software)',
+            ],
+            [
+                'nama' => 'Perangkat Lunak (Hardware)',
+            ],
+            [
+                'nama' => 'SIMRS',
+            ],
+            [
+                'nama' => 'Lainnya'
+            ]
+        ];
 
-        \App\Models\User::create([
-            'name' => 'Tommy',
-            'email' => 'tommy@gmail.com',
-            'handphone' => '082283778944',
-            'jabatan' => 'IT Support',
-            'status' => '-',
-            'divisi' => 'IT',
-            'password' =>  Hash::make('12345678'),
-        ]);
-
-        \App\Models\User::create([
-            'name' => 'Nindy',
-            'email' => 'nindy@gmail.com',
-            'handphone' => '082283778944',
-            'jabatan' => 'IT Support',
-            'status' => '-',
-            'divisi' => 'IT',
-            'password' =>  Hash::make('12345678'),
-        ]);
-
+        foreach ($kategori as $kategoriData) {
+            \App\Models\KatPengaduan::create($kategoriData);
+        }
+        
     }
 }

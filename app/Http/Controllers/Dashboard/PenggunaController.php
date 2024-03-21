@@ -14,16 +14,26 @@ class PenggunaController extends Controller
 {
     public function index(Request $request){
         if($request->ajax()){
-            $data = User::latest()->where('jabatan','!=','Administrator');
+            $data = User::latest()->whereNotIn('role', ['Admin']);
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->editColumn('created_at', function($row){
+                    return date('d-m-Y H:i:s', strtotime($row->created_at));
+                })
+                ->editColumn('role', function($row){
+                    if($row->role == 'Worker'){
+                        return '<span class="badge badge-primary">Worker</span>';
+                    }elseif($row->role == 'User'){
+                        return '<span class="badge badge-success">User</span>';
+                    }else{
+                        return '<span class="badge badge-danger">Admin</span>';
+                    }
+                })
                 ->addColumn('action', function($row){
                     $btn = '<a href="'.route('pengguna.show', $row->id).'" class="mr-2 edit btn btn-outline-primary btn-sm editPengguna"><i class="fas fa-eye"></i></a>';
-                    $btn.='<button type="button" id="modalDelete" class="mr-2 btn btn-sm round btn-outline-danger shadow" title="Hapus" data-id="' . $row->id . '">
-                    <i class="fa fa-lg fa-fw fa-trash"></i></button>';
                     return $btn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'role'])
                 ->make(true);
         }
         return view('dashboard.pengguna.pengguna-index');
@@ -51,8 +61,9 @@ class PenggunaController extends Controller
             'email' => 'required',
             'handphone' => 'required|numeric',
             'password' => 'required|min:6',
-            'jabatan' => ['required', Rule::in(['IT Support', 'Guest'])],
+            'jabatan' => 'required',
             'divisi' => 'required',
+            'role' => ['required', Rule::in(['Worker', 'User'])]
         ], $pesan);
 
         if ($validator->fails()) {
@@ -68,7 +79,8 @@ class PenggunaController extends Controller
                     'password' => bcrypt($request->password),
                     'jabatan' => $request->jabatan,
                     'divisi' => $request->divisi,
-                    'status' => '-',
+                    'status' => 'Aktif',
+                    'role' => $request->role,
                 ]);
             });
             return redirect()->route('pengguna.index')->with('success', 'Data pengguna berhasil ditambahkan');
@@ -94,7 +106,9 @@ class PenggunaController extends Controller
             'password.min' => 'Password minimal 6 karakter',
             'jabatan.required' => 'Jabatan tidak boleh kosong',
             'divisi.required' => 'Divisi tidak boleh kosong',
-            'divisi.in' => 'Divisi tidak valid, pastikan memilih antara IT dan Umum',
+            'role.required' => 'Role tidak boleh kosong',
+            'role.in' => 'Role tidak valid, pastikan memilih antara Worker dan User',
+
         ];
 
         $validator = Validator::make($request->all(), [
@@ -103,7 +117,8 @@ class PenggunaController extends Controller
             'handphone' => 'required|numeric',
             'password' => 'nullable|min:6',
             'jabatan' => 'required',
-            'divisi' => ['required', Rule::in(['IT', 'Umum'])],
+            'divisi' => 'required',
+            'role' => ['required', Rule::in(['Worker', 'User'])]
         ], $pesan);
 
         if ($validator->fails()) {
@@ -127,6 +142,7 @@ class PenggunaController extends Controller
                     'password' => $password,
                     'jabatan' => $request->jabatan,
                     'divisi' => $request->divisi,
+                    'role' => $request->role,
                 ]);
             });
             return redirect()->route('pengguna.index')->with('success', 'Data pengguna berhasil diubah');
@@ -134,7 +150,6 @@ class PenggunaController extends Controller
         }catch (\Exception $e) {
             return redirect()->back()->withInput()->with('errors', $e->getMessage());
         }
-
     }
 
     public function destroy($id){
