@@ -86,9 +86,14 @@ class PengaduanController extends Controller
 
     public function GetPengaduanList(){
         try {
-            $queryy = Pengaduan::query();
-            $getPengaduanList = $queryy->orderBy('created_at', 'desc')->select("id","judul_pengaduan","prioritas")->get(); 
-            return response(["status"=> "success","message"=> "Data list pengaduan successfully retrieved", "data" => $getPengaduanList], 200);
+            $queryy = Pengaduan::query()
+            ->with(['pelapor' => function($query) {
+                $query->select('id', 'name', 'email'); // Pilih kolom 'nama' dan 'email' saja
+            }])
+            ->orderBy('created_at', 'desc')
+            ->select("id","judul_pengaduan","prioritas", "tanggal_pelaporan", "created_at","dekskripsi_pelaporan", "status_pelaporan", "pelapor_id")
+            ->get(); 
+            return response(["status"=> "success","message"=> "Data list pengaduan successfully retrieved", "data" => $queryy], 200);
 
         } catch (\Exception $e) {
             return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
