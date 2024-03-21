@@ -443,7 +443,7 @@ class PengaduanController extends Controller
 
             'picture_pre.*.file' => 'Picture Pre harus berupa file',
             'picture_pre.*.mimes' => 'Picture Pre harus jpg,jpeg,png',
-            'picture_pre.*.required' => 'Picture Pre wajib diisi',
+            // 'picture_pre.*.required' => 'Picture Pre wajib diisi',
             'picture_pre.*.max' => 'Picture Pre maksimal 5 mb',
         ];
         $validator = Validator::make($request->all(), [
@@ -464,7 +464,7 @@ class PengaduanController extends Controller
             'tanggal_pelaporan' => 'date',
 
             'picture_pre' => 'array',
-            'picture_pre.*' => 'required|file|mimes:jpg,jpeg,png|max:5048',
+            'picture_pre.*' => 'file|mimes:jpg,jpeg,png|max:5048',
         ], $messages);
      
         return $validator;
