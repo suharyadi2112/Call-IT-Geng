@@ -26,9 +26,12 @@ class LaporanController extends Controller
 
     public function getlaporan(Request $request)
     {
-        $pengaduan = Pengaduan::whereMonth('tanggal_pelaporan', $request->bulan)
+        $pengaduan = Pengaduan::select('id')
+            ->with('pelapor:name') // Memuat relasi pelapor dengan hanya mengambil kolom id dan name
+            ->whereMonth('tanggal_pelaporan', $request->bulan)
             ->whereYear('tanggal_pelaporan', $request->tahun)
             ->get();
+
         return Excel::download(new PengaduanExport($pengaduan), 'laporan.xlsx');
     }
 }
