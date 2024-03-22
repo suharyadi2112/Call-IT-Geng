@@ -87,6 +87,12 @@ class DatabaseSeeder extends Seeder
                 'nama' => 'SIMRS',
             ],
             [
+                'nama' => 'Printer & Scanner',
+            ],
+            [
+                'nama' => 'Office'
+            ],
+            [
                 'nama' => 'Lainnya'
             ]
         ];

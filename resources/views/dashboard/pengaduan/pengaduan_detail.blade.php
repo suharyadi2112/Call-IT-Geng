@@ -3,30 +3,7 @@
 @section('content')
 <div class="page-inner">
     <h4 class="page-title">Detail Pengaduan</h4>
-        @if ($errors->any())
-            <div class="alert alert-danger  alert-dismissible fade show" role="alert">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li class="text-danger">{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
-        @if (session('success'))
-        <div class="alert alert-success  alert-dismissible fade show" role="alert">
-            <div class="d-flex justify-content-between">
-                <div>
-                    {{ session('success') }}
-                </div>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        </div>
-    @endif
+    @include('partial.layout.error_message')
     <div class="row">
         <div class="col-md-6">
             <div class="card">
@@ -117,7 +94,7 @@
                                 'done' => 'Selesai',
                             ];
                             @endphp
-                            <select class="form-control" id="status_pelaporan" name="status_pelaporan" @if($pengaduan->status_pelaporan == 'done' || auth()->user()->divisi == 'Umum') @disabled(true) @endif>
+                            <select class="form-control" id="status_pelaporan" name="status_pelaporan" @if($pengaduan->status_pelaporan == 'done' || auth()->user()->role == 'User') @disabled(true) @endif>
                                 <option value="">-- Pilih Status Pelaporan --</option>
                                 @foreach ($status as $key => $value)
                                     <option value="{{ $key }}" {{ $key == $pengaduan->status_pelaporan ? 'selected' : '' }}>{{ $value }}</option>
@@ -126,7 +103,7 @@
                         </div>
                         <div class="form-group select2-input">
                             <label>Ditugaskan Kepada</label>
-                            <select class="form-control" id="workers" name="workers[]" multiple required style="width: 100%" @if($pengaduan->status_pelaporan == 'done' || auth()->user()->divisi == 'Umum') @disabled(true) @endif>
+                            <select class="form-control" id="workers" name="workers[]" multiple required style="width: 100%" @if($pengaduan->status_pelaporan == 'done' || auth()->user()->role == 'User') @disabled(true) @endif>
                                 @checkRole
                                 <option value="">-- Pilih Orang --</option>
                                 @foreach ($workers as $key => $value)

@@ -86,7 +86,7 @@ class PenggunaController extends Controller
             return redirect()->route('pengguna.index')->with('success', 'Data pengguna berhasil ditambahkan');
 
         }catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('errors', $e->getMessage());
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -148,7 +148,7 @@ class PenggunaController extends Controller
             return redirect()->route('pengguna.index')->with('success', 'Data pengguna berhasil diubah');
 
         }catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('errors', $e->getMessage());
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -159,7 +159,7 @@ class PenggunaController extends Controller
             });
             return redirect()->route('pengguna.index')->with('success', 'Data pengguna berhasil dihapus');
         }catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('errors', $e->getMessage());
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
     }
 }

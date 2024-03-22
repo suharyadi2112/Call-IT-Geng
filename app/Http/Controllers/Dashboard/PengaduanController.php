@@ -92,7 +92,6 @@ class PengaduanController extends Controller
                     'pelapor_id' => Auth::user()->id,
                     'admin_id' => $adminCheck,
                     'kategori_pengaduan_id' => $request->input('kategori_pengaduan_id'),
-                    'indikator_mutu_id' => '-',
                     'lokasi' => $request->input('lokasi'),
                     'lantai' => $request->input('lantai'),
                     'judul_pengaduan' => $request->input('judul_pengaduan'),
@@ -225,7 +224,7 @@ class PengaduanController extends Controller
             return redirect()->route('pengaduan.index')->with('success', 'Status pelaporan berhasil diupdate!');
 
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error', $e->getMessage());
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -237,7 +236,7 @@ class PengaduanController extends Controller
             $pengaduan->delete();
             return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil dihapus!');
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error', $e->getMessage());
+            return redirect()->back()->withErrors($e->getMessage());
         }
     }
 

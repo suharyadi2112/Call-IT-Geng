@@ -79,7 +79,11 @@
                                         <td>{{ Carbon\Carbon::parse($p->tanggal_pelaporan)->format('d-M-Y') }}</td>
                                         <td>{{ $p->judul_pengaduan }}</td>
                                         <td>{{ $p->status_pelaporan }}</td>
-                                        <td>{{ $p->workers[$key]->name }}</td>
+                                        <td>
+                                            @foreach ($p->workers as $key => $w)
+                                            {{ $w->name }} </br> 
+                                            @endforeach
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

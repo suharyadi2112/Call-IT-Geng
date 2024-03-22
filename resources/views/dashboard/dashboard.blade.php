@@ -3,8 +3,7 @@
 @section('content')
     <div class="page-inner">
         <h4 class="page-title">Dashboard</h4>
-
-        @if (Auth::user()->divisi == 'IT')
+        @if (in_array(Auth::user()->role, ['Admin', 'Worker']))
             <div class="row row-card-no-pd">
                 <div class="col-sm-6 col-md-3">
                     <div class="card card-stats card-round">
