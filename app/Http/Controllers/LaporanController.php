@@ -19,9 +19,7 @@ class LaporanController extends Controller
             ->groupBy('year')
             ->orderBy('year')
             ->get();
-        $pengaduan = Pengaduan::get();
-        // dd($tahun);
-        return view('dashboard.laporan.index', ['tahun' => $tahun, 'pengaduan' => $pengaduan]);
+        return view('dashboard.laporan.index', ['tahun' => $tahun]);
     }
 
 
@@ -35,6 +33,7 @@ class LaporanController extends Controller
         DATE_FORMAT(a_pengaduan.tanggal_selesai, "%d-%M-%Y") as tanggal_selesai,
         DATE_FORMAT(a_pengaduan.tanggal_selesai, "%H:%i") as jam_selesai,
         SEC_TO_TIME(TIMESTAMPDIFF(SECOND, a_pengaduan.tanggal_pelaporan, a_pengaduan.tanggal_selesai)) as durasi,
+        a_pengaduan.judul_pengaduan,
         a_pengaduan.status_pelaporan,
         CASE 
             WHEN a_pengaduan.status_pelaporan = "done" THEN "Selesai"
