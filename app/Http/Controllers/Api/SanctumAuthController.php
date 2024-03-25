@@ -191,22 +191,30 @@ class SanctumAuthController extends Controller
     public function ChangePasswordUser(Request $request, $id)
     {
         try{
+
+            if(Auth::user()->id != $id){
+                throw new \Exception('user not matching');
+            }
+
+            $messages = [
+                'password.required' => 'Password wajib diisi.',
+                'password.max' => 'Password tidak boleh lebih dari 10 karakter.',
+                'password.min' => 'Password tidak boleh kurang dari 8 karakter.',
+                'password.confirmed' => 'Password password tidak sesuai.',
+            ];
+
+            $validator = Validator::make($request->all(), [
+                'password' => 'required|min:8|max:10|confirmed',
+            ], $messages);
+
+            if ($validator->fails()) {
+                return response()->json(["status" => "fail", "message" => $validator->errors(), "data" => null], 400);
+            }
+
             DB::transaction(function () use ($request, $id) {
                 $user = User::findOrFail($id);
-
-                $messages = [
-                    'password.required' => 'Password wajib diisi.',
-                    'password.max' => 'Password tidak boleh lebih dari 10 karakter.',
-                    'password.min' => 'Password tidak boleh kurang dari 8 karakter.',
-                    'password.confirmed' => 'Password password tidak sesuai.',
-                ];
-
-                $validatedData = $request->validate([
-                    'password' => 'required|min:8|max:10|confirmed',
-                ], $messages);
-
                 $user->update([
-                    'password' => Hash::make($validatedData['password']),
+                    'password' => Hash::make($request->password),
                 ]);
             });
         
