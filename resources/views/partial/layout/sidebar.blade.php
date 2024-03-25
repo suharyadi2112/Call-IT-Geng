@@ -33,7 +33,6 @@
                             <p>Laporan</p>
                         </a>
                     </li>
-                    @endcekDivisi
                 @endcheckRole
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
