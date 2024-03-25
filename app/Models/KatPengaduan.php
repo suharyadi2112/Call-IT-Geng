@@ -28,6 +28,10 @@ class KatPengaduan extends Model
         'deleted_at',
     ];
 
+    protected $hidden = [
+        'deleted_at',
+    ];
+
     // public function pengaduan()
     // {
     //     return $this->hasMany(Pengaduan::class, 'id');

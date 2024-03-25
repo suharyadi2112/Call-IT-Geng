@@ -27,6 +27,10 @@ class IndikatorMutu extends Model
         'updated_at',
         'deleted_at',
     ];
+    
+    protected $hidden = [
+        'deleted_at',
+    ];
 
 
     protected static function boot()
