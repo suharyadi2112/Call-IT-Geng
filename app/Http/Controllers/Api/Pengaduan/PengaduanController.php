@@ -219,7 +219,7 @@ class PengaduanController extends Controller
         }
         try {
 
-            $adminCheck = null;
+            $adminCheck = "-";
             if(Auth::user()->jabatan == 'admin'){
                 $adminCheck = Auth::user()->id;
             }
@@ -294,13 +294,13 @@ class PengaduanController extends Controller
                     throw new \Exception('pengaduan not found');
                 }
             
-                $adminCheck = null;
+                $adminCheck = "-";
                 if (Auth::user()->jabatan == 'admin') {
                     $adminCheck = Auth::user()->id;
                 }
             
                 $dataToUpdate = $request->all();
-                if ($adminCheck !== null) {
+                if ($adminCheck !== null || $adminCheck !== "-") {
                     $dataToUpdate['admin_id'] = $adminCheck;
                 }
             
