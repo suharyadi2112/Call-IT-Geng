@@ -40,11 +40,12 @@ class LaporanController extends Controller
             ELSE a_pengaduan.status_pelaporan
         END as status_pelaporan,
         "" as kolom_kosong,
-        users.name as worker')
+        GROUP_CONCAT(users.name) as workers') // Menggunakan GROUP_CONCAT untuk menggabungkan nama pekerja
             ->leftJoin('a_pivot_worker_pengaduan as pivot', 'a_pengaduan.id', '=', 'pivot.pengaduan_id')
             ->leftJoin('users', 'pivot.user_id', '=', 'users.id')
             ->whereMonth('a_pengaduan.tanggal_pelaporan', $request->bulan)
             ->whereYear('a_pengaduan.tanggal_pelaporan', $request->tahun)
+            ->groupBy('a_pengaduan.id', 'a_pengaduan.tanggal_pelaporan', 'a_pengaduan.pelapor_id', 'a_pengaduan.lokasi', 'a_pengaduan.tanggal_selesai') // Menambahkan a_pengaduan.id ke dalam GROUP BY
             ->get();
 
         return Excel::download(new PengaduanExport($pengaduan), 'laporan.xlsx');
