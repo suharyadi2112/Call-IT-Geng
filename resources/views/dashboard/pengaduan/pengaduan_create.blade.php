@@ -8,7 +8,7 @@
         @csrf
         @method('POST')
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">Form Pengaduan</div>
@@ -53,6 +53,15 @@
                             <input type="text" class="form-control" id="judul_pengaduan" name="judul_pengaduan" placeholder="Judul Pengaduan" required value="{{ old('judul_pengaduan') }}">
                         </div>
                         <div class="form-group">
+                            <label>Kategori <span class="required-label">*</span></label>
+                            <select class="form-control" id="kategori_pengaduan_id" name="kategori_pengaduan_id">
+                                <option value="">-- Pilih Kategori --</option>
+                                @foreach ($kategoriPengaduan as $key => $value)
+                                    <option value="{{ $value->id }}" {{ old('kategori_pengaduan_id') == $value->id ? 'selected' : '' }}>{{ $value->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="dekskripsi_pelaporan">Deskripsi <span class="required-label">*</span></label>
                             <textarea id="dekskripsi_pelaporan" name="dekskripsi_pelaporan" class="form-control" rows="5" placeholder="Deskripsi Pengaduan" required>{{ old('dekskripsi_pelaporan') }}</textarea>
                         </div>
@@ -63,33 +72,6 @@
                             <button type="button" class="btn btn-sm btn-danger mt-3" id="btnDelete" style="display:none;">Hapus Gambar</button>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Pilihan</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label>Kategori <span class="required-label">*</span></label>
-                            <select class="form-control" id="kategori_pengaduan_id" name="kategori_pengaduan_id">
-                                <option value="">-- Pilih Kategori --</option>
-                                @foreach ($kategoriPengaduan as $key => $value)
-                                    <option value="{{ $value->id }}" {{ old('kategori_pengaduan_id') == $value->id ? 'selected' : '' }}>{{ $value->nama }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Prioritas <span class="required-label">*</span></label>
-                            <select class="form-control" id="prioritas" name="prioritas">
-                                <option value="">-- Pilih Prioritas --</option>
-                                <option value="Rendah" {{ old('prioritas') == 'Rendah' ? 'selected' : '' }}>Rendah</option>
-                                <option value="Sedang" {{ old('prioritas') == 'Sedang' ? 'selected' : '' }}>Sedang</option>
-                                <option value="Tinggi" {{ old('prioritas') == 'Tinggi' ? 'selected' : '' }}>Tinggi</option>
-                            </select>
-                        </div>
-                    </div>
                     <div class="card-action">
                         <a href="{{ route('pengaduan.index') }}" class="btn btn-sm btn-black">Kembali</a>
                         <button class="btn btn-sm btn-primary">Simpan</button>
@@ -97,7 +79,7 @@
                 </div>
             </div>
         </div>
-    </form>
+    </form> 
 </div>
 @endsection
 @push('styles')

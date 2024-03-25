@@ -23,6 +23,7 @@
                                 style="width: 100%">
                                 <thead>
                                     <tr>
+                                        <th>#</th>
                                         <th>Nama Kategori</th>
                                         <th>Action</th>
                                     </tr>
@@ -39,7 +40,7 @@
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form id="postForm" name="postForm">
+                <form id="postForm" name="postForm" >
                     <input type="hidden" name="id" id="id">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Input Data Kategori</h5>
@@ -53,6 +54,11 @@
                             <input type="text" name="nama" id="nama"
                                 class="form-control form-control-border border-width-2" placeholder="Nama Kategori"
                                 required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nama">Gambar Kategori</label>
+                            <input type="file" name="gambar" id="gambar" class="form-control form-control-border border-width-2"
+                                placeholder="Gambar Kategori" required accept=".jpg, .jpeg, .png"/>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -82,6 +88,11 @@
                                 class="form-control form-control-border border-width-2" placeholder="Nama Kategori"
                                 required>
                         </div>
+                        <div class="form-group">
+                            <label for="nama">Gambar Kategori</label>
+                            <input type="file" name="gambar" id="gambar" class="form-control form-control-border border-width-2"
+                                placeholder="Gambar Kategori" required accept=".jpg, .jpeg, .png"/>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -101,7 +112,13 @@
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('kategori.index') }}",
-                columns: [{
+                columns: [
+                    {
+                        data : 'gambar',
+                        name : 'gambar',
+                        width : '10%',
+                    },
+                    {
                         data: 'nama',
                         name: 'nama'
                     },
@@ -116,7 +133,7 @@
             $('#exampleModal').click(function() {
                 $('#saveBtn').val("create-data");
                 $('#id').val('');
-                $('#postForm').trigger("reset");
+                // $('#postForm').trigger("reset");
                 $('#modal-title').html("Tambah Data");
                 // $('#modalOpen').modal('show');
             });
@@ -228,6 +245,59 @@
                     }
                 });
             });
+
+            $('body').on('click', '#modalDelete', function() {
+            var id = $(this).data('id');
+            swal({
+                title: 'Hapus Data',
+                text: "Apakah anda yakin ingin menghapus data ini?",
+                type: 'warning',
+                buttons:{
+                    cancel: {
+                        visible: true,
+                        text: 'Batal',
+                        className: 'btn btn-secondary',
+                    },
+                    confirm: {
+                        text : 'Hapus',
+                        className : 'btn btn-danger'
+                    },
+                    
+                }
+            }).then((Delete) => {
+                if (Delete) {
+                    $.ajax({
+                        url : window.location.pathname + '/' + id + '/hapus',
+                        data: {
+                            "id": id,
+                            "_token": "{{ csrf_token() }}",
+                            "_method": 'DELETE'
+                        },
+                        success: function (data) {
+                            table.ajax.reload();
+                            swal({
+                                title: 'Berhasil',
+                                text: 'Data berhasil dihapus',
+                                type: 'success',
+                                timer: '1500'
+                            });
+                        },
+
+                        error: function (data) {
+                            swal({
+                                title: 'Oops...',
+                                text: 'Terjadi kesalahan! Coba lagi',
+                                type: 'error',
+                                timer: '1500'
+                            });
+                        }
+                    });
+                } else {
+                    swal.close();
+                }
+            });
+        })
+
 
 
         });

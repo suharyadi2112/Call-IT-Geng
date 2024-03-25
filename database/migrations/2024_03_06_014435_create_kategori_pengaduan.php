@@ -17,8 +17,8 @@ return new class extends Migration
         Schema::create('a_kategori_pengaduan', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nama');
+            $table->string('gambar')->nullable();
             $table->timestamps();
-            
             $table->softDeletes(); // deleted_at
         }); 
     }
