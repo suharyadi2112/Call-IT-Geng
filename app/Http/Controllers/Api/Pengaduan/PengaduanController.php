@@ -240,6 +240,9 @@ class PengaduanController extends Controller
                     'nomor_handphone' => $request->input('nomor_handphone'),
                     'status_pelaporan' => 'waiting',
                     'tanggal_pelaporan' => date('Y-m-d H:i:s'),
+                    'prioritas' => "-",
+                    'indikator_mutu_id' => "-",
+                    'tanggal_selesai' => "-",
                 ]);
 
                 if ($request->file('picture_pre')) { //unggah file
