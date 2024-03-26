@@ -17,8 +17,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('nama_indikator');
             $table->integer('target');
+            $table->uuid('kategori_pengaduan_id');
             $table->timestamps();
-            
             $table->softDeletes(); // deleted_at
         });
     }

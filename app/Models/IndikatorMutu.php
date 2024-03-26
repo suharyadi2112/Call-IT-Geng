@@ -11,23 +11,24 @@ class IndikatorMutu extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'a_indikator_mutu'; 
+    protected $table = 'a_indikator_mutu';
 
-    protected $primaryKey = 'id'; 
+    protected $primaryKey = 'id';
 
-    public $incrementing = false; 
+    public $incrementing = false;
 
-    protected $keyType = 'string'; 
+    protected $keyType = 'string';
 
     protected $fillable = [
         'id',
         'nama_indikator',
         'target',
+        'kategori_pengaduan_id',
         'created_at',
         'updated_at',
         'deleted_at',
     ];
-    
+
     protected $hidden = [
         'deleted_at',
     ];
@@ -42,11 +43,16 @@ class IndikatorMutu extends Model
         });
     }
 
+    public function kategoripengaduan()
+    {
+        return $this->belongsTo(KatPengaduan::class, 'kategori_pengaduan_id', 'id');
+    }
+
     public function scopeSearch($query, $search)
     {
         if ($search) {
             return $query->where('nama_indikator', 'LIKE', "%$search%")
-            ->orWhere('target', 'LIKE', "%$search%");
+                ->orWhere('target', 'LIKE', "%$search%");
         }
         return $query;
     }
