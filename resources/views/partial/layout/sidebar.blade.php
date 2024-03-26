@@ -27,6 +27,12 @@
                             <p>Kategori</p>
                         </a>
                     </li>
+                    <li class="nav-item {{ request()->routeIs('indikatormutu*') ? 'active' : '' }}">
+                        <a href="{{ route('indikatormutu.index') }}" aria-expanded="false">
+                            <i class="fas fa-chart-pie"></i>
+                            <p>Indikator Mutu</p>
+                        </a>
+                    </li>
                     <li class="nav-item {{ request()->routeIs('laporan.*') ? 'active' : '' }}">
                         <a href="{{ route('laporan.index') }}" aria-expanded="false">
                             <i class="fas fa-file"></i>

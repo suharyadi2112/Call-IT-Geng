@@ -7,6 +7,7 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\PengaduanController;
 use App\Http\Controllers\Dashboard\KategoriPengaduanController;
+use App\Http\Controllers\Dashboard\IndikatorMutuController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Dashboard\PenggunaController;
 use App\Http\Controllers\LaporanController;
@@ -22,8 +23,9 @@ use App\Models\Pengaduan;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/loginx', function () { 
-    return response()->json('Authentication failed:'); 
+
+Route::get('/loginx', function () {
+    return response()->json('Authentication failed:');
 })->name('loginX');
 
 
@@ -48,7 +50,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::put('/{id}', [PengaduanController::class, 'updatePengaduan'])->name('pengaduan.update');
         Route::get('/{id}/hapus', [PengaduanController::class, 'hapusPengaduan'])->middleware('checkRole')->name('pengaduan.delete');
     });
-    
+
 
     Route::prefix('kategori')->middleware('checkRole')->group(function () {
         Route::get('/', [KategoriPengaduanController::class, 'kategori'])->name('kategori.index');
@@ -69,16 +71,25 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         // Route::post('/update', [PengaduanController::class, 'updatekategori'])->name('kategori.update');
         // Route::get('/hapus/{id}', [PengaduanController::class, 'destroykategori'])->name('kategori.destroy');
     });
-    
+
     Route::prefix('pengguna')->middleware('checkRole')->group(function () {
         Route::get('/', [PenggunaController::class, 'index'])->name('pengguna.index');
         Route::get('/buat', [PenggunaController::class, 'create'])->name('pengguna.create');
-        Route::post('/buat', [PenggunaController::class,'store'])->name('pengguna.store');
+        Route::post('/buat', [PenggunaController::class, 'store'])->name('pengguna.store');
         Route::get('/{id}', [PenggunaController::class, 'show'])->name('pengguna.show');
         Route::put('/{id}', [PenggunaController::class, 'update'])->name('pengguna.update');
         Route::get('/{id}/hapus', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
     });
-    
+
+    Route::prefix('indikatormutu')->middleware('checkRole')->group(function () {
+        Route::get('/', [IndikatorMutuController::class, 'index'])->name('indikatormutu.index');
+        Route::post('/store', [IndikatorMutuController::class, 'store'])->name('indikatormutu.store');
+        Route::get('/show/{id}', [IndikatorMutuController::class, 'showindikator'])->name('indikatormutu.index.show');
+        Route::post('/update', [IndikatorMutuController::class, 'updateindikator'])->name('indikatormutu.update');
+        Route::get('/hapus/{id}', [IndikatorMutuController::class, 'destroyindikator'])->name('indikatormutu.destroy');
+    });
+
+    // //indikatormutu
 
 });
 

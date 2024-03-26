@@ -24,6 +24,8 @@ class IndikatorMutu extends Model
         'nama_indikator',
         'target',
         'kategori_pengaduan_id',
+        'n',
+        'd',
         'created_at',
         'updated_at',
         'deleted_at',
