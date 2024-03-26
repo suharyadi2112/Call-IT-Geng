@@ -28,6 +28,10 @@ class DetailIPengaduan extends Model
         
     ];
 
+    protected $hidden = [
+        'deleted_at',
+    ];
+
     protected static function boot()
     {
         parent::boot();

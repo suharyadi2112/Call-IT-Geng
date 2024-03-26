@@ -22,11 +22,16 @@ class KatPengaduan extends Model
     protected $fillable = [
         'id',
         'nama',
-
+        'gambar',
         'created_at',
         'updated_at',
+    ];
+
+    protected $hidden = [
         'deleted_at',
     ];
+
+    protected $dates = ['deleted_at'];
 
     // public function pengaduan()
     // {

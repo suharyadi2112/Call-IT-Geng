@@ -45,6 +45,7 @@ class User extends Authenticatable
         'created_at',
         'updated_at',
         'deleted_at',
+        'email_verified_at',
     ];
 
     /**

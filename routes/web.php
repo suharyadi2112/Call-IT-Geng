@@ -6,6 +6,7 @@ use App\Http\Controllers\Dashboard\DashboardController;
 // use App\Http\Controllers\Dashboard\IndikatorMutuController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\PengaduanController;
+use App\Http\Controllers\Dashboard\KategoriPengaduanController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Dashboard\PenggunaController;
 use App\Http\Controllers\LaporanController;
@@ -50,11 +51,11 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     
 
     Route::prefix('kategori')->middleware('checkRole')->group(function () {
-        Route::get('/', [PengaduanController::class, 'kategori'])->name('kategori.index');
-        Route::post('/store', [PengaduanController::class, 'storekategori'])->name('kategori.store');
-        Route::get('/show/{id}', [PengaduanController::class, 'showkategori'])->name('kategori.show');
-        Route::post('/update', [PengaduanController::class, 'updatekategori'])->name('kategori.update');
-        Route::get('/hapus/{id}', [PengaduanController::class, 'destroykategori'])->name('kategori.destroy');
+        Route::get('/', [KategoriPengaduanController::class, 'kategori'])->name('kategori.index');
+        Route::post('/store', [KategoriPengaduanController::class, 'storekategori'])->name('kategori.store');
+        Route::get('/show/{id}', [KategoriPengaduanController::class, 'showkategori'])->name('kategori.show');
+        Route::post('/update', [KategoriPengaduanController::class, 'updatekategori'])->name('kategori.update');
+        Route::get('/{id}/hapus', [KategoriPengaduanController::class, 'destroykategori'])->name('kategori.destroy');
     });
 
     Route::prefix('laporan')->middleware('checkRole')->group(function () {

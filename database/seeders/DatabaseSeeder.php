@@ -76,24 +76,31 @@ class DatabaseSeeder extends Seeder
         $kategori =[
             [
                 'nama' => 'Jaringan (Network)',
+                'gambar' => 'kategori/jaringan.png'
             ],
             [
                 'nama' => 'Perangkat Lunak (Software)',
+                'gambar' => 'kategori/perangkat-lunak.png',
             ],
             [
-                'nama' => 'Perangkat Lunak (Hardware)',
+                'nama' => 'Perangkat Keras (Hardware)',
+                'gambar' => 'kategori/perangkat-keras.png',
             ],
             [
                 'nama' => 'SIMRS',
+                'gambar' => 'kategori/simrs.png',
             ],
             [
                 'nama' => 'Printer & Scanner',
+                'gambar' => 'kategori/printer-scanner.png',
             ],
             [
-                'nama' => 'Office'
+                'nama' => 'Dokumen & File',
+                'gambar' => 'kategori/dokumen.png',
             ],
             [
-                'nama' => 'Lainnya'
+                'nama' => 'Lainnya',
+                'gambar' => 'kategori/lainnya.png',
             ]
         ];
 

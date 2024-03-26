@@ -36,7 +36,7 @@ class PengaduanController extends Controller
             ->addColumn('action', function ($row) {
                 $actionBtn = '<a href="'.route('pengaduan.detail',$row->id).'" class="mr-2 btn btn-sm round btn-outline-primary shadow" title="Detail" data-id="' . $row->id . '">
                 <i class="fa fa-lg fa-fw fa-eye"></i></a>';
-                if (Auth::user()->divis == 'IT') {
+                if (Auth::user()->divisi == 'IT') {
                     $actionBtn.= '<button type="button" id="modalDelete" class="mr-2 btn btn-sm round btn-outline-danger shadow" title="Hapus" data-id="'. $row->id. '">
                     <i class="fa fa-lg fa-fw fa-trash"></i></button>';
                 }
@@ -78,7 +78,7 @@ class PengaduanController extends Controller
         }
         try {
 
-            $adminCheck = null;
+            $adminCheck = '-';
             if (Auth::user()->jabatan == 'Administrator') {
                 $adminCheck = Auth::user()->id;
             }
@@ -100,6 +100,10 @@ class PengaduanController extends Controller
                     'nomor_handphone' => $request->input('nomor_handphone'),
                     'status_pelaporan' => 'waiting',
                     'tanggal_pelaporan' => date('Y-m-d H:i:s'),
+
+                    'prioritas' => '-',
+                    'indikator_mutu_id' => '-',
+                    'tanggal_selesai' => '-',
                 ]);
 
                 if ($request->file('picture_pre')) {
@@ -280,9 +284,6 @@ class PengaduanController extends Controller
             'dekskripsi_pelaporan.required' => 'Deskripsi pelapporan wajib diisi.',
             'dekskripsi_pelaporan.max' => 'Deskripsi pelapporan max 1000 karakter.',
 
-            'prioritas.required' => 'Prioritas pelaporan wajib diisi.',
-            'prioritas.max' => 'Prioritas pelaporan max 100 karakter.',
-
             'nomor_handphone.max' => 'Nomor handphone max 50 karakter.',
 
             'tanggal_pelaporan.date' => 'Tanggal pelaporan tidak bertipe tanggal(date).',
@@ -309,7 +310,6 @@ class PengaduanController extends Controller
             ],
             'judul_pengaduan' => 'required|max:500',
             'dekskripsi_pelaporan' => 'required|max:1000',
-            'prioritas' => 'required|max:100',
             'nomor_handphone' => 'max:20',
             'tanggal_pelaporan' => 'date',
 
@@ -318,81 +318,5 @@ class PengaduanController extends Controller
         ], $messages);
 
         return $validator;
-    }
-
-    public function kategori(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = KatPengaduan::select('id', 'nama')
-                ->latest();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-                    $actionBtn = '<button type="button" class="mr-2 btn btn-sm round btn-outline-primary shadow" title="Edit" id="modalEdit" data-id="' . $row->id . '">
-                    <i class="fa fa-lg fa-fw fa-edit"></i>
-                    </button>';
-                    $actionBtn .= '<a href="' . route('kategori.destroy', $row->id) . '" class="btn btn-sm round btn-outline-danger shadow" title="Delete" id="modalDelete"
-                    data-id="' . $row->id . '">
-                    <i class="fa fa-lg fa-fw fa-trash"></i>
-                    </a>';
-                    return $actionBtn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-        return view('dashboard.pengaduan.pengaduan_kategori');
-    }
-
-    public function storekategori(Request $request)
-    {
-        $request->validate([
-            'nama' => 'required|max:50',
-
-        ], [
-            'nama.required' => 'Nama kategori tidak boleh kosong',
-            // 'nama.min' => 'Nama kategori minimal 5 karakter',
-            'nama.max' => 'Nama kategori maksimal 50 karakter',
-        ]);
-
-
-        $nama = $request->nama;
-        KatPengaduan::updateOrCreate(
-            ['id' => $request->id],
-            ['nama' => $nama]
-        );
-        return response()->json(['success' => 'Kategori berhasil ditambahkan']);
-    }
-
-    public function updatekategori(Request $request)
-    {
-        $request->validate([
-            'namaupdate' => 'required|max:50',
-
-        ], [
-            'namaupdate.required' => 'Nama kategori tidak boleh kosong',
-            // 'nama.min' => 'Nama kategori minimal 5 karakter',
-            'namaupdate.max' => 'Nama kategori maksimal 50 karakter',
-        ]);
-
-
-        $namaupdate = $request->namaupdate;
-        KatPengaduan::whereId($request->idupdate)->update(['nama'=>$namaupdate]);
-        return response()->json(['success' => 'Kategori berhasil diupdate']);
-    }
-    public function destroykategori($id)
-    {
-        // return response()->json($id);
-        $kategori = KatPengaduan::where('id', $id)->first();
-        $kategori->delete();
-        return back();
-    }
-    public function showkategori($id, Request $request)
-    {
-        $kategori = KatPengaduan::where('id', $id)->first();
-        if ($request->ajax()) {
-            return response()->json($kategori);
-        } else {
-            return redirect()->route('kategori.index');
-        }
     }
 }
