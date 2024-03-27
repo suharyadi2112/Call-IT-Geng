@@ -637,7 +637,7 @@ body {
   .nav-top .more {
     background: transparent;
     border: 0;
-    font-size: 22px;
+    font-size: 25px;
     padding: 0;
     opacity: 0;
     width: 0;
@@ -1565,6 +1565,20 @@ body {
     background: #3697E1 !important; }
   .main-header[data-background-color="light-blue2"] .nav-bottom .title-menu {
     background: #3697E1 !important; }
+
+.main-header[data-background-color="hijau-header"] {
+  background: #00BF63 !important; }
+    
+.main-header[data-background-color="hijau-header"] .nav-top {
+  background: #00BF63 !important; }
+
+.main-header[data-background-color="hijau-header"] .navbar-header {
+  background: #00BF63 !important; }
+
+.main-header[data-background-color="hijau-header"] .navbottom .title-menu {
+  background: #00BF63 !important; }
+
+
 
 .main-header[data-background-color="green"] {
   background: #31CE36 !important; }
@@ -13373,7 +13387,7 @@ img.mfp-img {
       color: #545454;
       cursor: pointer;
       display: inline-block;
-      line-height: 56px;
+      line-height: 70px;
       order: 3;
       width: unset;
       margin-left: auto; }
@@ -13848,3 +13862,70 @@ body {
   background: linear-gradient(-45deg, #E80A15, #F25961) !important; }
 
 /*# sourceMappingURL=atlantis2.css.map */
+
+.header {
+  background-color: #00BF63;
+}
+
+.header .header-content {
+  padding-top: 6rem;
+  padding-bottom: 3rem;
+  text-align: center;
+}
+
+.header .text-container {
+  margin-bottom: 3rem;
+}
+
+.header h1 {
+  margin-bottom: 1rem;
+  color: #fff;
+  font-size: 2.5rem;
+  line-height: 3rem;
+}
+
+.header .p-large {
+  margin-top: 2rem;
+  font-size: 1rem;
+  color: #f3f7fd;
+}
+
+
+.wave {
+  margin-top: -1px;
+  width: 100%;
+  height: 2.25rem;
+}
+
+.description {
+  padding-top: 3.25rem;
+  padding-bottom: 3rem;
+  text-align: center;
+}
+
+.description .h2-heading {
+  margin-bottom: 3.5rem;
+}
+
+.description .card {
+margin-right: auto;
+margin-bottom: 3.5rem;
+margin-left: auto;
+padding: 0;
+border: none;
+}
+.description .card-image {
+  margin-right: auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  margin-left: auto;
+}
+
+.description .card-title {
+  margin-bottom: 0.5rem;
+}
+
+.description .card-body {
+padding: 20px;
+min-height: 150px;
+}
