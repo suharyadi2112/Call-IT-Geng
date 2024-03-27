@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use DataTables;
 
 //model
@@ -71,7 +72,7 @@ class KategoriPengaduan extends Controller
         }
     }
 
-    public function StoreKategoriPengaduan(Request $request){
+    public function StoreKategoriPengaduan(Request $request){   
 
         $validator = $this->validateKategoriPengaduan($request, null , 'insert');  
         if ($validator->fails()) {
@@ -79,8 +80,17 @@ class KategoriPengaduan extends Controller
         }
         try {
             DB::transaction(function () use ($request) {
+
+                $path = '-';
+                if($request->hasFile('gambar')){
+                    $file = $request->file('gambar');
+                    $filename = Str::slug($request->nama, '-'). $file->getClientOriginalExtension();
+                    $path = $file->storeAs('kategori', $filename, 'public');
+                }
+
                 KatPengaduan::create([
                     'nama' => strtolower($request->input('nama')),
+                    'gambar' => $path,
                 ]);
             });
             return response()->json(["status"=> "success","message"=> "Data kategori pengaduan successfully stored", "data" => $request->all()], 200);
@@ -144,7 +154,11 @@ class KategoriPengaduan extends Controller
             'nama.required' => 'Nama Kategori Pengaduan wajib diisi.',
             'nama.max' => 'Nama Kategori Pengaduan tidak boleh lebih dari 400 karakter.',
             'nama.unique' => 'Nama Kategori Pengaduan sudah ada. Silakan gunakan nama yang berbeda.',
+            'gambar.image' => 'Gambar kategori harus berupa gambar',
+            'gambar.mimes' => 'Gambar kategori harus berupa gambar',
         ];
+
+      
         $validator = Validator::make($request->all(), [
             'nama' => ['required','max:400',
 
@@ -162,6 +176,7 @@ class KategoriPengaduan extends Controller
                     }
                 },
             ],
+            'gambar'=>'image|mimes:jpeg,png,jpg,gif,svg|max:512',
         ], $messages);
      
         return $validator;
