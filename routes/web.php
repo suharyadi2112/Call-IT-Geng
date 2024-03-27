@@ -89,7 +89,10 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::get('/hapus/{id}', [IndikatorMutuController::class, 'destroyindikator'])->name('indikatormutu.destroy');
     });
 
-    // //indikatormutu
+    Route::prefix('laporanindikatormutu')->middleware('checkRole')->group(function () {
+        Route::get('/', [LaporanController::class, 'index'])->name('laporanindikatormutu.index');
+        Route::post('/get', [LaporanController::class, 'getlaporan'])->name('laporanindikatormutu.get');
+    });
 
 });
 

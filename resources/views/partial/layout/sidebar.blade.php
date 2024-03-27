@@ -39,6 +39,12 @@
                             <p>Laporan</p>
                         </a>
                     </li>
+                    <li class="nav-item {{ request()->routeIs('laporanindikatormutu.*') ? 'active' : '' }}">
+                        <a href="{{ route('laporanindikatormutu.index') }}" aria-expanded="false">
+                            <i class="fas fa-file-contract"></i>
+                            <p>Laporan Indikator Mutu</p>
+                        </a>
+                    </li>
                 @endcheckRole
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
