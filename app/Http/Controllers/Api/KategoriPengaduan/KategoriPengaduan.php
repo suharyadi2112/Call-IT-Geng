@@ -51,7 +51,7 @@ class KategoriPengaduan extends Controller
     public function GetKategoriPengaduanList(){
         try {
             $queryy = KatPengaduan::query();
-            $getKategoriPengaduanList = $queryy->orderBy('created_at', 'desc')->select("id","nama")->get(); 
+            $getKategoriPengaduanList = $queryy->orderBy('created_at', 'desc')->select("id","nama","gambar")->get(); 
             return response(["status"=> "success","message"=> "Data list kategori pengaduan successfully retrieved", "data" => $getKategoriPengaduanList], 200);
 
         } catch (\Exception $e) {
