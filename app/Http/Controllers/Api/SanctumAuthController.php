@@ -157,7 +157,7 @@ class SanctumAuthController extends Controller
                     'handphone' => $request->input('handphone'),
                     'jabatan' => $request->input('jabatan'),
                     'role' => $request->input('role'),
-                    'status' => $request->input('status'),
+                    'status' => 'Active',
                     'divisi' => $request->input('divisi'),
                 ]);
             });
@@ -271,6 +271,84 @@ class SanctumAuthController extends Controller
         }
     }
 
+    public function ChangeEmail(Request $req, $id){
+
+        try {
+
+            $user = User::find($id);
+            if (!$user) {
+                throw new \Exception('User not found');
+            }
+    
+            $pesan = [
+                'email.required' => 'Email wajib diisi.',
+                'email.max' => 'Email max 50 karakter',
+            ];
+    
+            $validator = Validator::make($req->all(), [
+                'email' => 'required|max:50',
+            ], $pesan);
+    
+            if ($validator->fails()) {
+                return response()->json(["status" => "fail", "message" => $validator->errors(), "data" => null], 400);
+            }
+
+            DB::transaction(function () use ($req, $user) {
+                
+                $user->fill($req->all());
+                $user->save();
+                
+            });
+
+            return response()->json(['status' => 'success', 'message' => 'email updated successfully', 'data' => $req->all()], 200);
+
+        } catch (ValidationException $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->errors(), 'data' => null], 400);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'data' => null], 500);
+        }
+
+    }
+
+    public function ChangeNoHP(Request $req, $id){
+
+        try {
+
+            $user = User::find($id);
+            if (!$user) {
+                throw new \Exception('User not found');
+            }
+    
+            $pesan = [
+                'handphone.required' => 'Handphone wajib diisi.',
+                'handphone.max' => 'Handphone max 50 karakter',
+            ];
+    
+            $validator = Validator::make($req->all(), [
+                'handphone' => 'required|max:50',
+            ], $pesan);
+    
+            if ($validator->fails()) {
+                return response()->json(["status" => "fail", "message" => $validator->errors(), "data" => null], 400);
+            }
+
+            DB::transaction(function () use ($req, $user) {
+                
+                $user->fill($req->all());
+                $user->save();
+                
+            });
+
+            return response()->json(['status' => 'success', 'message' => 'handphone updated successfully', 'data' => $req->all()], 200);
+
+        } catch (ValidationException $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->errors(), 'data' => null], 400);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'data' => null], 500);
+        }
+
+    }
+
     private function validateUser(Request $request, $id, $action = 'insert')
     {   
 
@@ -318,7 +396,7 @@ class SanctumAuthController extends Controller
             ],
             'handphone' => 'required|max:20',
             'jabatan' => 'required|max:50',
-            'status' => 'required|max:20',
+            'status' => 'max:20',
             'divisi' => 'required|max:50',
         ];
         

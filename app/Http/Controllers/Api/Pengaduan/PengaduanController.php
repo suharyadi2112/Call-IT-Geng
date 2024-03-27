@@ -52,6 +52,20 @@ class PengaduanController extends Controller
         }
     }
 
+    public function GetPengaduanAll(){
+        try {
+            $queryy = Pengaduan::query()
+            ->with('detailpengaduan', 'kategoripengaduan','indikatormutu','pelapor', 'workers')
+            ->orderBy('created_at', 'desc')
+            ->where('pelapor_id','=',Auth::user()->id)
+            ->get(); 
+            return response(["status"=> "success","message"=> "Data list pengaduan all by user successfully retrieved", "data" => $queryy], 200);
+
+        } catch (\Exception $e) {
+            return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+    }
+
     public function GetPengaduanYajra(){
         try {
             $model = Pengaduan::query()->with('detailpengaduan', 'kategoripengaduan','indikatormutu','pelapor', 'workers')
