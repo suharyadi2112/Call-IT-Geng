@@ -9,7 +9,7 @@
                     <div class="text-container">
                         <h1>Call IT RSUD Raja Ahmad Tabib 
                         <p class="p-large">Dirancang untuk memudahkan bagian manajemen dan pelayanan rumah sakit dalam melaporkan keluhan atau gangguan terkait layanan IT kepada tim IT RSUD Raja Ahmad Tabib</p>
-                        <a href="{{ url('/') }}" class="btn btn-secondary btn-round">Tentang</a>
+                        <a href="{{ url('/tentang') }}" class="btn btn-secondary btn-round">Tentang</a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-xl-7">
