@@ -13,112 +13,72 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use Maatwebsite\Excel\Concerns\WithDrawings;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
-class LaporanIndikatorMutuExport implements FromCollection
+class LaporanIndikatorMutuExport implements WithHeadings, ShouldAutoSize, WithCustomStartCell, WithStyles, WithDrawings
 {
-    protected $pengaduan;
-
-    public function __construct($pengaduan)
-    {
-        $this->pengaduan = $pengaduan;
-    }
-
-    public function collection()
-    {
-        return $this->pengaduan;
-    }
-
     public function headings(): array
     {
         return [
-            'No',
-            'Nama Pelapor',
-            'Ruangan/Unit',
-            'Tanggal Laporan',
-            'Jam Laporan',
-            'Tanggal Selesai',
-            'Jam Selesai',
-            'Durasi',
-            'Laporan Kerusakan',
-            'Status',
-            'Keterangan',
-            'Petugas',
-            'Validator'
+            ['JUDUL INDIKATOR MUTU', '', '', 'N/D', 'TARGET', 'CAPAIAN']
         ];
     }
 
     public function startCell(): string
     {
-        return 'A13';
+        return 'A10';
     }
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('A4:M4')->applyFromArray([
+        $sheet->getStyle('A2:F4')->applyFromArray([
             'borders' => [
-                'bottom' => [
+                'outline' => [
                     'borderStyle' => Border::BORDER_THIN,
                     'color' => ['rgb' => '000000'],
                 ],
             ],
         ]);
 
-        $sheet->setCellValue('K5', 'No. Form PMKP :');
-        $sheet->getStyle('A:M')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        
 
-        $sheet->mergeCells('A6:M6');
+        // Mengatur tinggi kolom B2
+        $sheet->getRowDimension('2')->setRowHeight(27); // Sesuaikan tinggi kolom B2 sesuai kebutuhan
+        $sheet->getRowDimension('3')->setRowHeight(27); // Sesuaikan tinggi kolom B2 sesuai kebutuhan
+        $sheet->getRowDimension('4')->setRowHeight(27); // Sesuaikan tinggi kolom B2 sesuai kebutuhan
 
-        $sheet->setCellValue('A6', 'FORMULIR  ANGKA ANGKA KERUSAKAN JARINGAN');
+        // Mengatur ukuran font pada sel B2
+        $sheet->getStyle('B2:B4')->getFont()->setSize(16); // Sesuaikan ukuran font sesuai kebutuhan
+
+        $sheet->getStyle('A:F')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->mergeCells('A10:C10');
+        $sheet->mergeCells('B2:F2');
+        $sheet->setCellValue('B2', 'RSUD RAJA AHMAD TABIB');
+        $sheet->getStyle('B2')->getFont()->setBold(true);
+
+        $sheet->mergeCells('B3:F3');
+        $sheet->setCellValue('B3', 'PENINGKATAN MUTU DAN KESELAMATAN PASIEN');
+        $sheet->getStyle('B3')->getFont()->setBold(true);
+
+        $sheet->mergeCells('B4:F4');
+        $sheet->setCellValue('B4', 'PENINGKATAN MUTU DAN KESELAMATAN PASIEN');
+        $sheet->getStyle('B4')->getFont()->setBold(true);
+
+        $sheet->mergeCells('A6:C6');
+        $sheet->setCellValue('A6', 'INSTALASI INFORMASI TEKNOLOGI');
         $sheet->getStyle('A6')->getFont()->setBold(true);
 
-        $sheet->mergeCells('A7:M7');
-
-        $sheet->setCellValue('A7', 'INDIKATOR MANAJEMEN RESIKO');
-
-        $sheet->setCellValue('A9', 'RUANG       :');
-        $sheet->getStyle('A9')->getFont()->setBold(true);
-
-        $sheet->setCellValue('B9', 'INSTALASI IT');
-        $sheet->getStyle('B9')->getFont()->setBold(true);
-
-        $sheet->setCellValue('A10', 'PERIODE    :');
-        $sheet->getStyle('A10')->getFont()->setBold(true);
-
-        $sheet->setCellValue('J10', 'LEMBAR KE    :');
-        $sheet->getStyle('J10')->getFont()->setBold(true);
-
-
-
+        $sheet->mergeCells('A7:C7');
+        $sheet->setCellValue('A7', 'BULAN : ');
         $sheet->getStyle('A7')->getFont()->setBold(true);
-
-        // Menambahkan border pada seluruh kolom dari A13 ke bawah hingga M13
-        $lastRow = $sheet->getHighestRow();
-        $sheet->getStyle('A13:M' . $lastRow)->applyFromArray([
-            'borders' => [
-                'allBorders' => [
-                    'borderStyle' => Border::BORDER_THIN,
-                    'color' => ['rgb' => '000000'],
-                ],
-            ],
-        ]);
-        return [
-            // Style the first row as bold text and center align
-            13 => [
-                'font' => ['bold' => true],
-                'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
-            ]
-        ];
-
-        // Menambahkan border pada seluruh kolom dari A13 hingga M13 ke bawah
-
     }
 
     public function drawings()
     {
         $drawing = new Drawing();
         $drawing->setName('Logo');
-        $drawing->setPath(public_path('/assets/img/header.png'));
+        $drawing->setPath(public_path('/assets/img/kepri.png'));
         $drawing->setHeight(78);
-        $drawing->setCoordinates('B1');
+        $drawing->setCoordinates('B2');
 
         return [$drawing];
     }

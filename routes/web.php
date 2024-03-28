@@ -11,6 +11,7 @@ use App\Http\Controllers\Dashboard\IndikatorMutuController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Dashboard\PenggunaController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\LaporanIndikatorMutuController;
 use App\Models\Pengaduan;
 
 /*
@@ -90,8 +91,8 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     });
 
     Route::prefix('laporanindikatormutu')->middleware('checkRole')->group(function () {
-        Route::get('/', [LaporanController::class, 'index'])->name('laporanindikatormutu.index');
-        Route::post('/get', [LaporanController::class, 'getlaporan'])->name('laporanindikatormutu.get');
+        Route::get('/', [LaporanIndikatorMutuController::class, 'index'])->name('laporanindikatormutu.index');
+        Route::post('/get', [LaporanIndikatorMutuController::class, 'getlaporan'])->name('laporanindikatormutu.get');
     });
 
 });
