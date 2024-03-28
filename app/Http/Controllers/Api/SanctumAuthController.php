@@ -365,7 +365,7 @@ class SanctumAuthController extends Controller
             'password.min' => 'Password tidak boleh kurang dari 8 karakter.',
 
             'handphone.required' => 'Handphone wajib diisi.',
-            'handphone.max' => 'Handphone tidak boleh lebih dari 20 karakter.',
+            'handphone.between' => 'Handphone tidak boleh lebih dari 20 angka dan tidak kurang dari 10 angka',
             
             'jabatan.required' => 'jabatan wajib diisi.',
             'jabatan.max' => 'jabatan tidak boleh lebih dari 50 karakter.',
@@ -394,7 +394,7 @@ class SanctumAuthController extends Controller
                     }
                 },
             ],
-            'handphone' => 'required|max:20',
+            'handphone' => 'required|string|between:10,20',
             'jabatan' => 'required|max:50',
             'status' => 'max:20',
             'divisi' => 'required|max:50',
