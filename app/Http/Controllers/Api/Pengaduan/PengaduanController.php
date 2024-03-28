@@ -52,14 +52,26 @@ class PengaduanController extends Controller
         }
     }
 
-    public function GetPengaduanAll(){
+    public function GetPengaduanAll(Request $request){
         try {
-            $queryy = Pengaduan::query()
-            ->with('detailpengaduan', 'kategoripengaduan','indikatormutu','pelapor', 'workers')
+            $query = Pengaduan::query()
+            ->with('detailpengaduan', 'kategoripengaduan', 'indikatormutu', 'pelapor', 'workers')
             ->orderBy('created_at', 'desc')
-            ->where('pelapor_id','=',Auth::user()->id)
-            ->get(); 
-            return response(["status"=> "success","message"=> "Data list pengaduan all by user successfully retrieved", "data" => $queryy], 200);
+            ->where('pelapor_id', Auth::user()->id);
+
+            if ($request->tanggal_pelaporan) {
+                $query->whereDate('created_at', $request->tanggal_pelaporan);
+            } else {
+                $query->whereDate('created_at', now()->toDateString()); // Jika tanggal kosong, gunakan tanggal hari ini
+            }
+            
+            if ($request->status_pelaporan) {
+                $query->where('status_pelaporan', $request->status_pelaporan);
+            }
+
+            $results = $query->get();
+
+            return response(["status"=> "success","message"=> "Data list pengaduan all by user successfully retrieved", "data" => $results], 200);
 
         } catch (\Exception $e) {
             return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
