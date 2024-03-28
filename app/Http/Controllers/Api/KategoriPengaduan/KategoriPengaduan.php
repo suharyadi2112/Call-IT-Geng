@@ -122,6 +122,7 @@ class KategoriPengaduan extends Controller
     }
 
     public function UpdateKategoriPengaduan(Request $request, $id){
+
         try {
             $validator = $this->validateKategoriPengaduan($request, $id, 'update');
             if ($validator->fails()) {
@@ -134,7 +135,15 @@ class KategoriPengaduan extends Controller
                 if (!$kategoriPengaduan) {
                     throw new \Exception('kategori pengaduan not found');
                 }
-                $kategoriPengaduan->fill($request->all());
+
+                if($request->hasFile('gambar')){
+                    $file = $request->file('gambar');
+                    $names = Str::random(5) . date('YmdHis') . '.' . $file->getClientOriginalExtension();
+                    $path = $file->storeAs('kategori', $names, 'public');
+                    $kategoriPengaduan->gambar = $path;
+                }
+
+                $kategoriPengaduan->nama = $request->nama;
                 $kategoriPengaduan->save();
             });
 
@@ -176,8 +185,13 @@ class KategoriPengaduan extends Controller
                     }
                 },
             ],
-            'gambar'=>'required|image|mimes:jpeg,png,jpg,gif,svg|max:512',
         ], $messages);
+
+        if ($action === 'create') {
+            $validator->sometimes('gambar', 'required|image|mimes:jpeg,png,jpg,gif,svg|max:512', function ($input) {
+                return $input->hasFile('gambar');
+            });
+        }
      
         return $validator;
     }

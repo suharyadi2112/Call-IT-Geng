@@ -67,7 +67,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('get_kategori_pengaduan/{id}', [KategoriPengaduan::class, 'GetKategoriPengaduanByID']);
     Route::post('store_kategori_pengaduan', [KategoriPengaduan::class, 'StoreKategoriPengaduan']);
     Route::delete('del_kategori_pengaduan/{id}', [KategoriPengaduan::class, 'DelKategoriPengaduan']);
-    Route::put('update_kategori_pengaduan/{id}', [KategoriPengaduan::class, 'UpdateKategoriPengaduan']);
+    Route::post('update_kategori_pengaduan/{id}', [KategoriPengaduan::class, 'UpdateKategoriPengaduan']);
 
     //indikator mutu 
     Route::get('get_indikator_mutu', [IndikatorMutuController::class, 'GetIndikatorMutu']);
