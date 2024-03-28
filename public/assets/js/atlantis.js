@@ -1,15 +1,16 @@
 "use strict";
 
 $(".nav-search .input-group > input").focus(function(e){
-	$(this).parent().addClass("focus");
+	$(this).parents().eq(2).addClass("focus");
 }).blur(function(e){
-	$(this).parent().removeClass("focus");
+	$(this).parents().eq(2).removeClass("focus");
 });
 
 $(function () {
 	$('[data-toggle="tooltip"]').tooltip();
 	$('[data-toggle="popover"]').popover();
 	layoutsColors();
+	customBackgroundColor();
 });
 
 function layoutsColors(){
@@ -18,12 +19,16 @@ function layoutsColors(){
 	} else {
 		$('html').removeClass('sidebar-color');
 	}
+}
 
-	if($('body').is('[data-image]')) {
-		$('body').css('background-image', 'url("' + $('body').attr('data-image') + '")');
-	} else {
-		$('body').css('background-image', '');
-	}
+function customBackgroundColor() {
+	$('*[data-background-color="custom"]').each(function(){
+		if($(this).is('[custom-color]')) {
+			$(this).css('background', $(this).attr('custom-color'));
+		} else if($(this).is('[custom-background]')) {
+			$(this).css('background-image', 'url(' + $(this).attr('custom-background') + ')');
+		}
+	});
 }
 
 function legendClickCallback(event) {
@@ -342,6 +347,40 @@ function showPassword(button) {
 $('.show-password').on('click', function(){
 	showPassword(this);
 })
+
+// Sign In & Sign Up
+var containerSignIn = $('.container-login'),
+containerSignUp = $('.container-signup'),
+showSignIn = true,
+showSignUp = false;
+
+function changeContainer(){
+	if(showSignIn == true){
+		containerSignIn.css('display', 'block')
+	} else {
+		containerSignIn.css('display', 'none')
+	}
+
+	if(showSignUp == true){
+		containerSignUp.css('display', 'block')
+	} else {
+		containerSignUp.css('display', 'none')
+	}
+}
+
+$('#show-signup').on('click', function(){ 
+	showSignUp = true;
+	showSignIn = false;
+	changeContainer();
+})
+
+$('#show-signin').on('click', function(){ 
+	showSignUp = false;
+	showSignIn = true;
+	changeContainer();
+})
+
+changeContainer();
 
 //Input with Floating Label
 

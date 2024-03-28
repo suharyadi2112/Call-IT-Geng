@@ -98,9 +98,10 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 });
 
 
-
-Route::get('/', function () {
-    return redirect('/login');
-});
+Route::get('/', function () { return view('frontend.welcome'); });
+Route::get('/tentang', function () { return view('frontend.tentang'); });
+Route::get('/kebijakan-privasi', function () { return view('frontend.kebijakan-privasi'); });
+Route::get('/pertanyaan-umum', function () { return view('frontend.pertanyaan-umum'); });
+Route::get('/syarat-ketentuan', function () { return view('frontend.syarat-ketentuan'); });
 
 Route::get('pusher-test', [Controller::class, 'TangkapEvent']);
