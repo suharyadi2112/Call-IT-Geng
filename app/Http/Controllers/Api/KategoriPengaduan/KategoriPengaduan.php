@@ -84,8 +84,8 @@ class KategoriPengaduan extends Controller
                 $path = '-';
                 if($request->hasFile('gambar')){
                     $file = $request->file('gambar');
-                    $filename = Str::slug($request->nama, '-'). $file->getClientOriginalExtension();
-                    $path = $file->storeAs('kategori', $filename, 'public');
+                    $names = Str::random(5) . date('YmdHis') . '.' . $file->getClientOriginalExtension();
+                    $path = $file->storeAs('kategori', $names, 'public');
                 }
 
                 KatPengaduan::create([
@@ -122,6 +122,7 @@ class KategoriPengaduan extends Controller
     }
 
     public function UpdateKategoriPengaduan(Request $request, $id){
+
         try {
             $validator = $this->validateKategoriPengaduan($request, $id, 'update');
             if ($validator->fails()) {
@@ -134,7 +135,15 @@ class KategoriPengaduan extends Controller
                 if (!$kategoriPengaduan) {
                     throw new \Exception('kategori pengaduan not found');
                 }
-                $kategoriPengaduan->fill($request->all());
+
+                if($request->hasFile('gambar')){
+                    $file = $request->file('gambar');
+                    $names = Str::random(5) . date('YmdHis') . '.' . $file->getClientOriginalExtension();
+                    $path = $file->storeAs('kategori', $names, 'public');
+                    $kategoriPengaduan->gambar = $path;
+                }
+
+                $kategoriPengaduan->nama = $request->nama;
                 $kategoriPengaduan->save();
             });
 
@@ -155,7 +164,7 @@ class KategoriPengaduan extends Controller
             'nama.max' => 'Nama Kategori Pengaduan tidak boleh lebih dari 400 karakter.',
             'nama.unique' => 'Nama Kategori Pengaduan sudah ada. Silakan gunakan nama yang berbeda.',
             'gambar.image' => 'Gambar kategori harus berupa gambar',
-            'gambar.mimes' => 'Gambar kategori harus berupa gambar',
+            'gambar.required' => 'Gambar kategori harus diisi',
         ];
 
       
@@ -176,8 +185,13 @@ class KategoriPengaduan extends Controller
                     }
                 },
             ],
-            'gambar'=>'image|mimes:jpeg,png,jpg,gif,svg|max:512',
         ], $messages);
+
+        if ($action === 'create') {
+            $validator->sometimes('gambar', 'required|image|mimes:jpeg,png,jpg,gif,svg|max:512', function ($input) {
+                return $input->hasFile('gambar');
+            });
+        }
      
         return $validator;
     }

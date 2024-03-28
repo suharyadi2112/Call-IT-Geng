@@ -23,4 +23,11 @@ class LaporanIndikatorMutuController extends Controller
             ->get();
         return view('dashboard.laporanindikatormutu.index', ['tahun' => $tahun]);
     }
+
+    public function getlaporan(Request $request)
+    {
+        
+
+        return Excel::download(new LaporanIndikatorMutuExport, 'Laporan Indikator Mutu.xlsx');
+    }
 }
