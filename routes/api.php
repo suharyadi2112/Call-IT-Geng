@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\KategoriPengaduan\KategoriPengaduan;
 use App\Http\Controllers\Api\IndikatorMutu\IndikatorMutuController;
 use App\Http\Controllers\Api\DetailPengaduan\DetailPengaduanController;
 use App\Http\Controllers\Api\Pengaduan\PengaduanController;
+use App\Http\Controllers\Api\Oncall\OncallController;
 
 
 
@@ -81,6 +82,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //detail pengaduan
     Route::get('get_detail_pengaduan', [DetailPengaduanController::class, 'GetDetailPengaduan']);
+
+    //oncall
+    Route::get('get_oncall_all', [OncallController::class, 'GetOncallAll']);
     
 
 }); 
