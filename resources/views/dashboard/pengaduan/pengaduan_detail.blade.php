@@ -40,6 +40,15 @@
                         <input type="text" class="form-control" id="judul_pengaduan" name="judul_pengaduan" placeholder="Judul Pengaduan" required value="{{ $pengaduan->judul_pengaduan }}" disabled>
                     </div>
                     <div class="form-group">
+                        <label>Kategori</label>
+                        <select class="form-control" id="kategori_pengaduan_id" name="kategori_pengaduan_id" disabled>
+                            <option value="">-- Pilih Kategori --</option>
+                            @foreach ($kategoriPengaduan as $key => $value)
+                                <option value="{{ $value->id }}" {{ $pengaduan->kategori_pengaduan_id == $value->id ? 'selected' : '' }}>{{ $value->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="dekskripsi_pelaporan">Deskripsi</label>
                         <textarea id="dekskripsi_pelaporan" name="dekskripsi_pelaporan" class="form-control" rows="5" placeholder="Deskripsi Pengaduan" required disabled>{{ $pengaduan->dekskripsi_pelaporan }}</textarea>
                     </div>
@@ -52,24 +61,6 @@
                                 </a>   
                             @endforeach
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Kategori</label>
-                        <select class="form-control" id="kategori_pengaduan_id" name="kategori_pengaduan_id" disabled>
-                            <option value="">-- Pilih Kategori --</option>
-                            @foreach ($kategoriPengaduan as $key => $value)
-                                <option value="{{ $value->id }}" {{ $pengaduan->kategori_pengaduan_id == $value->id ? 'selected' : '' }}>{{ $value->nama }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Prioritas</label>
-                        <select class="form-control" id="prioritas" name="prioritas" disabled>
-                            <option value="">-- Pilih Prioritas --</option>
-                            <option value="Rendah" {{ $pengaduan->prioritas == 'Rendah' ? 'selected' : '' }}>Rendah</option>
-                            <option value="Sedang" {{ $pengaduan->prioritas == 'Sedang' ? 'selected' : '' }}>Sedang</option>
-                            <option value="Tinggi" {{ $pengaduan->prioritas == 'Tinggi' ? 'selected' : '' }}>Tinggi</option>
-                        </select>
                     </div>
                 </div>
             </div>
@@ -85,6 +76,15 @@
                         <div class="card-title">Kondisi Perbaikan</div>
                     </div>
                     <div class="card-body">
+                        <div class="form-group">
+                            <label>Prioritas <span class="required-label">*</span></label>
+                            <select class="form-control" id="prioritas" name="prioritas" @if($pengaduan->status_pelaporan == 'done' || auth()->user()->role == 'User') @disabled(true) @endif>
+                                <option value="">-- Pilih Prioritas --</option>
+                                <option value="Rendah" {{ $pengaduan->prioritas == 'Rendah' ? 'selected' : '' }}>Rendah</option>
+                                <option value="Sedang" {{ $pengaduan->prioritas == 'Sedang' ? 'selected' : '' }}>Sedang</option>
+                                <option value="Tinggi" {{ $pengaduan->prioritas == 'Tinggi' ? 'selected' : '' }}>Tinggi</option>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label>Status Pelaporan <span class="required-label">*</span></label>
                             @php
@@ -172,7 +172,7 @@
             $(this).ekkoLightbox();
         });
         $("#workers").select2({
-            placeholder: "",
+            placeholder: "-- Pilih Worker --",
             theme: 'bootstrap',
         });
 

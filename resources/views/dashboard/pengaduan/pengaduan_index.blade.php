@@ -23,13 +23,13 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Judul Aduan</th>
+                                    <th>Kode Laporan</th>
+                                    <th>Aduan</th>
                                     <th>Lantai</th>
                                     <th>Lokasi</th>
                                     <th>Prioritas</th>
                                     <th>Status</th>
                                     <th>Pelapor</th>
-                                    <th>Kategori</th>
                                 </tr>
                             </thead>
                         </table>
@@ -72,13 +72,13 @@
                     orderable : false,
                     defaultContent : "",
                 }, 
+                { data: 'kode_laporan', name: 'kode_laporan' , width: '5%'},
                 { data: 'judul_pengaduan', name: 'judul_pengaduan' },
                 { data: 'lantai', name: 'lantai' },
                 { data: 'lokasi', name: 'lokasi' },
                 { data: 'prioritas', name: 'prioritas' },
                 { data: 'status_pelaporan', name: 'status_pelaporan' },
                 { data: 'pelapor.name', name: 'pelapor.name' },
-                { data: 'kategoripengaduan.nama', name: 'kategoripengaduan.nama', defaultContent: '-' },
             ],
         });
 
@@ -111,16 +111,18 @@
                 }
                 workerData += '</td></tr>';
             }
-            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+            return '<table class="display table table-bordered" style="width: 100%">'+
+                '<tr>'+
+                    '<td>Kategori : </td>'+
+                    '<td>'+d.kategoripengaduan.nama+'</td>'+
+                '</tr>'+
                 '<tr>'+
                     '<td>Tanggal Lapor : </td>'+
                     '<td>'+d.tanggal_pelaporan+'</td>'+
-                '</tr>'+
-                '<tr>'+
                     '<td>Tanggal Selesai:</td>'+
                     '<td>'+d.tanggal_selesai+'</td>'+
                 '</tr>'+
-                workerData + 
+                    workerData + 
                 '<tr>'+
                     '<td>Aksi</td>'+
                     '<td>'+d.action+'</td>'+
@@ -180,8 +182,6 @@
                 }
             });
         })
-                
-    
 
     });
 </script>
