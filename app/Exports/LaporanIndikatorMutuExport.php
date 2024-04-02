@@ -14,7 +14,7 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use Maatwebsite\Excel\Concerns\WithDrawings;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
-class LaporanIndikatorMutuExport implements FromCollection,WithHeadings,  WithCustomStartCell, WithStyles, WithDrawings
+class LaporanIndikatorMutuExport implements FromCollection, WithHeadings,  WithCustomStartCell, WithStyles, WithDrawings
 {
     protected $indikator;
 
@@ -25,9 +25,42 @@ class LaporanIndikatorMutuExport implements FromCollection,WithHeadings,  WithCu
 
     public function collection()
     {
-        return $this->indikator;
+        $data = [];
+
+        foreach ($this->indikator as $indikator) {
+            $data[] = [
+                $indikator->nama_indikator,
+                '', // Kolom kosong untuk 'N/D'
+                '', // Kolom kosong untuk 'TARGET'
+                '', // Kolom kosong untuk 'CAPAIAN'
+                ''
+            ];
+
+            // Baris untuk 'n'
+            $data[] = [
+                'N', // Menambahkan 'N:' pada kolom A
+                $indikator->n, // Menambahkan nilai $indikator->n pada kolom 'JUDUL INDIKATOR MUTU'
+                '', // Kolom kosong untuk 'TARGET'
+                '', // Kolom kosong untuk 'CAPAIAN'
+                strval($indikator->target) . '%',
+            ];
+
+            // Baris untuk 'd'
+            $data[] = [
+                'D', // Kolom kosong untuk 'N/D'
+                $indikator->d,
+                '', // Mengonversi nilai target menjadi string
+                '', // Kolom kosong untuk 'CAPAIAN'
+                ''
+            ];
+
+            // Tambah baris kosong untuk memisahkan setiap indikator
+            $data[] = [];
+        }
+
+        return collect($data);
     }
-    
+
     public function headings(): array
     {
         return [
@@ -43,6 +76,59 @@ class LaporanIndikatorMutuExport implements FromCollection,WithHeadings,  WithCu
 
     public function styles(Worksheet $sheet)
     {
+        $lastRow = $sheet->getHighestRow();
+
+        // Mendapatkan data indikator dari konstruktor
+        $indikatorData = $this->indikator;
+
+        // Mengatur style untuk setiap baris
+        $currentRow = 11; // Mulai dari baris ke-11
+
+        foreach ($indikatorData as $indikator) {
+            // Mendapatkan baris dimana nama indikator muncul
+            $indikatorRow = $currentRow;
+
+            // Mencari baris dimana nama indikator berikutnya muncul
+            while ($currentRow <= $lastRow && $sheet->getCell('A' . $currentRow)->getValue() == $indikator->nama_indikator) {
+                $currentRow++;
+            }
+            $nextIndikatorRow = $currentRow - 1;
+
+
+            $sheet->mergeCells('B' . ($currentRow) . ':C' . ($currentRow));
+            $sheet->mergeCells('B' . ($currentRow + 1) . ':C' . ($currentRow + 1));
+
+
+            // Merge sel untuk setiap nama indikator
+            $sheet->mergeCells('A' . $indikatorRow . ':F' . $nextIndikatorRow);
+
+            // Mengatur style border untuk sel yang digabungkan
+            $sheet->getStyle('A' . $indikatorRow . ':F' . $nextIndikatorRow)->applyFromArray([
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                        'color' => ['rgb' => '000000'],
+                    ],
+                ],
+                // Mengatur alignment horizontal untuk kolom A menjadi kiri
+                'alignment' => [
+                    'horizontal' => Alignment::HORIZONTAL_LEFT,
+                    'vertical' => Alignment::VERTICAL_CENTER
+                ],
+                // Mengatur font dan ukuran
+                'font' => [
+                    'name' => 'Arial',
+                    'size' => 12,
+                    'bold' => true
+                ]
+            ]);
+
+            // Atur baris saat ini ke baris berikutnya
+            $currentRow++;
+        }
+
+
+
         $sheet->getStyle('A2:F4')->applyFromArray([
             'borders' => [
                 'outline' => [
@@ -51,7 +137,7 @@ class LaporanIndikatorMutuExport implements FromCollection,WithHeadings,  WithCu
                 ],
             ],
             'font' => [
-                'name'=>'Constantia'
+                'name' => 'Constantia'
             ]
         ]);
 
@@ -86,12 +172,15 @@ class LaporanIndikatorMutuExport implements FromCollection,WithHeadings,  WithCu
         ]);
 
         // Mengatur alignment horizontal untuk kolom A hingga F menjadi pusat
-        $sheet->getStyle('A:F')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A:F')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A10:F10')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A10:F10')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
 
         // Mengatur alignment horizontal untuk baris A6 dan A7 menjadi kiri
         $sheet->getStyle('A6:A7')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
         $sheet->getStyle('A6:A7')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+
+        $sheet->getStyle('B2:B4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('B2:B4')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
 
         $sheet->getColumnDimension('B')->setWidth(80);
         $sheet->getColumnDimension('D')->setWidth(35);
@@ -143,6 +232,4 @@ class LaporanIndikatorMutuExport implements FromCollection,WithHeadings,  WithCu
 
         return [$drawing];
     }
-
-
 }

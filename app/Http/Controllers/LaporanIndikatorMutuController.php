@@ -27,8 +27,8 @@ class LaporanIndikatorMutuController extends Controller
     public function getlaporan(Request $request)
     {
 
-        $indikator = IndikatorMutu::select('nama_indikator') // Menambahkan a_pengaduan.id ke dalam GROUP BY
-            ->get();
+        $indikator = IndikatorMutu::select('nama_indikator', 'n', 'd','target')->get();
+        // dd($indikator);
         return Excel::download(new LaporanIndikatorMutuExport($indikator), 'Laporan Indikator Mutu.xlsx');
     }
 }
