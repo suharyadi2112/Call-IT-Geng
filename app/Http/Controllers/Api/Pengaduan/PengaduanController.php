@@ -53,16 +53,21 @@ class PengaduanController extends Controller
     }
 
     public function GetPengaduanAll(Request $request){
+
         try {
             $query = Pengaduan::query()
             ->with('detailpengaduan', 'kategoripengaduan', 'indikatormutu', 'pelapor', 'workers')
-            ->orderBy('created_at', 'desc')
-            ->where('pelapor_id', Auth::user()->id);
+            ->orderBy('created_at', 'desc');
+
+            if (strtolower(Auth::user()->role) == "admin") {
+            } else {
+                $query->where('pelapor_id', Auth::user()->id);
+            }
 
             if ($request->tanggal_pelaporan) {
-                $query->whereDate('created_at', $request->tanggal_pelaporan);
+                $query->whereDate('tanggal_pelaporan', $request->tanggal_pelaporan);
             } else {
-                $query->whereDate('created_at', now()->toDateString()); // Jika tanggal kosong, gunakan tanggal hari ini
+                $query->whereDate('tanggal_pelaporan', now()->toDateString()); // Jika tanggal kosong, gunakan tanggal hari ini
             }
             
             if ($request->status_pelaporan) {
