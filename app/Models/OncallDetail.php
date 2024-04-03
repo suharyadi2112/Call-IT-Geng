@@ -29,6 +29,9 @@ class OncallDetail extends Model
 
     protected $hidden = [
         'created_at',
+        'id',
+        'id_users',
+        'tanggal_oncall',
         'updated_at',
     ];
 
