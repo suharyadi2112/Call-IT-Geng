@@ -52,9 +52,9 @@ class PengaduanController extends Controller
                 return date('d-m-Y H:i', strtotime($row->tanggal_pelaporan));
             })
             ->editColumn('tanggal_selesai', function ($row) {
-                if ($row->tanggal_selesai == '-') {
-                    return '-';
-                }
+                // if ($row->tanggal_selesai === '-') {
+                //     return '-';
+                // }
                 return date('d-m-Y H:i', strtotime($row->tanggal_selesai));
             })
             ->rawColumns(['action', 'status_pelaporan', 'prioritas'])
@@ -194,7 +194,7 @@ class PengaduanController extends Controller
                 $pengaduan->workers()->sync($dataPekerja);
 
                 if ($request->input('status_pelaporan') == 'done') {
-                    if ($pengaduan->tanggal_selesai == null) {
+                    if ($pengaduan->tanggal_selesai == '-') {
                         $pengaduan->tanggal_selesai = date('Y-m-d H:i:s');
                     }
                 }

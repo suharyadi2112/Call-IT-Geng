@@ -85,6 +85,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //oncall
     Route::get('get_oncall_all', [OncallController::class, 'GetOncallAll']);
+    Route::get('get_oncall_who_on_date', [OncallController::class, 'GetOncallWhoOnThatDate']);
+    
     
 
 }); 
