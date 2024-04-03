@@ -22,6 +22,7 @@ class OncallDetail extends Model
         'id',
         'id_users',
         'tanggal_oncall',
+        'tipe_oncall',
         'created_at',
         'updated_at',
     ];
