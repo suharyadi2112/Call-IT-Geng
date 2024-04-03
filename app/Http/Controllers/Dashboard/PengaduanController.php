@@ -52,7 +52,7 @@ class PengaduanController extends Controller
                 return date('d-m-Y H:i', strtotime($row->tanggal_pelaporan));
             })
             ->editColumn('tanggal_selesai', function ($row) {
-                if ($row->tanggal_selesai == null) {
+                if ($row->tanggal_selesai == '-') {
                     return '-';
                 }
                 return date('d-m-Y H:i', strtotime($row->tanggal_selesai));
@@ -96,7 +96,6 @@ class PengaduanController extends Controller
                     'lantai' => $request->input('lantai'),
                     'judul_pengaduan' => $request->input('judul_pengaduan'),
                     'dekskripsi_pelaporan' => $request->input('dekskripsi_pelaporan'),
-                    'prioritas' => $request->input('prioritas'),
                     'nomor_handphone' => $request->input('nomor_handphone'),
                     'status_pelaporan' => 'waiting',
                     'tanggal_pelaporan' => date('Y-m-d H:i:s'),
@@ -157,6 +156,7 @@ class PengaduanController extends Controller
 
     public function updatePengaduan(Request $request, $id){
         $pesan = [
+            'prioritas.required' => 'Prioritas wajib dipilih.',
             'status_pelaporan.required' => 'Status pelaporan wajib dipilih.',
             'status_pelaporan.max' => 'Status pelaporan max 50 karakter',
             'picture_post.*.file' => 'Picture Pre harus berupa file',
@@ -171,6 +171,7 @@ class PengaduanController extends Controller
             'workers' => 'required|array',
             'picture_post.*' => 'required|file|mimes:jpg,jpeg,png|max:5048',
             'picture_post' => 'array',
+            'prioritas' => 'required',
         ], $pesan);
 
         if ($validator->fails()) {
