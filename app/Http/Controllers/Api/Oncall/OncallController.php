@@ -24,13 +24,13 @@ class OncallController extends Controller
     public function GetOncallWhoOnThatDate(){
         try {
             
-            $details = OncallDetail::query()
+            $data =  OncallDetail::query()
             ->with('detailoncallusers')
             ->orderBy('tanggal_oncall', 'asc')
-            ->get()
-            ->groupBy('tanggal_oncall');
+            ->whereDate('tanggal_oncall', now()->toDateString())
+            ->get();
 
-            return response(["status"=> "success","message"=> "Data list Oncall Who On That Date successfully retrieved", "data" => $details], 200);
+            return response(["status"=> "success","message"=> "Data list Oncall Who On That Date successfully retrieved", "data" => $data], 200);
 
         } catch (\Exception $e) {
             return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
