@@ -142,6 +142,19 @@ class SanctumAuthController extends Controller
         }
     }
 
+    public function GetUsersWorker(){
+        try {
+            $queryy = User::query();
+            $getUserWorker = $queryy->orderBy('created_at', 'desc')
+            ->where('role','=','worker')
+            ->get(); 
+            return response(["status"=> "success","message"=> "Data list user only worker successfully retrieved", "data" => $getUserWorker], 200);
+
+        } catch (\Exception $e) {
+            return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+    }
+
     public function StoreUser(Request $request){
 
         $validator = $this->validateUser($request, null , 'insert');  
