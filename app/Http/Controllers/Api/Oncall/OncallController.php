@@ -25,6 +25,7 @@ class OncallController extends Controller
         try {
             
             $details = OncallDetail::query()
+            ->with('detailoncallusers')
             ->orderBy('tanggal_oncall', 'asc')
             ->get()
             ->groupBy('tanggal_oncall');

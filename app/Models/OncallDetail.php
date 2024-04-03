@@ -34,7 +34,7 @@ class OncallDetail extends Model
 
     public function detailoncallusers()
     {
-        return $this->hasMany(User::class, 'id_users', 'id');
+        return $this->hasMany(User::class, 'id', 'id_users');
     }
 
     protected static function boot()
