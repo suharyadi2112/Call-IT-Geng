@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('a_oncall_detail', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('id_oncall_schedule');
+            $table->integer('id_users')->nullable();
             $table->date('tanggal_oncall')->comment('tanggal kapan jadwwal oncall diberikan');
             $table->timestamps();
         });

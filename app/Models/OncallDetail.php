@@ -20,7 +20,7 @@ class OncallDetail extends Model
 
     protected $fillable = [
         'id',
-        'id_oncall_schedule',
+        'id_users',
         'tanggal_oncall',
         'created_at',
         'updated_at',
@@ -30,6 +30,11 @@ class OncallDetail extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function detailoncallusers()
+    {
+        return $this->hasMany(User::class, 'id_users', 'id');
+    }
 
     protected static function boot()
     {
