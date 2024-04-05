@@ -56,10 +56,17 @@ class PengaduanController extends Controller
 
         try {
             $query = Pengaduan::query()
-            ->with('detailpengaduan', 'kategoripengaduan', 'indikatormutu', 'pelapor', 'workers')
+            ->with('detailpengaduan', 'kategoripengaduan', 'indikatormutu', 'pelapor','workers')
             ->orderBy('created_at', 'desc');
 
             if (strtolower(Auth::user()->role) == "admin") {
+            
+            } else if (strtolower(Auth::user()->role) == "worker"){
+              
+                $query->whereHas('workers', function ($query) {
+                    $query->where('user_id', Auth::user()->id);
+                });
+            
             } else {
                 $query->where('pelapor_id', Auth::user()->id);
             }
