@@ -38,6 +38,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('get_user_yajra', [SanctumAuthController::class, 'GetUsersYajra']);
     Route::get('get_user/{id}', [SanctumAuthController::class, 'GetUsersByID']);
     Route::get('get_user_list', [SanctumAuthController::class, 'GetUserList']);
+    Route::get('get_user_worker', [SanctumAuthController::class, 'GetUsersWorker']);
     Route::post('store_user', [SanctumAuthController::class, 'StoreUser']);
     Route::delete('del_user/{id}', [SanctumAuthController::class, 'DelUser']);
     Route::put('change_password/{id}', [SanctumAuthController::class, 'ChangePasswordUser']);
@@ -59,6 +60,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('del_worker_from_pengaduan/{id_peng}/{id_worker}', [PengaduanController::class, 'DelWorkerFromPengaduan']);
     Route::post('store_picture_post_pengaduan/{id}', [PengaduanController::class, 'StorePicturePost']);
     Route::get('pengaduan_by_worker/{id_worker}', [PengaduanController::class, 'GetPengaduanByWorker']);
+    Route::post('store_picture_pre_pengaduan/{id}', [PengaduanController::class, 'StorePicturePre']);
 
 
     //kategori pengaduan 

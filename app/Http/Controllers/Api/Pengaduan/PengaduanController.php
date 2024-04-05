@@ -310,6 +310,37 @@ class PengaduanController extends Controller
         }
     }
 
+    public function StorePicturePre(Request $request, $id){
+
+        try {
+            if ($request->file('picture_pre')) { //unggah file
+                
+                $files = $request->file('picture_pre');
+                $names = [];
+                foreach ($files as $file) {
+                    $names[] = Str::random(5) . date('YmdHis') . '.' . $file->getClientOriginalExtension();
+                }
+
+                foreach ($files as $key => $file) {
+                    $paths[] = $file->storeAs('detail_pengaduan/picture_pre', $names[$key], 'public');
+                }
+
+                foreach ($paths as $path) {
+                    DetailIPengaduan::create([
+                        'pengaduan_id' => $id,
+                        'picture' => $path,
+                        'tipe' => 'pre'
+                    ]);
+                }
+            }
+
+            return response()->json(["status"=> "success","message"=> "Picture Pre Standalone successfully stored", "data" => $paths], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+    }
+
     public function UpdatePengaduan(Request $request, $idPengaduan){
 
         try {
