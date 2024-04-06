@@ -56,10 +56,17 @@ class PengaduanController extends Controller
 
         try {
             $query = Pengaduan::query()
-            ->with('detailpengaduan', 'kategoripengaduan', 'indikatormutu', 'pelapor', 'workers')
+            ->with('detailpengaduan', 'kategoripengaduan', 'indikatormutu', 'pelapor','workers')
             ->orderBy('created_at', 'desc');
 
             if (strtolower(Auth::user()->role) == "admin") {
+            
+            } else if (strtolower(Auth::user()->role) == "worker"){
+              
+                $query->whereHas('workers', function ($query) {
+                    $query->where('user_id', Auth::user()->id);
+                });
+            
             } else {
                 $query->where('pelapor_id', Auth::user()->id);
             }
@@ -238,8 +245,30 @@ class PengaduanController extends Controller
         } catch (\Exception $e) {
             return response()->json(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
         }
+    }
 
+    public function DelPicturePre($idPicturePre){
+        
+        try {
+            $dataPicturePre = DetailIPengaduan::find($idPicturePre);
+            if (!$dataPicturePre) {
+                throw new \Exception('Picture pre not found');
+            }
 
+            DB::transaction(function () use ($dataPicturePre) {
+                $dataPicturePre->delete();
+            });
+
+            $path = 'storage/'.$dataPicturePre->picture;
+            $pathh = public_path($path);
+
+            if (unlink($path)) {
+                return response()->json(["status"=> "success","message"=> "Picture Pre has been deleted", "data" => $pathh], 200);
+            }
+            
+        } catch (\Exception $e) {
+            return response()->json(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
     }
 
     public function StorePengaduan(Request $request){
@@ -313,6 +342,22 @@ class PengaduanController extends Controller
     public function StorePicturePre(Request $request, $id){
 
         try {
+
+            $messages = [
+                'picture_pre.*.file' => 'Picture Pre harus berupa file',
+                'picture_pre.*.mimes' => 'Picture Pre harus jpg,jpeg,png',
+                'picture_pre.*.max' => 'Picture Pre maksimal 5 mb',
+            ];
+
+            $validator = Validator::make($request->all(), [
+                'picture_pre' => 'array',
+                'picture_pre.*' => 'file|mimes:jpg,jpeg,png|max:5048',
+            ], $messages);
+
+            if ($validator->fails()) {
+                return response()->json(["status"=> "fail", "message"=>  $validator->errors(),"data" => null], 400);
+            }
+
             if ($request->file('picture_pre')) { //unggah file
                 
                 $files = $request->file('picture_pre');

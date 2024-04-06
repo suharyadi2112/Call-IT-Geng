@@ -27,28 +27,31 @@ class LaporanIndikatorMutuExport implements FromCollection, WithHeadings,  WithC
     {
         $data = [];
 
-        foreach ($this->indikator as $indikator) {
+        foreach ($this->indikator as $key => $indikator) {
             $data[] = [
                 $indikator->nama_indikator,
                 '', // Kolom kosong untuk 'N/D'
+                '', // Kolom kosong untuk 'Jumlah Pengaduan'
                 '', // Kolom kosong untuk 'TARGET'
                 '', // Kolom kosong untuk 'CAPAIAN'
                 ''
             ];
 
-            // Baris untuk 'n'
+            // Baris untuk 'n' dan jumlah_pengaduan
             $data[] = [
                 'N', // Menambahkan 'N:' pada kolom A
                 $indikator->n, // Menambahkan nilai $indikator->n pada kolom 'JUDUL INDIKATOR MUTU'
-                '', // Kolom kosong untuk 'TARGET'
+                '',
+                $this->indikator[$key]->jumlah_pengaduan, // Kolom kosong untuk 'TARGET'
                 '', // Kolom kosong untuk 'CAPAIAN'
-                strval($indikator->target) . '%',
+                '',
             ];
 
             // Baris untuk 'd'
             $data[] = [
                 'D', // Kolom kosong untuk 'N/D'
                 $indikator->d,
+                '', // Kolom kosong untuk 'Jumlah Pengaduan'
                 '', // Mengonversi nilai target menjadi string
                 '', // Kolom kosong untuk 'CAPAIAN'
                 ''
@@ -94,6 +97,24 @@ class LaporanIndikatorMutuExport implements FromCollection, WithHeadings,  WithC
             }
             $nextIndikatorRow = $currentRow - 1;
 
+            // Merge cell untuk kolom E (TARGET)
+            if ($indikator->target !== null) {
+                $sheet->mergeCells('E' . ($indikatorRow + 1) . ':E' . ($indikatorRow + 2));
+
+                // Menambahkan nilai $indikator->target di kolom E
+                $sheet->setCellValue('E' . ($indikatorRow + 1), $indikator->target . '%');
+
+                // Mengatur style untuk baris 'TARGET'
+                $sheet->getStyle('E' . ($indikatorRow + 1))->applyFromArray([
+                    'alignment' => [
+                        'horizontal' => Alignment::HORIZONTAL_CENTER,
+                        'vertical' => Alignment::VERTICAL_CENTER
+                    ],
+                    'font' => [
+                        'bold' => true
+                    ]
+                ]);
+            }
 
             $sheet->mergeCells('B' . ($currentRow) . ':C' . ($currentRow));
             $sheet->mergeCells('B' . ($currentRow + 1) . ':C' . ($currentRow + 1));
