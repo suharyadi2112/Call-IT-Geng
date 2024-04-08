@@ -247,10 +247,10 @@ class PengaduanController extends Controller
         }
     }
 
-    public function DelPicturePre($idPicturePre){
+    public function DelPicture($idPicture){
         
         try {
-            $dataPicturePre = DetailIPengaduan::find($idPicturePre);
+            $dataPicturePre = DetailIPengaduan::find($idPicture);
             if (!$dataPicturePre) {
                 throw new \Exception('Picture pre not found');
             }
@@ -326,6 +326,14 @@ class PengaduanController extends Controller
                     }
                 }
 
+                if ($request->has('user_id')) { //jika worker disertakan
+                    $this->AssignWorkerToPengaduan($request, $pengaduan->id);
+                }
+                
+                if ($request->has('prioritas')) { //jika prioritas disertakan
+                    $this->UpdatePrioritasPengaduan($request->prioritas, $pengaduan->id);
+                }
+
                 //Notif
                 event(new LaporPengaduan('Laporan Pengaduan Baru Dengan Kode Pengaduan '. $kodeGenerate. ' Lantai '. $request->input('lantai')));
                 
@@ -336,6 +344,29 @@ class PengaduanController extends Controller
 
         } catch (\Exception $e) {
             return response()->json(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+    }
+
+    public function UpdatePrioritasPengaduan($prioritas, $idPengaduan){
+        try {
+          
+            DB::transaction(function () use ($prioritas, $idPengaduan) {
+                $pengaduanDataPrioritas = Pengaduan::find($idPengaduan);
+            
+                if (!$pengaduanDataPrioritas) {
+                    throw new \Exception('pengaduan not found');
+                }
+                $pengaduanDataPrioritas->prioritas = $prioritas;
+                $pengaduanDataPrioritas->save();
+
+            });
+
+            return response()->json(['status' => 'success', 'message' => 'prioritas pengaduan updated successfully', 'data' => $prioritas], 200);
+
+        } catch (ValidationException $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->errors(), 'data' => null], 400);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'data' => null], 500);
         }
     }
 
