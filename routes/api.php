@@ -56,6 +56,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('store_pengaduan', [PengaduanController::class, 'StorePengaduan']);
     Route::put('update_pengaduan/{id}', [PengaduanController::class, 'UpdatePengaduan']);
     Route::put('update_status_pengaduan/{id}', [PengaduanController::class, 'UpdateStatusPengaduan']);
+    Route::delete('delete_pengaduan/{id}', [PengaduanController::class, 'DeletePengaduan']);
     Route::put('assign_worker_to_pengaduan/{id}', [PengaduanController::class, 'AssignWorkerToPengaduan']);
     Route::delete('del_worker_from_pengaduan/{id_peng}/{id_worker}', [PengaduanController::class, 'DelWorkerFromPengaduan']);
     Route::post('store_picture_post_pengaduan/{id}', [PengaduanController::class, 'StorePicturePost']);
