@@ -417,6 +417,27 @@ class PengaduanController extends Controller
         }
     }
 
+    public function DeletePengaduan($idPengaduan){
+        try {
+            
+            DB::transaction(function () use ($idPengaduan) {
+                $pengaduanData = Pengaduan::find($idPengaduan);
+
+                if (!$pengaduanData) {
+                    throw new \Exception('pengaduan not found');
+                }
+                
+                $pengaduanData->delete();
+            });
+            return response()->json(['status' => 'success', 'message' => 'pengaduan deleted successfully', 'data' => null], 200);
+
+        } catch (ValidationException $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->errors(), 'data' => null], 400);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'data' => null], 500);
+        }
+    }
+
     public function UpdatePengaduan(Request $request, $idPengaduan){
 
         try {
