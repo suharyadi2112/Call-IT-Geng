@@ -492,12 +492,19 @@ class PengaduanController extends Controller
             $validator = Validator::make($request->all(), [
                 'status_pelaporan' => 'required|max:50',
             ], $pesan);
-    
+
+            if (Str::lower($request->status_pelaporan) === 'progress') {
+                if (!$pengaduan->workers()->exists()) {
+                    $validator->after(function ($validator) {
+                        $validator->errors()->add('worker', 'Belum ada workers untuk pengaduan ini.');
+                    });
+                }
+            }
+            
             if ($validator->fails()) {
                 return response()->json(["status" => "fail", "message" => $validator->errors(), "data" => null], 400);
             }
 
-          
             DB::transaction(function () use ($request, $pengaduan) {
                 
                 $pengaduan->fill($request->all());
