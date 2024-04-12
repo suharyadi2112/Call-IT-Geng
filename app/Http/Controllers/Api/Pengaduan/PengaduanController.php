@@ -331,7 +331,7 @@ class PengaduanController extends Controller
                 }
                 
                 if ($request->has('prioritas')) { //jika prioritas disertakan
-                    $this->UpdatePrioritasPengaduan($request->prioritas, $pengaduan->id);
+                    $this->UpdatePrioritasPengaduan($request, $pengaduan->id);
                 }
 
                 //Notif
@@ -347,21 +347,43 @@ class PengaduanController extends Controller
         }
     }
 
-    public function UpdatePrioritasPengaduan($prioritas, $idPengaduan){
-        try {
-          
-            DB::transaction(function () use ($prioritas, $idPengaduan) {
+    public function UpdatePrioritasPengaduan(Request $request, $idPengaduan){
+        try {  
+
+            $currentPrioritas = Pengaduan::find($idPengaduan);
+
+            $priority = $request->prioritas;
+       
+            $messages = [
+                'prioritas.in' => 'Tingkat kesulitan hanya bisa Tinggi, Sedang, atau Ringan.',
+            ];
+
+            $validator = Validator::make($request->all(), [
+                'prioritas' => 'required|in:Tinggi,Sedang,Ringan',
+            ], $messages);
+
+            if (Str::lower($currentPrioritas->status_pelaporan) === 'done') {
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('prioritas', 'Pengaduan sudah selesai dengan status Done, tidak bisa mengganti Prioritas.');
+                });
+            }
+
+            if ($validator->fails()) {
+                return response()->json(["status"=> "fail", "message"=>  $validator->errors(),"data" => $priority], 400);
+            }
+
+            DB::transaction(function () use (&$priority, $idPengaduan) {
                 $pengaduanDataPrioritas = Pengaduan::find($idPengaduan);
             
                 if (!$pengaduanDataPrioritas) {
                     throw new \Exception('pengaduan not found');
                 }
-                $pengaduanDataPrioritas->prioritas = $prioritas;
+                $pengaduanDataPrioritas->prioritas = $priority;
                 $pengaduanDataPrioritas->save();
 
             });
 
-            return response()->json(['status' => 'success', 'message' => 'prioritas pengaduan updated successfully', 'data' => $prioritas], 200);
+            return response()->json(['status' => 'success', 'message' => 'prioritas pengaduan updated successfully', 'data' => $priority], 200);
 
         } catch (ValidationException $e) {
             return response()->json(['status' => 'fail', 'message' => $e->errors(), 'data' => null], 400);
@@ -492,12 +514,14 @@ class PengaduanController extends Controller
             $validator = Validator::make($request->all(), [
                 'status_pelaporan' => 'required|max:50',
             ], $pesan);
-    
+
+
+            $validator = $this->validateStatusPengaduan($request->status_pelaporan, $validator, $pengaduan); //validasi status
+            
             if ($validator->fails()) {
                 return response()->json(["status" => "fail", "message" => $validator->errors(), "data" => null], 400);
             }
 
-          
             DB::transaction(function () use ($request, $pengaduan) {
                 
                 $pengaduan->fill($request->all());
@@ -512,7 +536,6 @@ class PengaduanController extends Controller
         } catch (\Exception $e) {
             return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'data' => null], 500);
         }
-
     }
 
     public function StorePicturePost(Request $request, $idPengaduan){// photo setelah pengaduan diselesaikan
@@ -639,6 +662,36 @@ class PengaduanController extends Controller
         ->where('a_pengaduan.id', $idPengaduan)->get();
 
         return $dataPengaduan;
+    }
+
+    private function validateStatusPengaduan($status, $validator, $dataPengaduan) {
+        
+        if (Str::lower($status) === 'progress') {
+            if (!$dataPengaduan->workers()->exists()) {
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('worker', 'Workers harus terisi untuk status yang dipilih.');
+                });
+            }
+        }
+
+        if (Str::lower($status) === 'done') {
+            if (!$dataPengaduan->workers()->exists()) {
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('worker', 'Workers harus terisi untuk status yang dipilih.');
+                });
+            }
+            if (!$dataPengaduan->detailpengaduan()->where('tipe', 'pre')->exists()) {
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('picture_pre', 'Picture Pre harus terisi untuk status yang dipilih.');
+                });
+            }
+            if (!$dataPengaduan->detailpengaduan()->where('tipe', 'post')->exists()) {
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('picture_post', 'Picture post harus terisi untuk status yang dipilih.');
+                });
+            }
+        }
+        return $validator;
     }
     
     private function generateCode() {
