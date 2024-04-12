@@ -350,6 +350,8 @@ class PengaduanController extends Controller
     public function UpdatePrioritasPengaduan(Request $request, $idPengaduan){
         try {  
 
+            $currentPrioritas = Pengaduan::find($idPengaduan);
+
             $priority = $request->prioritas;
        
             $messages = [
@@ -359,6 +361,12 @@ class PengaduanController extends Controller
             $validator = Validator::make($request->all(), [
                 'prioritas' => 'required|in:Tinggi,Sedang,Ringan',
             ], $messages);
+
+            if (Str::lower($currentPrioritas->status_pelaporan) === 'done') {
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('prioritas', 'Pengaduan sudah selesai dengan status Done, tidak bisa mengganti Prioritas.');
+                });
+            }
 
             if ($validator->fails()) {
                 return response()->json(["status"=> "fail", "message"=>  $validator->errors(),"data" => $priority], 400);
