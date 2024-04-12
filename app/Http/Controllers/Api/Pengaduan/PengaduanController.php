@@ -331,7 +331,7 @@ class PengaduanController extends Controller
                 }
                 
                 if ($request->has('prioritas')) { //jika prioritas disertakan
-                    $this->UpdatePrioritasPengaduan($request->prioritas, $pengaduan->id);
+                    $this->UpdatePrioritasPengaduan($request, $pengaduan->id);
                 }
 
                 //Notif
@@ -347,21 +347,35 @@ class PengaduanController extends Controller
         }
     }
 
-    public function UpdatePrioritasPengaduan($prioritas, $idPengaduan){
-        try {
-          
-            DB::transaction(function () use ($prioritas, $idPengaduan) {
+    public function UpdatePrioritasPengaduan(Request $request, $idPengaduan){
+        try {  
+
+            $priority = $request->prioritas;
+       
+            $messages = [
+                'prioritas.in' => 'Tingkat kesulitan hanya bisa Tinggi, Sedang, atau Ringan.',
+            ];
+
+            $validator = Validator::make($request->all(), [
+                'prioritas' => 'required|in:Tinggi,Sedang,Ringan',
+            ], $messages);
+
+            if ($validator->fails()) {
+                return response()->json(["status"=> "fail", "message"=>  $validator->errors(),"data" => $priority], 400);
+            }
+
+            DB::transaction(function () use (&$priority, $idPengaduan) {
                 $pengaduanDataPrioritas = Pengaduan::find($idPengaduan);
             
                 if (!$pengaduanDataPrioritas) {
                     throw new \Exception('pengaduan not found');
                 }
-                $pengaduanDataPrioritas->prioritas = $prioritas;
+                $pengaduanDataPrioritas->prioritas = $priority;
                 $pengaduanDataPrioritas->save();
 
             });
 
-            return response()->json(['status' => 'success', 'message' => 'prioritas pengaduan updated successfully', 'data' => $prioritas], 200);
+            return response()->json(['status' => 'success', 'message' => 'prioritas pengaduan updated successfully', 'data' => $priority], 200);
 
         } catch (ValidationException $e) {
             return response()->json(['status' => 'fail', 'message' => $e->errors(), 'data' => null], 400);
