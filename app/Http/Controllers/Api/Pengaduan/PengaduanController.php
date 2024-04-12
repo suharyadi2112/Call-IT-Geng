@@ -355,11 +355,11 @@ class PengaduanController extends Controller
             $priority = $request->prioritas;
        
             $messages = [
-                'prioritas.in' => 'Tingkat kesulitan hanya bisa Tinggi, Sedang, atau Ringan.',
+                'prioritas.in' => 'Tingkat kesulitan hanya bisa Tinggi, Sedang, atau Rendah.',
             ];
 
             $validator = Validator::make($request->all(), [
-                'prioritas' => 'required|in:Tinggi,Sedang,Ringan',
+                'prioritas' => 'required|in:tinggi,sedang,rendah',
             ], $messages);
 
             if (Str::lower($currentPrioritas->status_pelaporan) === 'done') {
