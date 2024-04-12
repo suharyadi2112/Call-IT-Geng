@@ -493,13 +493,8 @@ class PengaduanController extends Controller
                 'status_pelaporan' => 'required|max:50',
             ], $pesan);
 
-            if (Str::lower($request->status_pelaporan) === 'progress') {
-                if (!$pengaduan->workers()->exists()) {
-                    $validator->after(function ($validator) {
-                        $validator->errors()->add('worker', 'Belum ada workers untuk pengaduan ini.');
-                    });
-                }
-            }
+
+            $validator = $this->validateStatusPengaduan($request->status_pelaporan, $validator, $pengaduan); //validasi status
             
             if ($validator->fails()) {
                 return response()->json(["status" => "fail", "message" => $validator->errors(), "data" => null], 400);
@@ -519,7 +514,6 @@ class PengaduanController extends Controller
         } catch (\Exception $e) {
             return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'data' => null], 500);
         }
-
     }
 
     public function StorePicturePost(Request $request, $idPengaduan){// photo setelah pengaduan diselesaikan
@@ -646,6 +640,36 @@ class PengaduanController extends Controller
         ->where('a_pengaduan.id', $idPengaduan)->get();
 
         return $dataPengaduan;
+    }
+
+    private function validateStatusPengaduan($status, $validator, $dataPengaduan) {
+        
+        if (Str::lower($status) === 'progress') {
+            if (!$dataPengaduan->workers()->exists()) {
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('worker', 'Workers harus terisi untuk status yang dipilih.');
+                });
+            }
+        }
+
+        if (Str::lower($status) === 'done') {
+            if (!$dataPengaduan->workers()->exists()) {
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('worker', 'Workers harus terisi untuk status yang dipilih.');
+                });
+            }
+            if (!$dataPengaduan->detailpengaduan()->where('tipe', 'pre')->exists()) {
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('picture_pre', 'Picture Pre harus terisi untuk status yang dipilih.');
+                });
+            }
+            if (!$dataPengaduan->detailpengaduan()->where('tipe', 'post')->exists()) {
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('picture_post', 'Picture post harus terisi untuk status yang dipilih.');
+                });
+            }
+        }
+        return $validator;
     }
     
     private function generateCode() {
