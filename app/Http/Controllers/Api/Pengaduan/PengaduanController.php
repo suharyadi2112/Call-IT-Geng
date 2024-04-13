@@ -159,7 +159,7 @@ class PengaduanController extends Controller
     public function GetPengaduanAdditionalInfo(){
         try {
             $prioritasList = Pengaduan::distinct('prioritas')->pluck('prioritas');
-            $pelaporList = Pengaduan::distinct('pelapor_id')->pluck('pelapor_id');
+            $pelaporList = Pengaduan::with('pelapor')->distinct()->get()->pluck('pelapor.name')->unique();
 
             $kategoriList = Pengaduan::with('kategoripengaduan')->distinct()->get()->pluck('kategoripengaduan.nama')->unique();
             
