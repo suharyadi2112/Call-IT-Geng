@@ -17,6 +17,7 @@ use DataTables;
 use App\Models\Pengaduan;
 use App\Models\User;
 use App\Models\DetailIPengaduan;
+use App\Models\KatPengaduan;
 use Illuminate\Support\Facades\Auth;
 
 class PengaduanController extends Controller
@@ -25,6 +26,13 @@ class PengaduanController extends Controller
         
         $perPage = $request->input('per_page');
         $search = $request->input('search');
+        
+        $pelapor_id = $request->input('pelapor_id');
+        $kategori_pengaduan_id = $request->input('kategori_pengaduan_id');
+        $status_pelaporan = $request->input('status_pelaporan');
+        $lantai = $request->input('lantai');
+        $prioritas = $request->input('prioritas');
+
         $page = $request->input('page');
 
         try {
@@ -33,6 +41,23 @@ class PengaduanController extends Controller
             if ($search) {
                 $query->search($search);
             }
+
+            if ($pelapor_id) {
+                $query->where('pelapor_id', strtolower($request->input('pelapor_id')));
+            }
+            if ($kategori_pengaduan_id) {
+                $query->where('kategori_pengaduan_id', strtolower($request->input('kategori_pengaduan_id')));
+            }
+            if ($status_pelaporan) {
+                $query->where('status_pelaporan', strtolower($request->input('status_pelaporan')));
+            }
+            if ($lantai) {
+                $query->where('lantai', strtolower($request->input('lantai')));
+            }
+            if ($prioritas) {
+                $query->where('prioritas', strtolower($request->input('prioritas')));
+            }
+
             $query->orderByRaw('CASE status_pelaporan
                 WHEN "Waiting" THEN 1
                 WHEN "Progress" THEN 2
@@ -133,6 +158,30 @@ class PengaduanController extends Controller
             ->get(); 
             return response(["status"=> "success","message"=> "Data list pengaduan successfully retrieved", "data" => $queryy], 200);
 
+        } catch (\Exception $e) {
+            return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+    }
+
+    public function GetPengaduanAdditionalInfo(){
+        try {
+            $prioritasList = Pengaduan::distinct('prioritas')->pluck('prioritas');
+            $pelaporList = Pengaduan::with('pelapor')->distinct()->get()->pluck('pelapor.name')->unique();
+
+            $kategoriList = Pengaduan::with('kategoripengaduan')->distinct()->get()->pluck('kategoripengaduan.nama')->unique();
+            
+            $statusPelaporan = Pengaduan::distinct('status_pelaporan')->pluck('status_pelaporan');
+            $lantaiList = Pengaduan::distinct('lantai')->pluck('lantai');
+
+            $items = [
+                'prioritasList' => $prioritasList,
+                'pelaporList' => $pelaporList,
+                'kategoriList' => $kategoriList,
+                'statusPelaporan' => $statusPelaporan,
+                'lantaiList' => $lantaiList,
+            ];
+
+            return response(["status"=> "success","message"=> "Data list additional successfully retrieved", "data" => $items], 200);
         } catch (\Exception $e) {
             return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
         }
