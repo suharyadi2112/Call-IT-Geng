@@ -64,6 +64,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('pengaduan_by_worker/{id_worker}', [PengaduanController::class, 'GetPengaduanByWorker']);
     Route::post('store_picture_pre_pengaduan/{id}', [PengaduanController::class, 'StorePicturePre']);
     Route::delete('del_picture/{id_picture}', [PengaduanController::class, 'DelPicture']);
+    Route::get('get_additional_info', [PengaduanController::class, 'GetPengaduanAdditionalInfo']);
 
 
     //kategori pengaduan 

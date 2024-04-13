@@ -17,6 +17,7 @@ use DataTables;
 use App\Models\Pengaduan;
 use App\Models\User;
 use App\Models\DetailIPengaduan;
+use App\Models\KatPengaduan;
 use Illuminate\Support\Facades\Auth;
 
 class PengaduanController extends Controller
@@ -150,6 +151,30 @@ class PengaduanController extends Controller
             ->get(); 
             return response(["status"=> "success","message"=> "Data list pengaduan successfully retrieved", "data" => $queryy], 200);
 
+        } catch (\Exception $e) {
+            return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+    }
+
+    public function GetPengaduanAdditionalInfo(){
+        try {
+            $prioritasList = Pengaduan::distinct('prioritas')->pluck('prioritas');
+            $pelaporList = Pengaduan::distinct('pelapor_id')->pluck('pelapor_id');
+
+            $kategoriList = Pengaduan::with('kategoripengaduan')->distinct()->get()->pluck('kategoripengaduan.nama')->unique();
+            
+            $statusPelaporan = Pengaduan::distinct('status_pelaporan')->pluck('status_pelaporan');
+            $lantaiList = Pengaduan::distinct('lantai')->pluck('lantai');
+
+            $items = [
+                'prioritasList' => $prioritasList,
+                'pelaporList' => $pelaporList,
+                'kategoriList' => $kategoriList,
+                'statusPelaporan' => $statusPelaporan,
+                'lantaiList' => $lantaiList,
+            ];
+
+            return response(["status"=> "success","message"=> "Data list additional successfully retrieved", "data" => $items], 200);
         } catch (\Exception $e) {
             return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
         }
