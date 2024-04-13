@@ -26,6 +26,13 @@ class PengaduanController extends Controller
         
         $perPage = $request->input('per_page');
         $search = $request->input('search');
+        
+        $pelapor_id = $request->input('pelapor_id');
+        $kategori_pengaduan_id = $request->input('kategori_pengaduan_id');
+        $status_pelaporan = $request->input('status_pelaporan');
+        $lantai = $request->input('lantai');
+        $prioritas = $request->input('prioritas');
+
         $page = $request->input('page');
 
         try {
@@ -35,19 +42,19 @@ class PengaduanController extends Controller
                 $query->search($search);
             }
 
-            if ($request->has('pelapor_id')) {
+            if ($pelapor_id) {
                 $query->where('pelapor_id', strtolower($request->input('pelapor_id')));
             }
-            if ($request->has('kategori_pengaduan_id')) {
+            if ($kategori_pengaduan_id) {
                 $query->where('kategori_pengaduan_id', strtolower($request->input('kategori_pengaduan_id')));
             }
-            if ($request->has('status_pelaporan')) {
+            if ($status_pelaporan) {
                 $query->where('status_pelaporan', strtolower($request->input('status_pelaporan')));
             }
-            if ($request->has('lantai')) {
+            if ($lantai) {
                 $query->where('lantai', strtolower($request->input('lantai')));
             }
-            if ($request->has('prioritas')) {
+            if ($prioritas) {
                 $query->where('prioritas', strtolower($request->input('prioritas')));
             }
 
