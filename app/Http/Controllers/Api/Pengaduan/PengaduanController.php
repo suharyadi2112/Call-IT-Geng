@@ -33,6 +33,23 @@ class PengaduanController extends Controller
             if ($search) {
                 $query->search($search);
             }
+
+            if ($request->has('pelapor_id')) {
+                $query->where('pelapor_id', strtolower($request->input('pelapor_id')));
+            }
+            if ($request->has('kategori_pengaduan_id')) {
+                $query->where('kategori_pengaduan_id', strtolower($request->input('kategori_pengaduan_id')));
+            }
+            if ($request->has('status_pelaporan')) {
+                $query->where('status_pelaporan', strtolower($request->input('status_pelaporan')));
+            }
+            if ($request->has('lantai')) {
+                $query->where('lantai', strtolower($request->input('lantai')));
+            }
+            if ($request->has('prioritas')) {
+                $query->where('prioritas', strtolower($request->input('prioritas')));
+            }
+
             $query->orderByRaw('CASE status_pelaporan
                 WHEN "Waiting" THEN 1
                 WHEN "Progress" THEN 2
