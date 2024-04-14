@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\IndikatorMutu\IndikatorMutuController;
 use App\Http\Controllers\Api\DetailPengaduan\DetailPengaduanController;
 use App\Http\Controllers\Api\Pengaduan\PengaduanController;
 use App\Http\Controllers\Api\Oncall\OncallController;
+use App\Http\Controllers\Api\DashboardHome\DashboardHomeController;
 
 
 
@@ -92,6 +93,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //oncall
     Route::get('get_oncall_all', [OncallController::class, 'GetOncallAll']);
     Route::get('get_oncall_who_on_date', [OncallController::class, 'GetOncallWhoOnThatDate']);
+
+    //dashboardHome data
+    Route::get('dashboard-home', [DashboardHomeController::class, 'DataDashboardHome']);
     
     
 
