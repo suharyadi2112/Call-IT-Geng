@@ -26,10 +26,12 @@ class DashboardHomeController extends Controller
             $totalPersenPengaduan = $this->hitungTotalPersenPengaduan($request);
             $totalPersenPrioritas = $this->hitungTotalPersenPrioritas($request);
             $totalPersenKategori = $this->hitungTotalKategori($request);
+            $totalPersenLantai = $this->hitungTotalLantai($request);
             $data = [
                     "totalPersenPengaduan" => $totalPersenPengaduan,
                     "totalPersenPrioritas" => $totalPersenPrioritas,
                     "totalPersenKategori" => $totalPersenKategori,
+                    "totalPersenLantai" => $totalPersenLantai,
                     ];
     
             return response(["status"=> "success","message"=> "Data successfully retrieved", "data" => $data], 200);
@@ -66,6 +68,32 @@ class DashboardHomeController extends Controller
             'previous_count' => $previousCount,
             'increase_percentage' => $increasePercentage,
             'interval' => $request->interval,
+        ];
+    }
+
+    protected function hitungTotalLantai(Request $request) {
+
+        $lantai = $request->lantai;
+
+        if ($lantai == '-') {
+
+            $lantai = $this->getRandomLantaiMostMonth();
+
+        }
+
+        list($currentDate, $previousDate) = $this->getDateRange($request->input('intervalLantai'));
+
+        $currentCount = $this->getLantaiCount($currentDate, $request->intervalLantai, $lantai);
+        $previousCount = $this->getLantaiCount($previousDate, $request->intervalLantai, $lantai);
+        
+        $increasePercentage = $this->calculateIncreasePercentage($currentCount, $previousCount);
+
+        return [
+            'current_count' => $lantai ? $currentCount : 0,
+            'previous_count' => $lantai ? $previousCount : 0,
+            'increase_percentage' => $lantai ? $increasePercentage : 0,
+            'interval' => $request->intervalLantai,
+            'lantai' => $lantai ? $lantai : '-',
         ];
     }
 
@@ -153,8 +181,7 @@ class DashboardHomeController extends Controller
     }
 
         
-    protected function getPengaduanCount($date, $intvl)
-    {   
+    protected function getPengaduanCount($date, $intvl){   
 
         if($intvl == "today"){
             $currentCount = Pengaduan::whereDate('tanggal_pelaporan', $date)->count();
@@ -168,8 +195,20 @@ class DashboardHomeController extends Controller
         return $currentCount;
     }
 
-    protected function getPrioritasCount($date, $intvl, $prioritas)
-    {   
+    protected function getLantaiCount($date, $intvl, $lantai){   
+
+        if($intvl == "today"){
+            $currentCount = Pengaduan::where('lantai', $lantai)->whereDate('tanggal_pelaporan', $date)->count();
+        }else if($intvl == "month"){
+            $currentCount = Pengaduan::where('lantai', $lantai)->whereMonth('tanggal_pelaporan', $date)->count();
+        }else if($intvl == "year"){
+            $currentCount = Pengaduan::where('lantai', $lantai)->whereYear('tanggal_pelaporan', $date)->count();
+        }
+
+        return $currentCount;
+    }
+
+    protected function getPrioritasCount($date, $intvl, $prioritas){   
 
         if($intvl == "today"){
             $currentCount = Pengaduan::where('prioritas', $prioritas)->whereDate('tanggal_pelaporan', $date)->count();
@@ -182,8 +221,7 @@ class DashboardHomeController extends Controller
         return $currentCount;
     }
 
-    protected function getKategoriCount($date, $intvl, $kategoriId)
-    {   
+    protected function getKategoriCount($date, $intvl, $kategoriId){   
         if ($intvl == "today") {
             $currentCount = Pengaduan::where('kategori_pengaduan_id', $kategoriId)->whereDate('tanggal_pelaporan', $date)->count();
         } else if ($intvl == "month") {
@@ -209,6 +247,25 @@ class DashboardHomeController extends Controller
             $kategoriTerbanyakId = $jumlahPerKategori->kategori_pengaduan_id;
             
             return $kategoriTerbanyakId;
+        } else {
+            return false;
+        }
+    }
+
+    protected function getRandomLantaiMostMonth(){
+        $startDate = now()->startOfMonth();
+        $endDate = now()->endOfMonth();
+
+        $jumlahPerLantai = Pengaduan::whereBetween('tanggal_pelaporan', [$startDate, $endDate])
+            ->select('lantai', DB::raw('COUNT(*) as total'))
+            ->groupBy('lantai')
+            ->orderByDesc('total')
+            ->first();
+
+        if ($jumlahPerLantai) {
+            $lantaiTerbanyak = $jumlahPerLantai->lantai;
+            
+            return $lantaiTerbanyak;
         } else {
             return false;
         }
