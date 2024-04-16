@@ -27,11 +27,15 @@ class DashboardHomeController extends Controller
             $totalPersenPrioritas = $this->hitungTotalPersenPrioritas($request);
             $totalPersenKategori = $this->hitungTotalKategori($request);
             $totalPersenLantai = $this->hitungTotalLantai($request);
+            $getPengaduanActivity = $this->getPengaduanActivity();
+            $totalKerjaanPerBulan = $this->totalKerjaanPerBulan();
             $data = [
                     "totalPersenPengaduan" => $totalPersenPengaduan,
                     "totalPersenPrioritas" => $totalPersenPrioritas,
                     "totalPersenKategori" => $totalPersenKategori,
                     "totalPersenLantai" => $totalPersenLantai,
+                    "getPengaduanActivity" => $getPengaduanActivity,
+                    "totalKerjaanPerBulan" => $totalKerjaanPerBulan,
                     ];
     
             return response(["status"=> "success","message"=> "Data successfully retrieved", "data" => $data], 200);
@@ -296,6 +300,78 @@ class DashboardHomeController extends Controller
         }
 
         return 0;
+    }
+
+
+    // -----------------recent activity--------------------//
+    protected function getPengaduanActivity(){
+        $pengaduan = Pengaduan::select('id', 'judul_pengaduan', 'prioritas', 'tanggal_pelaporan')->orderBy('tanggal_pelaporan', 'desc')->limit(10)->get();
+
+        // Memeriksa apakah data pengaduan kosong
+        if ($pengaduan->isEmpty()) {
+            return null;
+        }
+
+        foreach ($pengaduan as $p) {
+            $tanggalPelaporan = strtotime($p->tanggal_pelaporan);
+            $tanggalSekarang = time();
+            $selisihDetik = $tanggalSekarang - $tanggalPelaporan;
+        
+            // Hitung selisih waktu dalam tahun, bulan, hari, dan jam
+            $tahun = floor($selisihDetik / (365 * 24 * 3600));
+            $sisaDetik = $selisihDetik % (365 * 24 * 3600);
+            $bulan = floor($sisaDetik / (30 * 24 * 3600));
+            $sisaDetik %= (30 * 24 * 3600);
+            $hari = floor($sisaDetik / (24 * 3600));
+            $sisaDetik %= (24 * 3600);
+            $jam = floor($sisaDetik / 3600);
+        
+            $lamaWaktu = "";
+            if ($tahun > 0) {
+                $lamaWaktu .= $tahun . " tahun ";
+            }
+            if ($bulan > 0) {
+                $lamaWaktu .= $bulan . " bulan ";
+            }
+            if ($hari > 0) {
+                $lamaWaktu .= $hari . " hari ";
+            }
+            if ($jam > 0) {
+                $lamaWaktu .= $jam . " jam ";
+            }
+            $lamaWaktu = rtrim($lamaWaktu);
+        
+            $p->lama_waktu = $lamaWaktu;
+        }
+
+        return $pengaduan;
+    }
+
+    // -----------------worker job pertahun----------------//
+    public function totalKerjaanPerBulan(){
+
+        $tahunSaatIni = date('Y');
+        $users = User::select('id', 'name')->get();
+        $result = [];
+
+        foreach ($users as $user) {
+            $totalKerjaanPerBulan = [];
+            for ($bulan = 1; $bulan <= 12; $bulan++) {
+                $totalKerjaan = $user->pengaduan()
+                                    ->whereYear('tanggal_pelaporan', $tahunSaatIni)
+                                    ->whereMonth('tanggal_pelaporan', $bulan)
+                                    ->count();
+
+                $totalKerjaanPerBulan[] = $totalKerjaan;
+            }
+            $totalKerjaanPerBulan = implode(',', $totalKerjaanPerBulan);
+            $result[] = [
+                'name' => $user->name,
+                'totalKerjaan' => $totalKerjaanPerBulan
+            ];
+        }
+
+        return $result;
     }
 
 }
