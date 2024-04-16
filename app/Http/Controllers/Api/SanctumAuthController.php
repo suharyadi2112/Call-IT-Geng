@@ -9,6 +9,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use DataTables;
 
 //model
@@ -67,6 +68,46 @@ class SanctumAuthController extends Controller
         } catch (\Exception $e) {
             return response()->json(["status" => "fail", "message" => $e->getMessage(), "data" => null], 500);
         }
+    }
+
+    
+    public function ChangePhotoProfile(Request $request, $id_user) {
+    
+        $pesan = [
+            'picture_profile.file' => 'Picture profile harus berupa file',
+            'picture_profile.mimes' => 'Picture profile harus jpg,jpeg,png',
+            'picture_profile.required' => 'Picture profile wajib diisi',
+            'picture_profile.max' => 'Picture profile maksimal 5 mb',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'picture_profile' => 'required|file|mimes:jpg,jpeg,png|max:5048',
+        ], $pesan);
+
+        if ($validator->fails()) {
+            return response()->json(["status" => "fail", "message" => $validator->errors(), "data" => null], 400);
+        }
+
+        try {
+            $userData = User::find($id_user);
+
+            if (!$userData) {
+                throw new \Exception('User not found');
+            }
+
+            $file = $request->file('picture_profile'); 
+        
+            $name = Str::random(5) . date('YmdHis') . '.' . $file->getClientOriginalExtension(); 
+            $path = $file->storeAs('user/profile_user', $name, 'public');
+        
+            $userData->picture_path = $path; 
+            $userData->picture_profile = $name; 
+            $userData->save(); 
+            return response()->json(['status' => 'fail', 'message' => "Successfully updated photo profile", 'data' => $name], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => $e->getMessage(), 'data' => null], 500);
+        }
+
     }
 
     public function GetUsers(Request $request)

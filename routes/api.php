@@ -47,6 +47,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('update_user/{id}', [SanctumAuthController::class, 'UpdateUser']);
     Route::put('change_email/{id}', [SanctumAuthController::class, 'ChangeEmail']);
     Route::put('change_no_hp/{id}', [SanctumAuthController::class, 'ChangeNoHP']);
+    Route::post('change_photo_profile/{id}', [SanctumAuthController::class, 'ChangePhotoProfile']);
     
     //pengaduan
     Route::get('get_pengaduan', [PengaduanController::class, 'GetPengaduan']);
