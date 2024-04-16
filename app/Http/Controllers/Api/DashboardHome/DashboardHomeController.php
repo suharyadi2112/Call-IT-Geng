@@ -28,12 +28,14 @@ class DashboardHomeController extends Controller
             $totalPersenKategori = $this->hitungTotalKategori($request);
             $totalPersenLantai = $this->hitungTotalLantai($request);
             $getPengaduanActivity = $this->getPengaduanActivity();
+            $totalKerjaanPerBulan = $this->totalKerjaanPerBulan();
             $data = [
                     "totalPersenPengaduan" => $totalPersenPengaduan,
                     "totalPersenPrioritas" => $totalPersenPrioritas,
                     "totalPersenKategori" => $totalPersenKategori,
                     "totalPersenLantai" => $totalPersenLantai,
                     "getPengaduanActivity" => $getPengaduanActivity,
+                    "totalKerjaanPerBulan" => $totalKerjaanPerBulan,
                     ];
     
             return response(["status"=> "success","message"=> "Data successfully retrieved", "data" => $data], 200);
@@ -343,6 +345,33 @@ class DashboardHomeController extends Controller
         }
 
         return $pengaduan;
+    }
+
+    // -----------------worker job pertahun----------------//
+    public function totalKerjaanPerBulan(){
+
+        $tahunSaatIni = date('Y');
+        $users = User::select('id', 'name')->get();
+        $result = [];
+
+        foreach ($users as $user) {
+            $totalKerjaanPerBulan = [];
+            for ($bulan = 1; $bulan <= 12; $bulan++) {
+                $totalKerjaan = $user->pengaduan()
+                                    ->whereYear('tanggal_pelaporan', $tahunSaatIni)
+                                    ->whereMonth('tanggal_pelaporan', $bulan)
+                                    ->count();
+
+                $totalKerjaanPerBulan[] = $totalKerjaan;
+            }
+            $totalKerjaanPerBulan = implode(',', $totalKerjaanPerBulan);
+            $result[] = [
+                'name' => $user->name,
+                'totalKerjaan' => $totalKerjaanPerBulan
+            ];
+        }
+
+        return $result;
     }
 
 }
