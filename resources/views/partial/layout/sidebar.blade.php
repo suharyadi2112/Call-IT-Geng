@@ -45,6 +45,12 @@
                             <p>Laporan Indikator Mutu</p>
                         </a>
                     </li>
+                    <li class="nav-item {{ request()->routeIs('jadwal-oncall.*') ? 'active' : '' }}">
+                        <a href="{{ route('jadwal-oncall.index') }}" aria-expanded="false">
+                            <i class="fas fa-clock"></i>
+                            <p>Jadwal Oncall</p>
+                        </a>
+                    </li>
                 @endcheckRole
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
