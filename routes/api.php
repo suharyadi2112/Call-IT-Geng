@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\DetailPengaduan\DetailPengaduanController;
 use App\Http\Controllers\Api\Pengaduan\PengaduanController;
 use App\Http\Controllers\Api\Oncall\OncallController;
 use App\Http\Controllers\Api\DashboardHome\DashboardHomeController;
+use App\Http\Controllers\Api\Chat\ChatController;
 
 
 
@@ -97,7 +98,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //dashboardHome data
     Route::get('dashboard-home', [DashboardHomeController::class, 'DataDashboardHome']);
-    
-    
 
+    //chat
+    Route::post('create_room_chat', [ChatController::class, 'CreateRoomChat']);
+    Route::post('send_one_message', [ChatController::class, 'SendOneMessage']);
+    Route::get('chat_history_list/{chat_list_id}', [ChatController::class, 'ChatHistory']);
+    Route::get('chat_history_list_byroom/{room_id}', [ChatController::class, 'getHistoryByRoom']);
+    
+    
 }); 
