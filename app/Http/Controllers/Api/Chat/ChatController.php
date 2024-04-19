@@ -126,4 +126,23 @@ class ChatController extends Controller
         
     }
 
+    public function getHistoryByPengaduanID($pengaduan_id){
+
+        try {
+
+            $chatHistory = ChatHistory::whereHas('chatList.chatRoom', function ($query) use ($pengaduan_id) {
+                $query->where('pengaduan_id', $pengaduan_id);
+            })
+            ->orderBy('created_at', 'asc')
+            ->get();
+        
+
+            return response()->json(["status" => "success", 'message' => 'Message history list by pengaduan retrieved', 'data' => $chatHistory], 201);
+
+        } catch (\Exception $e) {
+            return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+        
+    }
+
 }
