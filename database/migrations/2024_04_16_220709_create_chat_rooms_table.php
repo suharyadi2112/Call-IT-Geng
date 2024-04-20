@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('a_chat_rooms', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable()->comment('untuk mencatat siapa yang membuat room');
-            $table->uuid('pengaduan_id')->nullable()->comment('catat pengaduan id ');
+            $table->uuid('pengaduan_id')->nullable()->comment('catat pengaduan id y');
             $table->string('name')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();

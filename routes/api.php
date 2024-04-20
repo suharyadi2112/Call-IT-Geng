@@ -102,8 +102,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //chat
     Route::post('create_room_chat', [ChatController::class, 'CreateRoomChat']);
     Route::post('send_one_message', [ChatController::class, 'SendOneMessage']);
-    Route::get('chat_history_list/{chat_list_id}', [ChatController::class, 'ChatHistory']);
-    Route::get('chat_history_list_byroom/{room_id}', [ChatController::class, 'getHistoryByRoom']);
     Route::get('chat_history_list_by_pengadua_id/{pengaduan_id}', [ChatController::class, 'getHistoryByPengaduanID']);
 
 }); 
