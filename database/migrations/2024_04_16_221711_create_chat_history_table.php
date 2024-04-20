@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('a_chat_history', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('chat_list_id');
+            $table->uuid('chat_room_id');
             $table->uuid('sender_id');
             $table->longText('message_content')->nullable();
             $table->timestamps();

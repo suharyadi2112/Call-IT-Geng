@@ -20,7 +20,7 @@ class ChatHistory extends Model
 
     protected $fillable = [
         'id',
-        'chat_list_id',
+        'chat_room_id',
         'sender_id',
         'message_content',
         'created_at',
@@ -36,9 +36,9 @@ class ChatHistory extends Model
         return $this->belongsTo(User::class, 'sender_id');
     }
 
-    public function chatList()
+    public function chatRoom()
     {
-        return $this->belongsTo(ChatList::class);
+        return $this->belongsTo(ChatRoom::class);
     }
 
     protected static function boot()
