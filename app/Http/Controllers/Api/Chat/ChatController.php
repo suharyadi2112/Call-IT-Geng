@@ -94,41 +94,39 @@ class ChatController extends Controller
         try {
 
             $message = null;
-            DB::transaction(function () use ($request, &$message) {
-                $message = ChatHistory::create([
-                    'chat_room_id' => $request->roomID,
-                    'sender_id' => auth()->user()->id, // pengguna yang terautentikasi sebagai pengirim
-                    'message_content' => $request->message_content,
-                ]);
+            $message = ChatHistory::create([
+                'chat_room_id' => $request->roomID,
+                'sender_id' => auth()->user()->id, // pengguna yang terautentikasi sebagai pengirim
+                'message_content' => $request->message_content,
+            ]);
 
-                //broadcast to all worker terkait pengaduan
-                $workerOnRoom = ChatRoom::find($request->roomID);
-                if ($workerOnRoom) {
-                    $pengaduanId = $workerOnRoom->pengaduan_id;
-                    $pengaduanWorker = Pengaduan::find($pengaduanId);
-                    if ($pengaduanWorker) {
-                        $workersInvolved = $pengaduanWorker->workers->pluck('id');
-                        $additionalWorkerIds = collect($workerOnRoom->user_id)->map(function ($id) {
-                            return (int) $id; //ubah menjadi int
-                        });
-                        $members = $workersInvolved->merge($additionalWorkerIds)->unique();
-                    } else {
-                        throw new \Exception('pengaduan not found');
-                    }
+            //broadcast to all worker terkait pengaduan
+            $workerOnRoom = ChatRoom::find($request->roomID);
+            if ($workerOnRoom) {
+                $pengaduanId = $workerOnRoom->pengaduan_id;
+                $pengaduanWorker = Pengaduan::find($pengaduanId);
+                if ($pengaduanWorker) {
+                    $workersInvolved = $pengaduanWorker->workers->pluck('id');
+                    $additionalWorkerIds = collect($workerOnRoom->user_id)->map(function ($id) {
+                        return (int) $id; //ubah menjadi int
+                    });
+                    $members = $workersInvolved->merge($additionalWorkerIds)->unique();
                 } else {
-                    throw new \Exception('room not found');
+                    throw new \Exception('pengaduan not found');
                 }
+            } else {
+                throw new \Exception('room not found');
+            }
 
-                $payloadBroad = [
-                    'roomID' => $request->roomID,
-                    'members' => $members,
-                ];
+            $payloadBroad = [
+                'roomID' => $request->roomID,
+                'members' => $members,
+                'sender_id' => $message->sender_id,
+            ];
 
-                //Event Kirim Pesan
-                event(new ChatPengaduan($payloadBroad));
-
-            });
-
+            //Event Kirim Pesan
+            event(new ChatPengaduan($payloadBroad));
+            
             return response()->json(["status" => "success", 'message' => 'Message sent successfully', 'data' => $message], 201);
 
         } catch (\Exception $e) {
