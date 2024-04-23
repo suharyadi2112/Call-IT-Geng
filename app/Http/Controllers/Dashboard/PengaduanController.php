@@ -23,20 +23,37 @@ class PengaduanController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            if(auth()->user()->divisi == 'IT'){
-                $model = Pengaduan::query()->with('kategoripengaduan', 'pelapor', 'workers')
-                ->orderBy('created_at', 'desc');
-            }else{
-                $model = Pengaduan::query()->with('kategoripengaduan', 'pelapor', 'workers')
-                ->where('pelapor_id', auth()->user()->id)
-                ->orderBy('created_at', 'desc');
+            $model = Pengaduan::query()->with('kategoripengaduan', 'pelapor', 'workers')
+            ->orderByRaw('CASE 
+                WHEN status_pelaporan = "Waiting" THEN 1
+                WHEN status_pelaporan = "Progress" THEN 2
+                ELSE 3
+            END')
+            ->orderByRaw('CASE 
+                WHEN prioritas = "Tinggi" THEN 1
+                WHEN prioritas = "Sedang" THEN 2
+                ELSE 3
+            END')
+            ->orderBy('created_at', 'desc');
+
+            if (auth()->check()) {
+                $userRole = auth()->user()->role;
+
+                if ($userRole == 'Admin') {
+                } elseif ($userRole == 'Worker') {
+                    $model->whereHas('workers', function ($query) {
+                        $query->where('user_id', auth()->user()->id);
+                    });
+                } else {
+                    $model->where('pelapor_id', auth()->user()->id);
+                }
             }
 
             return DataTables::of($model)
             ->addColumn('action', function ($row) {
                 $actionBtn = '<a href="'.route('pengaduan.detail',$row->id).'" class="mr-2 btn btn-sm round btn-outline-primary shadow" title="Detail" data-id="' . $row->id . '">
                 <i class="fa fa-lg fa-fw fa-eye"></i></a>';
-                if (Auth::user()->divisi == 'IT') {
+                if (Auth::user()->role == 'Admin') {
                     $actionBtn.= '<button type="button" id="modalDelete" class="mr-2 btn btn-sm round btn-outline-danger shadow" title="Hapus" data-id="'. $row->id. '">
                     <i class="fa fa-lg fa-fw fa-trash"></i></button>';
                 }
@@ -46,15 +63,12 @@ class PengaduanController extends Controller
                 return '<span class="badge badge-'.($row->status_pelaporan == 'waiting' ? 'warning' : ($row->status_pelaporan == 'progress' ? 'info' : 'success')).'">'.ucfirst($row->status_pelaporan).'</span>';
             })
             ->editColumn('prioritas', function ($row) {
-                return '<span class="badge badge-'.($row->prioritas == 'Tinggi'? 'danger' : ($row->prioritas == 'Sedang'? 'warning' :'success')).'">'.ucfirst($row->prioritas).'</span>';
+                return '<span class="badge badge-'.($row->prioritas == 'tinggi'? 'danger' : ($row->prioritas == 'sedang'? 'warning' :'success')).'">'.ucfirst($row->prioritas).'</span>';
             })
             ->editColumn('tanggal_pelaporan', function ($row) {
                 return date('d-m-Y H:i', strtotime($row->tanggal_pelaporan));
             })
             ->editColumn('tanggal_selesai', function ($row) {
-                // if ($row->tanggal_selesai === '-') {
-                //     return '-';
-                // }
                 return date('d-m-Y H:i', strtotime($row->tanggal_selesai));
             })
             ->rawColumns(['action', 'status_pelaporan', 'prioritas'])
