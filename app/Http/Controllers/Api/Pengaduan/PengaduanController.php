@@ -147,6 +147,34 @@ class PengaduanController extends Controller
         }
     }
 
+    public function GetPengaduanNotAssign(Request $request){
+
+        try {
+            $query = Pengaduan::query()
+            ->with('detailpengaduan', 'kategoripengaduan', 'indikatormutu', 'pelapor','workers')
+            ->whereDoesntHave('workers')// pengaduan belum/tidak ada di pivot workers
+            ->orderBy('created_at', 'desc');
+
+            if ($request->tanggal_pelaporan) {
+                $query->whereDate('tanggal_pelaporan', $request->tanggal_pelaporan);
+            } else {
+                $query->whereDate('tanggal_pelaporan', now()->toDateString()); // Jika tanggal kosong, gunakan tanggal hari ini
+            }
+            
+            if ($request->status_pelaporan) {
+                $query->where('status_pelaporan', $request->status_pelaporan);
+            }
+
+            $results = $query->get();
+
+            return response(["status"=> "success","message"=> "Data list pengaduan not assign successfully retrieved", "data" => $results], 200);
+
+        } catch (\Exception $e) {
+            return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
+        }
+
+    }
+
     public function GetPengaduanList(){
         try {
             $queryy = Pengaduan::query()

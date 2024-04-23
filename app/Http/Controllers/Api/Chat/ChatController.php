@@ -143,7 +143,10 @@ class ChatController extends Controller
             $room = ChatRoom::where('pengaduan_id', $pengaduan_id)->first();
             $roomReady = $room ? true : false;
 
-            $chatHistory = ChatHistory::whereHas('chatRoom', function ($query) use ($pengaduan_id) {
+            $chatHistory = ChatHistory::with(['user' => function($query) {
+                $query->select('id', 'name'); // Mengambil hanya kolom 'id' dan 'name' dari tabel user
+            }])
+            ->whereHas('chatRoom', function ($query) use ($pengaduan_id) {
                 $query->where('pengaduan_id', $pengaduan_id);
             })
             ->orderBy('created_at', 'asc')
