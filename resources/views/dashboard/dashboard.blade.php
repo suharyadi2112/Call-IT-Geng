@@ -86,11 +86,21 @@
                 <div class="col-md-7">
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Statistik Pengaduan</div>
+                            <div class="card-title">Statistik Pengaduan Bulan ini</div>
                         </div>
                         <div class="card-body">
                             <div class="chart-container">
                                 <canvas id="multipleLineChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Statistik Berdasarkan Kategori Bulan ini</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="doughnutChart" style="width: 50%; height: 50%"></canvas>
                             </div>
                         </div>
                     </div>
@@ -199,7 +209,8 @@
 @push('script')
 <script src="/assets/js/plugin/chart.js/chart.min.js"></script>
 <script>
-    var multipleLineChart = document.getElementById('multipleLineChart').getContext('2d');
+    var multipleLineChart = document.getElementById('multipleLineChart').getContext('2d'),
+    doughnutChart = document.getElementById('doughnutChart').getContext('2d');
     var currentDate = new Date();
     var currentMonth = currentDate.getMonth() + 1;
     var currentYear = currentDate.getFullYear();
@@ -208,26 +219,75 @@
     for (var i = 1; i <= daysInMonth; i++) {
         labels.push(currentYear + '-' + currentMonth + '-' + i);
     }
-		var myMultipleLineChart = new Chart(multipleLineChart, {
-			type: 'line',
-			data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: '{!! $chartData["name"] !!}',
-                        data: [{{ implode(',', $chartData["data"]) }}],
-                        fill: false,
-                        borderColor: '#00BF63',
-                    },
-                ]
+    var myMultipleLineChart = new Chart(multipleLineChart, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: '{!! $chartData["name"] !!}',
+                    data: [{{ implode(',', $chartData["data"]) }}],
+                    fill: false,
+                    borderColor: '#00BF63',
+                },
+            ]
+        },
+        options : {
+            responsive: true, 
+            maintainAspectRatio: false,
+            legend: {
+                position: 'bottom',
             },
-            options : {
-				responsive: true, 
-				maintainAspectRatio: false,
-				legend: {
-					position: 'bottom',
-				},
+        }
+    });
+
+    function randomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    var chartData = {!! json_encode(array_column($chartKategori, 'total')) !!};
+    var labelsData = {!! json_encode(array_column($chartKategori, 'kategori_pengaduan_id')) !!};
+
+    if (chartData.length === 0 || labelsData.length === 0) {
+        chartData = [1];
+        labelsData = ['Data Belum Tersedia'];
+    }
+
+    var backgroundColors = [];
+    for (var i = 0; i < chartData.length; i++) {
+        backgroundColors.push(randomColor());
+    }
+
+    var myDoughnutChart = new Chart(doughnutChart, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: chartData,
+                backgroundColor: backgroundColors
+            }],
+            labels: labelsData
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'bottom'
+            },
+            layout: {
+                padding: {
+                    left: 20,
+                    right: 20,
+                    top: 20,
+                    bottom: 20
+                }
             }
-		});
+        }
+    });
+
 </script>
 @endpush

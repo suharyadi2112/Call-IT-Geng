@@ -26,7 +26,19 @@ class DashboardController extends Controller
         $belum = Pengaduan::where('status_pelaporan', 'waiting')->get();
         $sedang = Pengaduan::where('status_pelaporan', 'progress')->get();
         $sudah = Pengaduan::where('status_pelaporan', 'done')->get();
-            $startDate = Carbon::now()->startOfMonth();
+
+        $chartkategori = Pengaduan::whereMonth('tanggal_pelaporan', Carbon::now()->format('m'))
+        ->select('kategori_pengaduan_id', DB::raw('count(*) as total'))
+        ->groupBy('kategori_pengaduan_id')
+        ->orderBy('total', 'desc')
+        ->get('total', 'kategori_pengaduan_id')
+        ->map(function($item){
+            $item->kategori_pengaduan_id = $item->kategoripengaduan->nama;
+            return $item;
+        })
+        ->toArray();
+
+        $startDate = Carbon::now()->startOfMonth();
         $endDate = Carbon::now()->endOfMonth();
         $dateRange = [];
         for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
@@ -56,6 +68,7 @@ class DashboardController extends Controller
                 'sedang' => $sedang,
                 'sudah' => $sudah,
                 'chartData' => $chartData,
+                'chartKategori' => $chartkategori
             ]
         );
     }
