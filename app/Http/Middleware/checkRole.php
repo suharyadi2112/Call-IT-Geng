@@ -17,7 +17,7 @@ class checkRole
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && in_array(Auth::user()->role, ['Admin', 'Worker'])) {
+        if (Auth::check() && in_array(Auth::user()->role, ['Admin'])) {
             return $next($request);
         }
 

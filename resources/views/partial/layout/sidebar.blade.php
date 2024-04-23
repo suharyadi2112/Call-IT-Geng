@@ -51,6 +51,12 @@
                             <p>Jadwal Oncall</p>
                         </a>
                     </li>
+                    <li class="nav-item {{ request()->routeIs('pesan-masuk.*') ? 'active' : '' }}">
+                        <a href="{{ route('pesan-masuk.index') }}" aria-expanded="false">
+                            <i class="far fa-paper-plane"></i>
+                            <p>Pesan Masuk</p>
+                        </a>
+                    </li>
                 @endcheckRole
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
