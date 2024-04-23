@@ -11,11 +11,11 @@
             </span>
         </button>
         <button class="topbar-toggler more"><i class="icon-options-vertical"></i></button>
-        <div class="nav-toggle">
+        {{-- <div class="nav-toggle">
             <button class="btn btn-toggle toggle-sidebar">
                 <i class="icon-menu"></i>
             </button>
-        </div>
+        </div> --}}
     </div>
 
     <nav class="navbar navbar-header navbar-expand-lg"
