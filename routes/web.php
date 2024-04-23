@@ -11,6 +11,7 @@ use App\Http\Controllers\Dashboard\IndikatorMutuController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Dashboard\OncallController;
 use App\Http\Controllers\Dashboard\PenggunaController;
+use App\Http\Controllers\Dashboard\PesanMasukController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LaporanIndikatorMutuController;
 use App\Models\Pengaduan;
@@ -101,6 +102,12 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::get('/', [OncallController::class, 'index'])->name('jadwal-oncall.index');
         Route::get('/get-oncall', [OncallController::class, 'getOncall'])->name('jadwal-oncall.get');
         Route::post('/', [OncallController::class, 'store'])->name('jadwal-oncall.store');
+    });
+
+
+    Route::prefix('pesan-masuk')->middleware('checkRole')->group(function () {
+        Route::get('/', [PesanMasukController::class, 'index'])->name('pesan-masuk.index');
+        Route::get('/detail', [PesanMasukController::class, 'detail'])->name('pesan-masuk.detail');
     });
 });
 
