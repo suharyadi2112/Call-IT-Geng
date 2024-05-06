@@ -46,6 +46,10 @@ class Pengaduan extends Model
         'deleted_at',
     ];
 
+    protected $casts = [
+        'tanggal_pelaporan' => 'date',
+    ];
+
     protected $dates = ['deleted_at'];
 
     public function detailpengaduan()
