@@ -148,6 +148,9 @@ class PengaduanController extends Controller
     }
 
     public function GetPengaduanNotAssign(Request $request){
+           
+        $perPage = $request->input('per_page');
+        $search = $request->input('search');
 
         try {
             $query = Pengaduan::query()
@@ -155,17 +158,26 @@ class PengaduanController extends Controller
             ->whereDoesntHave('workers')// pengaduan belum/tidak ada di pivot workers
             ->orderBy('created_at', 'desc');
 
-            if ($request->tanggal_pelaporan) {
+            if ($search) { //jika pakai pencarian
+                $query->search($search);
+            }
+
+            if ($request->tanggal_pelaporan && $request->tanggal_pelaporan != "all") {
                 $query->whereDate('tanggal_pelaporan', $request->tanggal_pelaporan);
+            } else if ($request->tanggal_pelaporan == "all") { //tampilkan semua data, yang belum di assign
+                
             } else {
-                $query->whereDate('tanggal_pelaporan', now()->toDateString()); // Jika tanggal kosong, gunakan tanggal hari ini
+                $query->whereDate('tanggal_pelaporan', now()->toDateString()); //tanggal hari ini
             }
             
             if ($request->status_pelaporan) {
-                $query->where('status_pelaporan', $request->status_pelaporan);
+                $query->where('status_pelaporan', $request->status_pelaporan); //berdasarkan status laporan
             }
-
-            $results = $query->get();
+            if ($perPage) { //jika menggunakan paging
+                $results = $query->paginate($perPage);
+            }else{
+                $results = $query->get();
+            }
 
             return response(["status"=> "success","message"=> "Data list pengaduan not assign successfully retrieved", "data" => $results], 200);
 
