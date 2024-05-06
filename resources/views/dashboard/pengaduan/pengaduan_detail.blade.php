@@ -89,9 +89,9 @@
                             <label>Status Pelaporan <span class="required-label">*</span></label>
                             @php
                             $status = [
-                                'waiting' => 'Menunggu',
-                                'progress' => 'Proses',
-                                'done' => 'Selesai',
+                                'Waiting' => 'Menunggu',
+                                'Progress' => 'Proses',
+                                'Done' => 'Selesai',
                             ];
                             @endphp
                             <select class="form-control" id="status_pelaporan" name="status_pelaporan" @if($pengaduan->status_pelaporan == 'done' || auth()->user()->role == 'User') @disabled(true) @endif>

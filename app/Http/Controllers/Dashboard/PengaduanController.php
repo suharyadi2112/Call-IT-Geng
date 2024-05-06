@@ -60,7 +60,19 @@ class PengaduanController extends Controller
                 return $actionBtn;
             })
             ->editColumn('status_pelaporan', function ($row) {
-                return '<span class="badge badge-'.($row->status_pelaporan == 'waiting' ? 'warning' : ($row->status_pelaporan == 'progress' ? 'info' : 'success')).'">'.ucfirst($row->status_pelaporan).'</span>';
+
+                $status = [
+                    'Waiting' => 'Menunggu',
+                    'Progress' => 'Proses',
+                    'Done' => 'Selesai',
+                ];
+                
+                $status_mapping = [
+                    'waiting' => 'Waiting',
+                    'progress' => 'Progress',
+                    'done' => 'Done',
+                ];
+                return '<span class="badge badge-'.($row->status_pelaporan == $status_mapping['waiting'] ? 'warning' : ($row->status_pelaporan == $status_mapping['progress'] ? 'info' : 'success')).'">'.ucfirst($status[$row->status_pelaporan]).'</span>';
             })
             ->editColumn('prioritas', function ($row) {
                 return '<span class="badge badge-'.($row->prioritas == 'tinggi'? 'danger' : ($row->prioritas == 'sedang'? 'warning' :'success')).'">'.ucfirst($row->prioritas).'</span>';
@@ -111,7 +123,7 @@ class PengaduanController extends Controller
                     'judul_pengaduan' => $request->input('judul_pengaduan'),
                     'dekskripsi_pelaporan' => $request->input('dekskripsi_pelaporan'),
                     'nomor_handphone' => $request->input('nomor_handphone'),
-                    'status_pelaporan' => 'waiting',
+                    'status_pelaporan' => 'Waiting',
                     'tanggal_pelaporan' => date('Y-m-d H:i:s'),
 
                     'prioritas' => '-',

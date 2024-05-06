@@ -28,7 +28,9 @@ class DashboardHomeController extends Controller
             $totalPersenKategori = $this->hitungTotalKategori($request);
             $totalPersenLantai = $this->hitungTotalLantai($request);
             $getPengaduanActivity = $this->getPengaduanActivity();
-            $totalKerjaanPerBulan = $this->totalKerjaanPerBulan();
+            $totalKerjaanPerBulan = $this->totalKerjaanPerBulan($request);
+            $totalLantaiData = $this->totalLantaiData($request);
+
             $data = [
                     "totalPersenPengaduan" => $totalPersenPengaduan,
                     "totalPersenPrioritas" => $totalPersenPrioritas,
@@ -36,6 +38,7 @@ class DashboardHomeController extends Controller
                     "totalPersenLantai" => $totalPersenLantai,
                     "getPengaduanActivity" => $getPengaduanActivity,
                     "totalKerjaanPerBulan" => $totalKerjaanPerBulan,
+                    "totalLantaiData" => $totalLantaiData,
                     ];
     
             return response(["status"=> "success","message"=> "Data successfully retrieved", "data" => $data], 200);
@@ -336,9 +339,14 @@ class DashboardHomeController extends Controller
             if ($hari > 0) {
                 $lamaWaktu .= $hari . " hari ";
             }
+    
             if ($jam > 0) {
                 $lamaWaktu .= $jam . " jam ";
+            } elseif ($selisihDetik < 3600) {
+                $lamaWaktu .= "< 1 jam";
             }
+    
+            
             $lamaWaktu = rtrim($lamaWaktu);
         
             $p->lama_waktu = $lamaWaktu;
@@ -348,9 +356,13 @@ class DashboardHomeController extends Controller
     }
 
     // -----------------worker job pertahun----------------//
-    public function totalKerjaanPerBulan(){
-
-        $tahunSaatIni = date('Y');
+    public function totalKerjaanPerBulan(Request $request){
+        
+        $tahunSaatIni = $request->tahunJobWorker;
+        if ($request->tahunJobWorker == '-') {
+            $tahunSaatIni = date('Y');
+        }
+        
         $users = User::select('id', 'name')->get();
         $result = [];
 
@@ -367,11 +379,50 @@ class DashboardHomeController extends Controller
             $totalKerjaanPerBulan = implode(',', $totalKerjaanPerBulan);
             $result[] = [
                 'name' => $user->name,
-                'totalKerjaan' => $totalKerjaanPerBulan
+                'totalKerjaan' => $totalKerjaanPerBulan,
             ];
         }
 
         return $result;
+    }
+
+    //--------------- lantai -----------------//
+    public function totalLantaiData(Request $request)
+    {
+
+        // Mendapatkan total pengaduan untuk setiap kategori lantai
+        $totalLantaiData = [];
+        $categories = ['Basement', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10'];
+
+        $k = 1;
+        foreach ($categories as $kategori) {
+            // Menggunakan if-else untuk menangani kategori Basement
+            if ($kategori == 'Basement') {
+                $total = Pengaduan::where('lantai', 'Basement')->count();
+            } else {
+                if (array_key_exists($k, $categories)) {
+                    $total = Pengaduan::where('lantai', $categories[$k])->count();
+                }
+            }
+
+            // Menambahkan total pengaduan ke dalam array
+            $totalLantaiData[] = $total;
+            $k++;
+        }
+
+        $totalLantaiData = $totalLantaiData;
+
+        $result = [];
+        foreach ($categories as $index => $kategori) {
+            $result[$kategori] = $totalLantaiData[$index];
+        }
+
+        // Mengembalikan respons JSON dengan total pengaduan untuk setiap kategori lantai
+        return [
+            'totalLantaiData' => $result,
+            'categories' => $categories
+        ];
+
     }
 
 }
