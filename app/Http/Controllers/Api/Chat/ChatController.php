@@ -127,7 +127,7 @@ class ChatController extends Controller
             //Event Kirim Pesan
             event(new ChatPengaduan($payloadBroad));
             
-            return response()->json(["status" => "success", 'message' => 'Message sent successfully', 'data' => $message], 201);
+            return response()->json(["status" => "success", 'message' => 'Message sent successfully', 'data' => $message, 'dataBroadcast' => $payloadBroad], 201);
 
         } catch (\Exception $e) {
             return response(["status"=> "fail","message"=> $e->getMessage(),"data" => null], 500);
