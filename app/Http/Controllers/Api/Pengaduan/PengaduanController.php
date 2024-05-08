@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
 use DataTables;
+use Carbon\Carbon;
 
 
 //model
@@ -18,7 +20,8 @@ use App\Models\Pengaduan;
 use App\Models\User;
 use App\Models\DetailIPengaduan;
 use App\Models\KatPengaduan;
-use Illuminate\Support\Facades\Auth;
+use App\Models\ChatList;
+use App\Models\ChatRoom;
 
 class PengaduanController extends Controller
 {
@@ -178,7 +181,6 @@ class PengaduanController extends Controller
             }else{
                 $results = $query->get();
             }
-
             return response(["status"=> "success","message"=> "Data list pengaduan not assign successfully retrieved", "data" => $results], 200);
 
         } catch (\Exception $e) {
@@ -301,6 +303,17 @@ class PengaduanController extends Controller
 
                 $pengaduan->workers()->attach($dataPekerja); // Lampirkan pekerja dengan data pivot
 
+                //chat 
+                $existingChatRoom = ChatRoom::where('pengaduan_id', $pengaduan->id)->first();
+                if ($existingChatRoom) {
+                    $room_id = $existingChatRoom->id;
+                
+                    $existingChatRoom->chatLists()->createMany(array_map(function($data) use ($room_id) {
+                        return ['chat_room_id' => $room_id, 'user_id' => $data['user_id']];
+                    }, $dataPekerja));
+                }
+                
+                //return data
                 $dataPivot = Pengaduan::query()->with(['workers' => function ($query) {
                     $query->select('users.id', 'users.name', 'users.handphone');
                     $query->withPivot('tanggal_assesment');
@@ -316,19 +329,34 @@ class PengaduanController extends Controller
     }
 
     public function DelWorkerFromPengaduan($idPengaduan, $idWorker){
-        
-        try {
+
+          try {
             $pengaduan = Pengaduan::find($idPengaduan);
             if (!$pengaduan) {
                 throw new \Exception('Pengaduan not found');
             }
 
-            $workerExists = $pengaduan->workers()->where('user_id', $idWorker)->exists();
-            if (!$workerExists) {
-                throw new \Exception('Worker di pengajuan ini tidak ada');
-            }
+            DB::transaction(function () use ($pengaduan, $idWorker) {
 
-            $pengaduan->workers()->detach($idWorker); // usir worker dari pengaduan #lu tu ngk diajak
+                $workerExists = $pengaduan->workers()->where('user_id', $idWorker)->exists();
+                if (!$workerExists) {
+                    throw new \Exception('Worker di pengajuan ini tidak ada');
+                }
+
+                $pengaduan->workers()->detach($idWorker); // usir worker dari pengaduan #lu tu ngk diajak 
+
+                //chat list user juga dihapus
+                $existingChatList = ChatList::whereHas('chatRoom', function($query) use ($pengaduan) {
+                    $query->where('pengaduan_id', $pengaduan->id);
+                })
+                ->where('user_id', $idWorker)
+                ->get();
+            
+                foreach ($existingChatList as $chatList) {
+                    $chatList->delete();
+                }
+
+            });
 
             return response()->json(["status"=> "success","message"=> "Worker has been deleted #lu ngk diajak", "data" => null], 200);
         } catch (\Exception $e) {
