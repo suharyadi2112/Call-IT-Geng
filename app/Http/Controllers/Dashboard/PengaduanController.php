@@ -72,7 +72,17 @@ class PengaduanController extends Controller
                     'progress' => 'Progress',
                     'done' => 'Done',
                 ];
-                return '<span class="badge badge-'.($row->status_pelaporan == $status_mapping['waiting'] ? 'warning' : ($row->status_pelaporan == $status_mapping['progress'] ? 'info' : 'success')).'">'.ucfirst($status[$row->status_pelaporan]).'</span>';
+                // return '<span class="badge badge-'.($row->status_pelaporan == $status_mapping['waiting'] ? 'warning' : ($row->status_pelaporan == $status_mapping['progress'] ? 'info' : 'success')).'">'.ucfirst($status[$row->status_pelaporan]).'</span>';
+
+                $normalized_status = strtolower($row->status_pelaporan);
+                $badge_class = 'success';
+                if ($normalized_status == 'waiting') {
+                    $badge_class = 'warning';
+                } elseif ($normalized_status == 'progress') {
+                    $badge_class = 'info';
+                }
+                
+                return '<span class="badge badge-'.$badge_class.'">'.ucfirst($status[$status_mapping[$normalized_status]]).'</span>';
             })
             ->editColumn('prioritas', function ($row) {
                 return '<span class="badge badge-'.($row->prioritas == 'tinggi'? 'danger' : ($row->prioritas == 'sedang'? 'warning' :'success')).'">'.ucfirst($row->prioritas).'</span>';
