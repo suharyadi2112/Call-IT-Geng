@@ -7,13 +7,13 @@ use App\Events\LaporPengaduan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
-use Carbon\Carbon;
-
+use Bunny\Client;
 
 //model
 use App\Models\Pengaduan;
@@ -25,6 +25,56 @@ use App\Models\ChatRoom;
 
 class PengaduanController extends Controller
 {
+
+    protected $rabbitmqHost;
+    protected $rabbitmqPort;
+    protected $rabbitmqUser;
+    protected $rabbitmqPassword;
+
+    public function __construct()
+    {
+        $this->rabbitmqHost = env('RABBITMQ_HOST');
+        $this->rabbitmqPort = env('RABBITMQ_PORT');
+        $this->rabbitmqUser = env('RABBITMQ_USER');
+        $this->rabbitmqPassword = env('RABBITMQ_PASSWORD');
+    }
+
+    protected function sendMessageWAToRabbitMQ($message, $noTarget, $maxRetry = 3, $retryCount = 0){
+        $client = new Client([
+            'host' => $this->rabbitmqHost,
+            'port' => $this->rabbitmqPort,
+            'user' => $this->rabbitmqUser,
+            'password' => $this->rabbitmqPassword,
+        ]);
+    
+        $client->connect();
+        $channel = $client->channel();
+        $channel->queueDeclare('sendWaPengaduan', false, true, false, false);
+    
+        try {
+
+            $data = [ //format data
+                'message' => $message,
+                'recipient' => $noTarget,
+            ];
+            $message = json_encode($data);
+            
+            $channel->publish($message, [], '', 'sendWaPengaduan');
+            Log::info("success send message");
+        } catch (\Exception $e) {
+            if ($retryCount < $maxRetry) {
+                Log::error("Failed to send message. Retrying... Attempt $retryCount");
+                $this->sendMessageWAToRabbitMQ($message,$noTarget, $maxRetry, ++$retryCount);
+            } else {
+                Log::error("Failed to send message after $maxRetry attempts. Error: " . $e->getMessage());
+            }
+        } finally {
+            $channel->close();
+            $client->disconnect();
+            Log::info("client closed");
+        }
+    }    
+
     public function GetPengaduan(Request $request){
         
         $perPage = $request->input('per_page');
@@ -245,7 +295,6 @@ class PengaduanController extends Controller
     public function AssignWorkerToPengaduan(Request $request, $idPengaduan){
 
         try {
-
             $pengaduan = Pengaduan::find($idPengaduan);
             if (!$pengaduan) {
                 throw new \Exception('Pengaduan not found');
@@ -299,6 +348,17 @@ class PengaduanController extends Controller
                         'tanggal_assesment' => date('Y-m-d'),
                         'created_at' => date('Y-m-d H:i:s'),
                     ];
+
+                    try { //send message assign 
+                        $message = "Pengaduan dengan kode laporan ".$pengaduan->kode_laporan."  diassign ke kamuhh, tolong dikerjakan yaa :)";
+    
+                        $noTarget = User::where('id', $idUser)->first()->handphone; //"+6282288184788" format valid
+                        $fixFormatHP = $this->formatNomorHP($noTarget);
+                        
+                        $this->sendMessageWAToRabbitMQ($message, $fixFormatHP);
+                    } catch (\Exception $e) {
+                        Log::error("Failed to send message to RabbitMQ: " . $e->getMessage());
+                    }
                 }
 
                 $pengaduan->workers()->attach($dataPekerja); // Lampirkan pekerja dengan data pivot
@@ -453,6 +513,17 @@ class PengaduanController extends Controller
 
                 //Notif
                 event(new LaporPengaduan('Laporan Pengaduan Baru Dengan Kode Pengaduan '. $kodeGenerate. ' Lantai '. $request->input('lantai')));
+
+                try { //send message pengaduan 
+                    $message = "Pengaduan baru dengan kode laporan ".$pengaduan->kode_laporan." silahkan dicek dan dikerjakan yaa :)";
+                    $noTargetadmin = User::where('role', "admin")->orWhere('role', "Admin")->get(); 
+                    foreach ($noTargetadmin as $noAdmin) { //"+6282288184788"
+                        $fixFormatHP = $this->formatNomorHP($noAdmin->handphone); 
+                        $this->sendMessageWAToRabbitMQ($message, $fixFormatHP);
+                    }
+                } catch (\Exception $e) {
+                    Log::error("Failed to send message to RabbitMQ: " . $e->getMessage());
+                }
                 
                 $dataPengaduan = $this->getPengaduanAfterCreate($pengaduan->id);
             });
@@ -819,5 +890,16 @@ class PengaduanController extends Controller
             $code .= $characters[rand(0, strlen($characters) - 1)];
         }
         return $kode.'-'.$code;
+    }
+
+    private function formatNomorHP($nomor_hp) { 
+
+        if (substr($nomor_hp, 0, 1) === "0") {
+            $nomor_hp = "+62" . substr($nomor_hp, 1);
+        } elseif (substr($nomor_hp, 0, 3) !== "+62") {
+            $nomor_hp = "+62" . $nomor_hp;
+        }
+    
+        return $nomor_hp;
     }
 }
