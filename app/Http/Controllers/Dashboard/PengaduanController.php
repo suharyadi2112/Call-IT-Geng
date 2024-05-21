@@ -51,10 +51,10 @@ class PengaduanController extends Controller
 
             return DataTables::of($model)
             ->addColumn('action', function ($row) {
-                $actionBtn = '<a href="'.route('pengaduan.detail',$row->id).'" class="mr-2 btn btn-sm round btn-outline-primary shadow" title="Detail" data-id="' . $row->id . '">
+                $actionBtn = '<a href="'.route('pengaduan.detail',$row->id).'" class="mr-2 btn btn-xs round btn-primary shadow" title="Detail" data-id="' . $row->id . '">
                 <i class="fa fa-lg fa-fw fa-eye"></i></a>';
                 if (Auth::user()->role == 'Admin') {
-                    $actionBtn.= '<button type="button" id="modalDelete" class="mr-2 btn btn-sm round btn-outline-danger shadow" title="Hapus" data-id="'. $row->id. '">
+                    $actionBtn.= '<button type="button" id="modalDelete" class="mr-2 btn btn-xs round btn-danger shadow" title="Hapus" data-id="'. $row->id. '">
                     <i class="fa fa-lg fa-fw fa-trash"></i></button>';
                 }
                 return $actionBtn;
@@ -72,7 +72,6 @@ class PengaduanController extends Controller
                     'progress' => 'Progress',
                     'done' => 'Done',
                 ];
-                // return '<span class="badge badge-'.($row->status_pelaporan == $status_mapping['waiting'] ? 'warning' : ($row->status_pelaporan == $status_mapping['progress'] ? 'info' : 'success')).'">'.ucfirst($status[$row->status_pelaporan]).'</span>';
 
                 $normalized_status = strtolower($row->status_pelaporan);
                 $badge_class = 'success';
@@ -84,14 +83,20 @@ class PengaduanController extends Controller
                 
                 return '<span class="badge badge-'.$badge_class.'">'.ucfirst($status[$status_mapping[$normalized_status]]).'</span>';
             })
+            ->editColumn('lokasi', function ($row) {
+                if($row->lantai == 'basement'){
+                    return  'Basement | ' .ucfirst($row->lokasi);
+                }
+                return  'Lantai ' . ucfirst($row->lantai). ' | ' .ucfirst($row->lokasi);
+            })
             ->editColumn('prioritas', function ($row) {
                 return '<span class="badge badge-'.($row->prioritas == 'tinggi'? 'danger' : ($row->prioritas == 'sedang'? 'warning' :'success')).'">'.ucfirst($row->prioritas).'</span>';
             })
-            ->editColumn('tanggal_pelaporan', function ($row) {
-                return date('d-m-Y H:i', strtotime($row->tanggal_pelaporan));
-            })
             ->editColumn('tanggal_selesai', function ($row) {
-                return date('d-m-Y H:i', strtotime($row->tanggal_selesai));
+                if($row->tanggal_selesai == '-' || $row->tanggal_selesai == null){
+                    return '-';
+                }
+                return $row->tanggal_selesai;
             })
             ->rawColumns(['action', 'status_pelaporan', 'prioritas'])
             ->make(true);

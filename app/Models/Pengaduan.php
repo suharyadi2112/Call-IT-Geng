@@ -47,7 +47,7 @@ class Pengaduan extends Model
     ];
 
     protected $casts = [
-        'tanggal_pelaporan' => 'date',
+        'tanggal_pelaporan' => 'datetime:Y-m-d H:i:s',
     ];
 
     protected $dates = ['deleted_at'];

@@ -51,11 +51,11 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::post('/buat', [PengaduanController::class, 'simpanPengaduan'])->name('pengaduan.store');
         Route::get('/{id}', [PengaduanController::class, 'detailPengaduan'])->name('pengaduan.detail');
         Route::put('/{id}', [PengaduanController::class, 'updatePengaduan'])->name('pengaduan.update');
-        Route::get('/{id}/hapus', [PengaduanController::class, 'hapusPengaduan'])->middleware('checkRole')->name('pengaduan.delete');
+        Route::get('/{id}/hapus', [PengaduanController::class, 'hapusPengaduan'])->middleware('adminRole')->name('pengaduan.delete');
     });
 
 
-    Route::prefix('kategori')->middleware('checkRole')->group(function () {
+    Route::prefix('kategori')->middleware('adminRole')->group(function () {
         Route::get('/', [KategoriPengaduanController::class, 'kategori'])->name('kategori.index');
         Route::post('/store', [KategoriPengaduanController::class, 'storekategori'])->name('kategori.store');
         Route::get('/show/{id}', [KategoriPengaduanController::class, 'showkategori'])->name('kategori.show');
@@ -63,7 +63,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::get('/{id}/hapus', [KategoriPengaduanController::class, 'destroykategori'])->name('kategori.destroy');
     });
 
-    Route::prefix('laporan')->middleware('checkRole')->group(function () {
+    Route::prefix('laporan')->middleware('adminRole')->group(function () {
         Route::get('/', [LaporanController::class, 'index'])->name('laporan.index');
         Route::post('/get', [LaporanController::class, 'getlaporan'])->name('laporan.get');
         // Route::get('/export_excel', [LaporanController::class, 'export_excel'])->name('laporan.export');
@@ -75,7 +75,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         // Route::get('/hapus/{id}', [PengaduanController::class, 'destroykategori'])->name('kategori.destroy');
     });
 
-    Route::prefix('pengguna')->middleware('checkRole')->group(function () {
+    Route::prefix('pengguna')->middleware('adminRole')->group(function () {
         Route::get('/', [PenggunaController::class, 'index'])->name('pengguna.index');
         Route::get('/buat', [PenggunaController::class, 'create'])->name('pengguna.create');
         Route::post('/buat', [PenggunaController::class, 'store'])->name('pengguna.store');
@@ -84,7 +84,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::get('/{id}/hapus', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
     });
 
-    Route::prefix('indikatormutu')->middleware('checkRole')->group(function () {
+    Route::prefix('indikatormutu')->middleware('adminRole')->group(function () {
         Route::get('/', [IndikatorMutuController::class, 'index'])->name('indikatormutu.index');
         Route::post('/store', [IndikatorMutuController::class, 'store'])->name('indikatormutu.store');
         Route::get('/show/{id}', [IndikatorMutuController::class, 'showindikator'])->name('indikatormutu.index.show');
@@ -92,20 +92,20 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::get('/hapus/{id}', [IndikatorMutuController::class, 'destroyindikator'])->name('indikatormutu.destroy');
     });
 
-    Route::prefix('laporanindikatormutu')->middleware('checkRole')->group(function () {
+    Route::prefix('laporanindikatormutu')->middleware('adminRole')->group(function () {
         Route::get('/', [LaporanIndikatorMutuController::class, 'index'])->name('laporanindikatormutu.index');
         Route::post('/get', [LaporanIndikatorMutuController::class, 'getlaporan'])->name('laporanindikatormutu.get');
     });
 
 
-    Route::prefix('jadwal-oncall')->middleware('checkRole')->group(function () {
+    Route::prefix('jadwal-oncall')->middleware('adminRole')->group(function () {
         Route::get('/', [OncallController::class, 'index'])->name('jadwal-oncall.index');
         Route::get('/get-oncall', [OncallController::class, 'getOncall'])->name('jadwal-oncall.get');
         Route::post('/', [OncallController::class, 'store'])->name('jadwal-oncall.store');
     });
 
 
-    Route::prefix('pesan-masuk')->middleware('checkRole')->group(function () {
+    Route::prefix('pesan-masuk')->middleware('adminRole')->group(function () {
         Route::get('/', [PesanMasukController::class, 'index'])->name('pesan-masuk.index');
         Route::get('/detail', [PesanMasukController::class, 'detail'])->name('pesan-masuk.detail');
     });
