@@ -9,9 +9,9 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title">Daftar Pengaduan</h4>
+                        <div>Daftar Pengaduan</div>
                         <div class="ml-auto">
-                            <a href="{{ route('pengaduan.create') }}" class="btn btn-sm btn-success">
+                            <a href="{{ route('pengaduan.create') }}" class="btn btn-xs btn-success">
                                 <i class="fa fa-plus"></i> Tambah Pengaduan
                             </a>
                         </div>
@@ -19,13 +19,13 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="basic-datatables" class="display table table-bordered" style="width: 100%">
+                        <table id="data" class="table table-bordered" style="width: 100%">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Kode Laporan</th>
+                                    <th>Tanggal Aduan</th>
                                     <th>Aduan</th>
-                                    <th>Lantai</th>
                                     <th>Lokasi</th>
                                     <th>Prioritas</th>
                                     <th>Status</th>
@@ -57,32 +57,34 @@
 @endpush
 
 @push('script')
-<script src="{{ ('/assets/js/plugin/datatables/datatables.min.js') }}"></script>
+<script src="{{ asset('/assets/js/plugin/datatables/datatables.min.js') }}"></script>
 <script src="{{ asset('/assets/js/plugin/sweetalert/sweetalert.min.js') }}"></script>
 <script >
     $(document).ready(function() {
-        var table= $('#basic-datatables').DataTable({
+        var table= $('#data').DataTable({
             processing: true,
             serverSide: true,
             ordering: false,
             ajax: '{{ route('pengaduan.index') }}',
+            pageLength : 20,
             columns: [
                 {
                     class : "details-control",
                     orderable : false,
                     defaultContent : "",
+                    width: '5%'
                 }, 
                 { data: 'kode_laporan', name: 'kode_laporan' , width: '5%'},
-                { data: 'judul_pengaduan', name: 'judul_pengaduan' },
-                { data: 'lantai', name: 'lantai' },
-                { data: 'lokasi', name: 'lokasi' },
-                { data: 'prioritas', name: 'prioritas' },
-                { data: 'status_pelaporan', name: 'status_pelaporan' },
-                { data: 'pelapor.name', name: 'pelapor.name' },
+                { data: 'tanggal_pelaporan', name: 'tanggal_pelaporan', width: '20%' },
+                { data: 'judul_pengaduan', name: 'judul_pengaduan', width: '15%' },
+                { data: 'lokasi', name: 'lokasi', width: '20%' },
+                { data: 'prioritas', name: 'prioritas', width: '5%' },
+                { data: 'status_pelaporan', name: 'status_pelaporan', width: '5%' },
+                { data: 'pelapor.name', name: 'pelapor.name', width: '10%' },
             ],
         });
 
-        $('#basic-datatables tbody').on('click', 'td.details-control', function () {
+        $('#data tbody').on('click', 'td.details-control', function () {
             var tr = $(this).closest('tr');
             var row = table.row( tr );
             table.rows().every(function () {
@@ -111,14 +113,13 @@
                 }
                 workerData += '</td></tr>';
             }
+            console.log(d);
             return '<table class="display table table-bordered" style="width: 100%">'+
                 '<tr>'+
                     '<td>Kategori : </td>'+
                     '<td>'+d.kategoripengaduan.nama+'</td>'+
                 '</tr>'+
                 '<tr>'+
-                    '<td>Tanggal Lapor : </td>'+
-                    '<td>'+d.tanggal_pelaporan+'</td>'+
                     '<td>Tanggal Selesai:</td>'+
                     '<td>'+d.tanggal_selesai+'</td>'+
                 '</tr>'+
@@ -182,7 +183,6 @@
                 }
             });
         })
-
     });
 </script>
 @endpush

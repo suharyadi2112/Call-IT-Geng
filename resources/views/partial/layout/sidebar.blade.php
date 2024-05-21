@@ -20,7 +20,7 @@
                         <p>Pengaduan</p>
                     </a>
                 </li>
-                @checkRole
+                @Admin
                     <li class="nav-item {{ request()->routeIs('kategori*') ? 'active' : '' }}">
                         <a href="{{ route('kategori.index') }}" aria-expanded="false">
                             <i class="fas fa-list"></i>
@@ -57,7 +57,7 @@
                             <p>Pesan Masuk</p>
                         </a>
                     </li>
-                @endcheckRole
+                @endAdmin
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>
@@ -70,14 +70,14 @@
                         <p>Profil</p>
                     </a>
                 </li>
-                @checkRole
-                    <li class="nav-item {{ request()->routeIs('pengguna*') ? 'active' : '' }}">
-                        <a href="{{ route('pengguna.index') }}" aria-expanded="false">
-                            <i class="fas fa-user"></i>
-                            <p>Master Pengguna</p>
-                        </a>
-                    </li>
-                @endcheckRole
+                @Admin
+                <li class="nav-item {{ request()->routeIs('pengguna*') ? 'active' : '' }}">
+                    <a href="{{ route('pengguna.index') }}" aria-expanded="false">
+                        <i class="fas fa-user"></i>
+                        <p>Master Pengguna</p>
+                    </a>
+                </li>
+                @endAdmin
             </ul>
         </div>
     </div>

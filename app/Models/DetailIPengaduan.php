@@ -49,4 +49,12 @@ class DetailIPengaduan extends Model
         return $query;
     }
 
+    public function getPictureAttribute($value)
+    {
+        if (file_exists(storage_path('app/public/' . $value))) {
+            return asset('storage/' . $value);
+        }
+        return  asset('assets/img/404.png');
+
+    }
 }
