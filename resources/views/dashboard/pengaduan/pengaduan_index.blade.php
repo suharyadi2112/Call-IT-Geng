@@ -69,8 +69,7 @@
             pageLength : 20,
             columns: [
                 {
-                    class : "details-control",
-                    orderable : false,
+                    class : "details-control dt-center",
                     defaultContent : "",
                     width: '5%'
                 }, 

@@ -22,10 +22,10 @@ class KategoriPengaduanController extends Controller
                     return '<img src="' . asset('storage/' . $row->gambar) . '" class="img-thumbnail" width="30" height="30" style="background-color: #28a745;">';
                 })
                 ->addColumn('action', function ($row) {
-                    $actionBtn = '<button type="button" class="mr-2 btn btn-sm round btn-outline-primary shadow" title="Edit" id="modalEdit" data-id="' . $row->id . '">
+                    $actionBtn = '<button type="button" class="mr-2 btn btn-xs round btn-primary shadow" title="Edit" id="modalEdit" data-id="' . $row->id . '">
                     <i class="fa fa-lg fa-fw fa-edit"></i>
                     </button>';
-                    $actionBtn .= '<button type="button" class="btn btn-sm round btn-outline-danger shadow" title="Delete" id="modalDelete"
+                    $actionBtn .= '<button type="button" class="btn btn-xs round btn-danger shadow" title="Delete" id="modalDelete"
                     data-id="' . $row->id . '">
                     <i class="fa fa-lg fa-fw fa-trash"></i>
                     </button>';

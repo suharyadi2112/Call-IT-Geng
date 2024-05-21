@@ -218,7 +218,7 @@
                 e.preventDefault();
                 swal({
                     title: "Apakah anda yakin?",
-                    text: "Apakah anda yakin ingin mengubah status pelaporan menjadi selesai?, karena jika sudah selesai tidak bisa diubah lagi",
+                    text: "Apakah anda yakin ingin mengubah status pelaporan menjadi selesai?, karena jika sudah selesai data tidak dapat diubah lagi",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,

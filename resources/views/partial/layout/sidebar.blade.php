@@ -1,4 +1,4 @@
-<div class="sidebar sidebar-style-2" data-background-color="{{ config('app.themes.color.sidebar') }}">
+<div class="sidebar sidebar-style-2">
     <div class="sidebar-wrapper scrollbar scrollbar-inner">
         <div class="sidebar-content">
             <ul class="nav nav-primary">
@@ -26,6 +26,12 @@
                             <i class="fas fa-list"></i>
                             <p>Kategori</p>
                         </a>
+                    </li>
+                    <li class="nav-section">
+                        <span class="sidebar-mini-icon">
+                            <i class="fa fa-ellipsis-h"></i>
+                        </span>
+                        <h4 class="text-section">Laporan</h4>
                     </li>
                     <li class="nav-item {{ request()->routeIs('indikatormutu*') ? 'active' : '' }}">
                         <a href="{{ route('indikatormutu.index') }}" aria-expanded="false">
