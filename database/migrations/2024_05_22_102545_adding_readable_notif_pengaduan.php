@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('picture_path')->nullable()->after('role')->nullable();
-            $table->string('picture_profile')->nullable()->after('role')->nullable();
+        Schema::table('a_pengaduan', function (Blueprint $table) {
+            $table->text('readable')->nullable();
         });
     }
     /**
@@ -26,8 +25,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('picture_profile');
-            $table->dropColumn('picture_path');
+            $table->dropColumn('readable');
         });
     }
 };
