@@ -209,6 +209,7 @@ class PengaduanController extends Controller
             $query = Pengaduan::query()
             ->with('detailpengaduan', 'kategoripengaduan', 'indikatormutu', 'pelapor','workers')
             ->whereDoesntHave('workers')// pengaduan belum/tidak ada di pivot workers
+            ->where('status_pelaporan', 'waiting')
             ->orderBy('created_at', 'desc');
 
             if ($search) { //jika pakai pencarian
