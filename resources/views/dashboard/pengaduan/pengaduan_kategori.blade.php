@@ -8,10 +8,10 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
-                            <h4 class="card-title">Daftar Kategori</h4>
+                            <div>Daftar Kategori</div>
                             <div class="ml-auto">
-                                <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
-                                    data-target="#exampleModal">
+                                <button type="button" class="btn btn-xs btn-success" data-toggle="modal"
+                                    data-target="#insertModal" id="insertModalBtn">
                                     <i class="fa fa-plus"></i> Tambah Kategori
                                 </button>
                             </div>
@@ -19,13 +19,13 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="basic-datatables" class="display table table-striped table-hover"
+                            <table id="data" class="table table-bordered"
                                 style="width: 100%">
                                 <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Nama Kategori</th>
-                                        <th>Action</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
 
@@ -36,14 +36,14 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+
+    <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form id="postForm" name="postForm" >
+                <form id="categoryForm" name="categoryForm">
                     <input type="hidden" name="id" id="id">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Input Data Kategori</h5>
+                        <h5 class="modal-title" id="categoryModalLabel">Input Data Kategori</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -51,69 +51,43 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="nama">Nama Kategori</label>
-                            <input type="text" name="nama" id="nama"
-                                class="form-control form-control-border border-width-2" placeholder="Nama Kategori"
-                                required>
+                            <input type="text" name="nama" id="nama" class="form-control form-control-border border-width-2" placeholder="Nama Kategori" required>
                         </div>
                         <div class="form-group">
-                            <label for="nama">Gambar Kategori</label>
-                            <input type="file" name="gambar" id="gambar" class="form-control form-control-border border-width-2"
-                                placeholder="Gambar Kategori" required accept=".jpg, .jpeg, .png"/>
+                            <label for="gambar">Gambar Kategori</label>
+                            <input type="file" name="gambar" id="gambar" class="form-control form-control-border border-width-2" placeholder="Gambar Kategori" required accept=".jpg, .jpeg, .png"/>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-primary" id="saveBtn">Simpan</button>
+                        <button type="button" class="btn btn-primary" id="saveOrUpdateBtn">Simpan</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form id="updateForm" name="updateForm">
-                    <input type="hidden" name="idupdate" id="idupdate">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="updateModalLabel">Update Data Kategori</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="nama">Nama Kategori</label>
-                            <input type="text" name="namaupdate" id="namaupdate"
-                                class="form-control form-control-border border-width-2" placeholder="Nama Kategori"
-                                required>
-                        </div>
-                        <div class="form-group">
-                            <label for="nama">Gambar Kategori</label>
-                            <input type="file" name="gambar" id="gambar" class="form-control form-control-border border-width-2"
-                                placeholder="Gambar Kategori" required accept=".jpg, .jpeg, .png"/>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-primary" id="updateBtn">Update</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    
 @endsection
+
+@push('style')
+    <style>
+    th.dt-center, td.dt-center { text-align: center; }
+    </style> 
+@endpush
 
 @push('script')
     <script src="{{ '/assets/js/plugin/datatables/datatables.min.js' }}"></script>
     <script>
         $(function() {
-            var table = $('#basic-datatables').DataTable({
+            var table = $('#data').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('kategori.index') }}",
+                ordering: false,
+                ajax: '{{ route('kategori.index') }}',
+                pageLength : 20,
                 columns: [
                     {
+                        class : "dt-center",
                         data : 'gambar',
                         name : 'gambar',
                         width : '10%',
@@ -130,89 +104,46 @@
             });
 
 
-            $('#exampleModal').click(function() {
-                $('#saveBtn').val("create-data");
-                $('#id').val('');
-                // $('#postForm').trigger("reset");
-                $('#modal-title').html("Tambah Data");
-                // $('#modalOpen').modal('show');
+            $('#insertModalBtn').click(function() {
+                clearForm();
+                $('#saveOrUpdateBtn').val("create-data");
+                $('#categoryModalLabel').html("Tambah Data");
+                $('#saveOrUpdateBtn').html('Simpan');
+                $('#categoryModal').modal('show');
             });
-
-            
 
             $('body').on('click', '#modalEdit', function() {
                 var id = $(this).data('id');
-                // alert(id);
                 $.get("{{ route('kategori.index') }}" + '/show/' + id, function(data) {
-                    $('#modal-title').html("Edit Data");
-                    $('#updateBtn').val("create-data");
-                    $('#updateModal').modal('show');
-                    $('#idupdate').val(data.id);
-                    $('#namaupdate').val(data.nama);
-                })
-            });
-
-            function clearForm() {
-                $('#postForm').trigger("reset");
-                $('#updateForm').trigger("reset");
-                $('#saveBtn').val("create-data");
-                $('#updateBtn').val("edit-data");
-                $('#id').val('');
-                $('#saveBtn').prop("disabled", false);
-                $('#updateBtn').prop("disabled", false);
-            }
-
-            $('#updateBtn').click(function(e) {
-                e.preventDefault();
-                $(this).html('Mengirim');
-                $('#updateBtn').prop("disabled", true);
-                $('.alert').remove();
-                $.ajax({
-                    enctype: 'multipart/form-data',
-                    data: new FormData($('#updateForm')[0]),
-                    url: "{{ route('kategori.update') }}",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    type: "POST",
-                    dataType: 'json',
-                    contentType: false,
-                    processData: false,
-                    success: function(data) {
-                        console.log(data);
-                        $('#updateBtn').html('Update');
-                        clearForm();
-                        table.draw();
-                        $('#updateModal').modal('hide');
-
-                    },
-                    error: function(data) {
-                        console.log(data);
-                        var errorList = '<ul>';
-                        $.each(data.responseJSON.errors, function(key, value) {
-                            $.each(value, function(i, error) {
-                                errorList += '<li>' + error + '</li>';
-                            });
-                        });
-                        errorList += '</ul>';
-                        $('.modal-body').prepend(
-                            '<div class="alert alert-danger" role="alert">' + errorList +
-                            '</div>');
-                        $('#updateBtn').html('Update');
-                        $('#updateBtn').prop("disabled", false);
-                    }
+                    clearForm();
+                    $('#categoryModalLabel').html("Edit Data");
+                    $('#saveOrUpdateBtn').val("update-data");
+                    $('#saveOrUpdateBtn').html('Simpan');
+                    $('#categoryModal').modal('show');
+                    $('#id').val(data.id);
+                    $('#nama').val(data.nama);
                 });
             });
 
-            $('#saveBtn').click(function(e) {
+            function clearForm() {
+                $('#categoryForm').trigger("reset");
+                $('#saveOrUpdateBtn').val("");
+                $('#id').val('');
+                $('#saveOrUpdateBtn').prop("disabled", false);
+            }
+
+            $('#saveOrUpdateBtn').click(function(e) {
                 e.preventDefault();
-                $(this).html('Mengirim');
-                $('#saveBtn').prop("disabled", true);
+                $(this).html('Mengirim...');
+                $('#saveOrUpdateBtn').prop("disabled", true);
                 $('.alert').remove();
+
+                var formData = new FormData($('#categoryForm')[0]);
+                var url = $('#saveOrUpdateBtn').val() == "create-data" ? "{{ route('kategori.store') }}" : "{{ route('kategori.update') }}";
+                
                 $.ajax({
-                    enctype: 'multipart/form-data',
-                    data: new FormData($('#postForm')[0]),
-                    url: "{{ route('kategori.store') }}",
+                    data: formData,
+                    url: url,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -221,15 +152,12 @@
                     contentType: false,
                     processData: false,
                     success: function(data) {
-                        console.log(data);
-                        $('#saveBtn').html('Simpan');
+                        $('#saveOrUpdateBtn').html('Simpan');
                         clearForm();
                         table.draw();
-                        $('#exampleModal').modal('hide');
-
+                        $('#categoryModal').modal('hide');
                     },
                     error: function(data) {
-                        console.log(data);
                         var errorList = '<ul>';
                         $.each(data.responseJSON.errors, function(key, value) {
                             $.each(value, function(i, error) {
@@ -238,65 +166,63 @@
                         });
                         errorList += '</ul>';
                         $('.modal-body').prepend(
-                            '<div class="alert alert-danger" role="alert">' + errorList +
-                            '</div>');
-                        $('#saveBtn').html('Simpan');
-                        $('#saveBtn').prop("disabled", false);
+                            '<div class="alert alert-danger" role="alert">' + errorList + '</div>'
+                        );
+                        $('#saveOrUpdateBtn').html('Simpan');
+                        $('#saveOrUpdateBtn').prop("disabled", false);
                     }
                 });
             });
 
             $('body').on('click', '#modalDelete', function() {
-            var id = $(this).data('id');
-            swal({
-                title: 'Hapus Data',
-                text: "Apakah anda yakin ingin menghapus data ini?",
-                type: 'warning',
-                buttons:{
-                    cancel: {
-                        visible: true,
-                        text: 'Batal',
-                        className: 'btn btn-secondary',
-                    },
-                    confirm: {
-                        text : 'Hapus',
-                        className : 'btn btn-danger'
-                    },
-                    
-                }
-            }).then((Delete) => {
-                if (Delete) {
-                    $.ajax({
-                        url : window.location.pathname + '/' + id + '/hapus',
-                        data: {
-                            "id": id,
-                            "_token": "{{ csrf_token() }}",
-                            "_method": 'DELETE'
+                var id = $(this).data('id');
+                swal({
+                    title: 'Hapus Data',
+                    text: "Apakah anda yakin ingin menghapus data ini?",
+                    type: 'warning',
+                    buttons: {
+                        cancel: {
+                            visible: true,
+                            text: 'Batal',
+                            className: 'btn btn-secondary',
                         },
-                        success: function (data) {
-                            table.ajax.reload();
-                            swal({
-                                title: 'Berhasil',
-                                text: 'Data berhasil dihapus',
-                                type: 'success',
-                                timer: '1500'
-                            });
+                        confirm: {
+                            text: 'Hapus',
+                            className: 'btn btn-danger'
                         },
-
-                        error: function (data) {
-                            swal({
-                                title: 'Oops...',
-                                text: 'Terjadi kesalahan! Coba lagi',
-                                type: 'error',
-                                timer: '1500'
-                            });
-                        }
-                    });
-                } else {
-                    swal.close();
-                }
+                    }
+                }).then((Delete) => {
+                    if (Delete) {
+                        $.ajax({
+                            url: window.location.pathname + '/' + id + '/hapus',
+                            data: {
+                                "id": id,
+                                "_token": "{{ csrf_token() }}",
+                                "_method": 'DELETE'
+                            },
+                            success: function(data) {
+                                table.ajax.reload();
+                                swal({
+                                    title: 'Berhasil',
+                                    text: 'Data berhasil dihapus',
+                                    type: 'success',
+                                    timer: '1500'
+                                });
+                            },
+                            error: function(data) {
+                                swal({
+                                    title: 'Oops...',
+                                    text: 'Terjadi kesalahan! Coba lagi',
+                                    type: 'error',
+                                    timer: '1500'
+                                });
+                            }
+                        });
+                    } else {
+                        swal.close();
+                    }
+                });
             });
-        })
 
 
 

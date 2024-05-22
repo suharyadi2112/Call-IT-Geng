@@ -1,4 +1,4 @@
-<div class="sidebar sidebar-style-2" data-background-color="{{ config('app.themes.color.sidebar') }}">
+<div class="sidebar sidebar-style-2">
     <div class="sidebar-wrapper scrollbar scrollbar-inner">
         <div class="sidebar-content">
             <ul class="nav nav-primary">
@@ -20,12 +20,18 @@
                         <p>Pengaduan</p>
                     </a>
                 </li>
-                @checkRole
+                @Admin
                     <li class="nav-item {{ request()->routeIs('kategori*') ? 'active' : '' }}">
                         <a href="{{ route('kategori.index') }}" aria-expanded="false">
                             <i class="fas fa-list"></i>
                             <p>Kategori</p>
                         </a>
+                    </li>
+                    <li class="nav-section">
+                        <span class="sidebar-mini-icon">
+                            <i class="fa fa-ellipsis-h"></i>
+                        </span>
+                        <h4 class="text-section">Laporan</h4>
                     </li>
                     <li class="nav-item {{ request()->routeIs('indikatormutu*') ? 'active' : '' }}">
                         <a href="{{ route('indikatormutu.index') }}" aria-expanded="false">
@@ -57,7 +63,7 @@
                             <p>Pesan Masuk</p>
                         </a>
                     </li>
-                @endcheckRole
+                @endAdmin
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>
@@ -70,14 +76,14 @@
                         <p>Profil</p>
                     </a>
                 </li>
-                @checkRole
-                    <li class="nav-item {{ request()->routeIs('pengguna*') ? 'active' : '' }}">
-                        <a href="{{ route('pengguna.index') }}" aria-expanded="false">
-                            <i class="fas fa-user"></i>
-                            <p>Master Pengguna</p>
-                        </a>
-                    </li>
-                @endcheckRole
+                @Admin
+                <li class="nav-item {{ request()->routeIs('pengguna*') ? 'active' : '' }}">
+                    <a href="{{ route('pengguna.index') }}" aria-expanded="false">
+                        <i class="fas fa-user"></i>
+                        <p>Master Pengguna</p>
+                    </a>
+                </li>
+                @endAdmin
             </ul>
         </div>
     </div>

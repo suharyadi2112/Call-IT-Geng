@@ -10,7 +10,7 @@
                         <div class="d-flex align-items-center">
                             <h4 class="card-title">Daftar Indikator Mutu</h4>
                             <div class="ml-auto">
-                                <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                                <button type="button" class="btn btn-xs btn-success" data-toggle="modal"
                                     data-target="#exampleModal">
                                     <i class="fa fa-plus"></i> Tambah Indikator Mutu
                                 </button>
@@ -19,7 +19,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="basic-datatables" class="display table table-striped table-hover">
+                            <table id="basic-datatables" class="display table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Indikator Mutu</th>
@@ -154,6 +154,7 @@
             var table = $('#basic-datatables').DataTable({
                 processing: true,
                 serverSide: true,
+                ordering: false,
                 ajax: "{{ route('indikatormutu.index') }}",
                 columns: [{
                         data: 'nama_indikator',
